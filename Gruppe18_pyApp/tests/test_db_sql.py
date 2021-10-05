@@ -28,4 +28,6 @@ def test_add_to_db(setup_database):
     # Test to add to the db
     cursor = setup_database
     cursor.execute('''INSERT INTO users VALUES('Mona', 'Buyer')''')
+    assert len(list(cursor.execute('SELECT * FROM users'))) == 3
+
 
