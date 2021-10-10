@@ -7,9 +7,7 @@ def setup_database():
     """ Fixture to set up the in-memory database with test data """
     con = sqlite3.connect(':memory:')
     cursor = con.cursor()
-    cursor.execute('''
-	    CREATE TABLE users
-        (name text, type text, mail text)''')
+    cursor.execute('''CREATE TABLE users(name text, status text, mail text)''')
     sample_users = [
         ('Per', 'Seller', 'per@test.com'),
         ('Arne', 'Buyer', 'arne1@grp18.no'),
