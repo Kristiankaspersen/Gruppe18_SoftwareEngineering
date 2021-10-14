@@ -4,5 +4,24 @@
 {% endblock %}
 
 {% block content %}
- <h1> this is the registration page</h1>
+<div class="container">
+     <form method="POST" class="form-register" style="color:white">
+         <h1>Create your account and register</h1>
+         {{ form.username.label() }}
+         {{ form.username(class="form-control", placeholder="User name") }}
+
+         {{ form.email.label() }}
+         {{ form.email(class="form-control", placeholder="Insert email") }}
+
+         {{ form.password1.label() }}
+         {{ form.password1(class="form-control", placeholder="Password") }}
+
+         {{ form.password2.label() }}
+         {{ form.password2(class="form-control", placeholder="Confirm password") }}
+
+         </br>
+         {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
+     </form>
+</div>
 {% endblock %}
