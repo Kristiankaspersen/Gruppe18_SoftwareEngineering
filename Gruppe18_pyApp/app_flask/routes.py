@@ -5,14 +5,17 @@ from app_flask.forms import RegisterUserForm
 from app_flask.models import User
 from app_flask import db
 
+
 @app.route("/")
 @app.route("/home")
 def home_page():
     return render_template("index.html")
 
+
 @app.route("/test")
 def test_page():
     return "<h1>Home Page</h1>"
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user_page():

@@ -1,5 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, PasswordField, StringField
+from wtforms import SubmitField, PasswordField, StringField, IntegerField
+from wtforms.validators import DataRequired
+
 
 class RegisterUserForm(FlaskForm):
     username = StringField(label="Choose user name")
@@ -8,3 +10,9 @@ class RegisterUserForm(FlaskForm):
     password2 = PasswordField(label="Confirm password")
     submit = SubmitField(label="Create account")
 
+
+class FormGoods(FlaskForm):
+    name = StringField('navn', validators=[DataRequired()])
+    description = StringField('beskrivelse', validators=[DataRequired()])
+    price = IntegerField('pris', validators=[DataRequired()])
+    submit = SubmitField('Submit')
