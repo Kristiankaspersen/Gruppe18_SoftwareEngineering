@@ -11,8 +11,16 @@ class RegisterUserForm(FlaskForm):
     submit = SubmitField(label="Create account")
 
 
+# changed into english
 class FormGoods(FlaskForm):
-    name = StringField('navn', validators=[DataRequired()])
-    description = StringField('beskrivelse', validators=[DataRequired()])
-    price = IntegerField('pris', validators=[DataRequired()])
+    name = StringField('name', validators=[DataRequired()])
+    description = StringField('description', validators=[DataRequired()])
+    price = IntegerField('price', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+# log in
+class LoginForm(FlaskForm):
+    # for user log in
+    email = StringField('email', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
