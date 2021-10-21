@@ -11,11 +11,10 @@ class RegisterUserForm(FlaskForm):
     submit = SubmitField(label="Create account")
 
 
-# changed into english
 class FormGoods(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    description = StringField('description', validators=[DataRequired()])
-    price = IntegerField('price', validators=[DataRequired()])
+    name = StringField('Choose a title for the ad', validators=[DataRequired()])  # Change name to title?
+    description = StringField('Write a description', validators=[DataRequired()])
+    price = IntegerField('Give the ad a price', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 

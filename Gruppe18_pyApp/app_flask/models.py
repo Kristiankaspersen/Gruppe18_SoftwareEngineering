@@ -11,7 +11,16 @@ class User(db.Model):
     # itemAd = db.relationship('ItemAd', backref='owned_by_user', lazy=True)
 
 
-#  need another model for the item ads, and we need to connect them with user
+#  Need to connect with user
+class Goods(db.Model):
+    __bind_key__ = 'goods'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+    description = db.Column(db.String(70), unique=False, nullable=False)
+    price = db.Column(db.Integer, unique=False, nullable=False)
+
+    def __repr__(self):
+        return '<Goods %r>' % self.name
 
 
 # Return if the user is authenticated (true)

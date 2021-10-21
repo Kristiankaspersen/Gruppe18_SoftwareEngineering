@@ -31,6 +31,28 @@ def register_user_page():
     return render_template("registerUser.html", form=form)
 
 
+@app.route('/goods', methods=['GET', 'POST'])
+def add_goods():
+    form = FormGoods()
+    if form.validate_on_submit():
+        new_goods = Goods(name=form.name.data, description=form.description.data, price=form.price.data)
+        # Clear the form ''
+        form.name.data = ''
+        form.description.data = ''
+        form.price.data = ''
+        db.session.add(new_goods)
+        db.session.commit()
+
+    db_goods = Goods.query.order_by(Goods.name)
+    return render_template('addGoods.html', form=form, db_goods=db_goods)
+
+
+@app.route('/store', methods=['GET', 'POST'])
+def show_goods():
+    db_goods = Goods.query.order_by(Goods.name)
+    return render_template('showGoods.html', db_goods=db_goods)
+
+
 # log in
 @app.route("/login", methods=["GET", "POST"])
 def login():

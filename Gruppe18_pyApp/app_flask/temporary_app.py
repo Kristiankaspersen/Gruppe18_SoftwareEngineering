@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+
+from app_flask.models import User, Goods
 from forms import RegisterUserForm, FormGoods
 import os.path
 
@@ -13,29 +15,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_file_users
 app.config["SQLALCHEMY_BINDS"] = {'goods': database_file_goods}  # Binds to be able to have multiple databases
 app.config['SECRET_KEY'] = 'nice'
 db = SQLAlchemy(app)
-
-
-# Det blir sirkulær import hvis denne ligger i en egen fil.
-class User(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(length=25), nullable=False, unique=True)
-    email = db.Column(db.String(length=60), nullable=False, unique=True)
-    password_hash = db.Column(db.String(length=60), nullable=False)
-
-    def __repr__(self):
-        return '<User %r>' % self.name
-
-
-class Goods(db.Model):
-    __bind_key__ = 'goods'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), unique=True, nullable=False)
-    description = db.Column(db.String(70), unique=True, nullable=False)
-    price = db.Column(db.Integer, unique=False, nullable=False)
-
-    def __repr__(self):
-        return '<Goods %r>' % self.name
-
 
 # --- Manually adding some data to the table, done once so the program can run ---
 # Can maybe be fixed if something else return if a table is empty
