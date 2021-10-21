@@ -3,8 +3,8 @@ import flask
 from flask import render_template
 from flask_login import current_user, login_required, login_user, logout_user
 from app_flask import app, db
-from app_flask.forms import RegisterUserForm, LoginForm
-from app_flask.models import User
+from app_flask.forms import RegisterUserForm, LoginForm, FormGoods
+from app_flask.models import User, Goods
 from app_flask.models import is_the_user_authenticated
 
 

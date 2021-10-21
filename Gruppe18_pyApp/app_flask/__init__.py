@@ -1,7 +1,7 @@
-from flask import Flask,  render_template
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
-#Flask instance, convention calling it app
+# Flask instance, convention calling it app
 app = Flask(__name__)
 # Config for our DB, so flask recognises our DB, pointing to our file
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///appDB.db'
