@@ -53,6 +53,18 @@ def show_goods():
     return render_template('showGoods.html', db_goods=db_goods)
 
 
+@app.route('/delete/<int:id>')
+def delete_goods(id):
+    goods_to_delete = Goods.query.filter_by(id=id).first()
+
+    form = FormGoods()
+
+    db.session.delete(goods_to_delete)
+    db.session.commit()
+
+    db_goods = Goods.query.order_by(Goods.name)
+    return render_template('showGoods.html', form=form, db_goods=db_goods)
+
 # log in
 @app.route("/login", methods=["GET", "POST"])
 def login():

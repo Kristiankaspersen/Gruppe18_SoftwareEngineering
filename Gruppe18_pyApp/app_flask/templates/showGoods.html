@@ -7,8 +7,9 @@
 <div class="container">
 
 
-        {%for db_goods in db_goods%}
-            {{ db_goods.name }} : {{ db_goods.description}} : {{ db_goods.price}} : ad from user___
+        {%for goods in db_goods%}
+            {{ goods.name }} : {{ goods.description}} : {{ goods.price}} : ad from user___ <a href="{{ url_for('delete_goods', id=goods.id)}}">Delete</a>
+
             <br>
         {% endfor %}
 </div>
