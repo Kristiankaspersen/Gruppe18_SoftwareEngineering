@@ -1,6 +1,6 @@
 import bcrypt as bcrypt
 import flask
-from flask import render_template
+from flask import render_template, flash
 from flask_login import current_user, login_required, login_user, logout_user
 from app_flask import app, db
 from app_flask.forms import RegisterUserForm, LoginForm, FormGoods
@@ -42,6 +42,7 @@ def add_goods():
         form.price.data = ''
         db.session.add(new_goods)
         db.session.commit()
+        flash("Item added to the store")
 
     db_goods = Goods.query.order_by(Goods.name)
     return render_template('addGoods.html', form=form, db_goods=db_goods)
@@ -56,12 +57,9 @@ def show_goods():
 @app.route('/delete/<int:id>')
 def delete_goods(id):
     goods_to_delete = Goods.query.filter_by(id=id).first()
-
     form = FormGoods()
-
     db.session.delete(goods_to_delete)
     db.session.commit()
-
     db_goods = Goods.query.order_by(Goods.name)
     return render_template('showGoods.html', form=form, db_goods=db_goods)
 
