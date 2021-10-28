@@ -29,8 +29,9 @@ def register_user_page():
         db.session.add(creating_user_in_db)
         db.session.commit()
         return redirect(url_for('show_goods'))
-    if form.errors != {}:
-        flash()
+    if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+        for err_message in form.errors.value():
+            flash(f"Error creating user: {err_message}")
     return render_template("registerUser.html", form=form)
 
 
