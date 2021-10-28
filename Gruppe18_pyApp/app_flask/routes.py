@@ -1,6 +1,6 @@
 import bcrypt as bcrypt
 import flask
-from flask import render_template, flash
+from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from app_flask import app, db
 from app_flask.forms import RegisterUserForm, LoginForm, FormGoods
@@ -28,6 +28,9 @@ def register_user_page():
                                    password_hash=form.password1.data)
         db.session.add(creating_user_in_db)
         db.session.commit()
+        return redirect(url_for('show_goods'))
+    if form.errors != {}:
+        flash()
     return render_template("registerUser.html", form=form)
 
 
@@ -99,6 +102,7 @@ def logout():
     # not finish, don't know why is not log out not working
     logout_user = ()
     # Todo: redirect to homepage or login
+    #return redirect(url_for('home_page'))
     return render_template("html")
 
 # Todo: run this on app.py or the new temporary ( can someone do it )

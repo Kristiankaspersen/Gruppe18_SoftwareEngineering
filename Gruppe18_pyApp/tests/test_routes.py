@@ -1,12 +1,19 @@
-from app.routes import configure_routes
-from flask import Flask
+import pytest
+from app_flask import app
 
+@pytest.fixture
+def client():
+    app.config["TESTING"] = True
+    with app.test_client() as client:
+        yield client
 
-def test_home_page_route():
-    app = Flask(__name__)
-    configure_routes(app)
-    client = app.test_client()
+def test_routes_status_home_page(client):
+    assert client.get("/").status_code == 200
+    assert client.get("/home").status_code == 200
 
-    response = client.get("/")
-    assert response.get_data() == b'<h1>Home Page</h1>'
-    assert response.status_code == 200
+def test_routes_status_register_page(client):
+    assert client.get("/register").status_code == 200
+
+def test_routes_status_add_goods_page(client):
+    assert client.get("/goods").status_code == 200
+
