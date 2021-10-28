@@ -1,4 +1,5 @@
 from app_flask import db
+from app_flask import bcrypt
 
 
 class User(db.Model):
@@ -11,6 +12,13 @@ class User(db.Model):
     # adding a relationship between goods and user
     #goods = db.relationship('goods', backref='goods_owned_by_user', lazy=True)
 
+    @property
+    def password(self):
+        return self.password
+
+    @property.setter
+    def password(self, plain_password_txt):
+        self.password_hash = bcrypt.generate_password_hash(plain_password_txt).decode("utf-8")
 
 #  Need to connect with user
 class Goods(db.Model):

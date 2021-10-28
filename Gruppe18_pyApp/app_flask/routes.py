@@ -25,7 +25,7 @@ def register_user_page():
     if form.validate_on_submit():
         creating_user_in_db = User(username=form.username.data,
                                    email=form.email.data,
-                                   password_hash=form.password1.data)
+                                   password=form.password1.data)
         db.session.add(creating_user_in_db)
         db.session.commit()
         return redirect(url_for('show_goods'))
