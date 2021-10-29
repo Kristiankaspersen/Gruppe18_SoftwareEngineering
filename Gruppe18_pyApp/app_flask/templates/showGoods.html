@@ -6,11 +6,29 @@
 {% block content %}
 <div class="container">
 
-
-        {%for goods in db_goods%}
-            {{ goods.name }} : {{ goods.description}} : {{ goods.price}} : ad from user___ <a href="{{ url_for('delete_goods', id=goods.id)}}">Delete</a>
-
+    <table class="table table-dark table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Description</th>
+          <th scope="col">Price</th>
+          <th scope="col">ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+      {%for goods in db_goods%}
+        <tr>
+          <th scope="row" class=".table-striped">
+                {{ goods.name }}
             <br>
-        {% endfor %}
+            </th>
+          <td class=".table-striped">{{ goods.description}}</td>
+          <td class=".table-striped">{{ goods.price}}</td>
+          <td class=".table-striped"><a href="{{ url_for('delete_goods', id=goods.id)}}">Delete</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
 </div>
 {% endblock %}
