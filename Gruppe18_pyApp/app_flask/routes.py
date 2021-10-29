@@ -35,6 +35,8 @@ def register_user_page():
     return render_template("registerUser.html", form=form)
 
 
+
+
 @app.route('/goods', methods=['GET', 'POST'])
 def add_goods():
     form = FormGoods()

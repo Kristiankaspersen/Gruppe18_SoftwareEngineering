@@ -17,9 +17,9 @@ class User(db.Model):
     def password(self):
         return self.password
 
-    # @property.setter
-    # def password(self, plain_password_txt):
-    #    self.password_hash = bcrypt.generate_password_hash(plain_password_txt).decode("utf-8")
+    @password.setter
+    def password(self, plain_password_txt):
+       self.password_hash = bcrypt.generate_password_hash(plain_password_txt).decode("utf-8")
 
 
 #  Need to connect with user
