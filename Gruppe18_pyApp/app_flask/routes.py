@@ -25,16 +25,37 @@ def register_user_page():
     if form.validate_on_submit():
         creating_user_in_db = User(username=form.username.data,
                                    email=form.email.data,
-                                   password=form.password1.data)
+                                   password=form.password1.data,
+                                   profile_type=form.profile_type.data)
         db.session.add(creating_user_in_db)
         db.session.commit()
         return redirect(url_for('show_goods'))
     if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
-        for err_message in form.errors.value():
+        for err_message in form.errors.values():
             flash(f"Error creating user: {err_message}")
     return render_template("registerUser.html", form=form)
 
+@app.route("/login", methods=["GET", "POST"])
+def login_page():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user_attempted = User.query.filter_by(username="Seller").first() #If you want to change user, write Buyer
+        if (user_attempted is not None) and user_attempted.checking_password_with_hash(
+                password_attempted="12345678"
+        ):
+            login_user(user_attempted)
+            flash(f"You are logged in as: {user_attempted.username}")
+            return redirect(url_for("show_goods"))
+        else:
+            flash("Wrong password, or username")
 
+    return render_template("login.html", form=form)
+
+@app.route("/logout")
+def logout_page():
+    logout_user()
+    flash("You have logged out")
+    return redirect(url_for('home_page'))
 
 
 @app.route('/goods', methods=['GET', 'POST'])

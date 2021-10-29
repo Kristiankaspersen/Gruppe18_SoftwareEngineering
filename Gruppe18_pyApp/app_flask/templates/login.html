@@ -1,11 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Log in</title>
-</head>
-<body>
- <h1>Login page</h1>
+{% extends 'base.html' %}
+{% block title %}
+    Login
+{% endblock %}
 
+{% block content %}
+<body class="text-center">
+    <div class="container">
+     <form method="POST" class="form-register" style="color:white">
+         {{ form.hidden_tag() }}
+         </br>
+         {{form.submit(class="btn btn-lg btn-block btn-primary")}}
+         </br>
+         {{form.submit(class="btn btn-lg btn-block btn-success")}}
+
+
+     </form>
+    </div>
 </body>
-</html>
+{% endblock %}

@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 
 # Flask instance, convention calling it app
 app = Flask(__name__)
@@ -12,5 +13,6 @@ app.config['SECRET_KEY'] = '5f4b0959c458e6b06c51097e'
 # SQLAlckemy instance, and its convention calling it db, takes in app as param
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
 
 from app_flask import routes
