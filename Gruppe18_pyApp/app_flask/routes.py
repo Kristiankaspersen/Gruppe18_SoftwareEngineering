@@ -1,4 +1,3 @@
-
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_user, logout_user
 from app_flask import app, db
@@ -33,11 +32,12 @@ def register_user_page():
             flash(f"Error creating user: {err_message}")
     return render_template("registerUser.html", form=form)
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
-        user_attempted = User.query.filter_by(username="Seller").first() #If you want to change user, write Buyer
+        user_attempted = User.query.filter_by(username="Seller").first()  # If you want to change user, write Buyer
         if (user_attempted is not None) and user_attempted.checking_password_with_hash(
                 password_attempted="12345678"
         ):
@@ -48,6 +48,7 @@ def login_page():
             flash("Wrong password, or username")
 
     return render_template("login.html", form=form)
+
 
 @app.route("/logout")
 def logout_page():
@@ -75,7 +76,11 @@ def add_goods():
 
 @app.route('/store', methods=['GET', 'POST'])
 def show_goods():
-    db_goods = Goods.query.order_by(Goods.name)
+    db_goods = db.session.query(User, Goods).filter(User.id == Goods.seller_id).all()
+
+    # return render_template('friends.html', userList=userList)
+    # db_goods = Goods.query.order_by(Goods.name)
+
     return render_template('showGoods.html', db_goods=db_goods)
 
 
@@ -86,8 +91,4 @@ def delete_goods(id):
     db.session.delete(goods_to_delete)
     db.session.commit()
     db_goods = Goods.query.order_by(Goods.name)
-    return render_template('showGoods.html', form=form, db_goods=db_goods)
-
-
-
-
+    return render_template('index.html', form=form, db_goods=db_goods)
