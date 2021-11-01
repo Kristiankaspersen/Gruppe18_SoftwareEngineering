@@ -25,10 +25,10 @@ class RegisterUserForm(FlaskForm):
 
 
 class FormGoods(FlaskForm):
-    name = StringField('Choose a title for the ad', validators=[DataRequired()])  # Change name to title?
-    description = StringField('Write a description', validators=[DataRequired()])
-    price = IntegerField('Give the ad a price', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    name = StringField(label='Choose a title for the ad', validators=[Length(min=1, max=30), DataRequired()])
+    description = StringField(label='Write a description', validators=[DataRequired()])
+    price = IntegerField(label='Give the ad a price', validators=[DataRequired()])
+    submit = SubmitField(label='Submit ad')
 
 
 # log in

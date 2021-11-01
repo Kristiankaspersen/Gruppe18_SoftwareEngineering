@@ -74,6 +74,12 @@ def add_goods():
     return render_template('addGoods.html', form=form, db_goods=db_goods)
 
 
+def add_goods_with_parameter(name, description, price, seller_id):
+    new_goods = Goods(name=name, description=description, price=price, seller_id=seller_id)
+    db.session.add(new_goods)
+    db.session.commit()
+
+
 @app.route('/store', methods=['GET', 'POST'])
 def show_goods():
     db_goods = db.session.query(User, Goods).filter(User.id == Goods.seller_id).all()
