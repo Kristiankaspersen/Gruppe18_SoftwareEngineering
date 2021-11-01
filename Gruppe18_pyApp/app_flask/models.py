@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     profile_type = db.Column(db.Boolean(), nullable=False, default=False)
     cash = db.Column(db.Integer(), nullable=False, default=2000)
 
-    # adding a relationship between goods and user
+    # Adding a relationship between goods and user
     goods = db.relationship('Goods', backref='goods_owned_by_user', lazy=True)
 
     @property
@@ -37,10 +37,9 @@ class Goods(db.Model):
     name = db.Column(db.String(30), unique=True, nullable=False)
     description = db.Column(db.String(70), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
-    seller_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
 
-    # user.id foregin key in this table, to indicate the owner for the item.
-    # goods_owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    # Adding a relationship between goods and user
+    seller_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
 
     def __repr__(self):
         return '<Goods %r>' % self.name
@@ -50,5 +49,12 @@ class Goods(db.Model):
 def is_the_user_authenticated(self):
     return self.authenticated
 
+
+"""Manually creating tables, and adding some data"""
 # db.drop_all() # Slette alle tabeller
+
 # db.create_all() # Lage alle tabller manuelt
+# seller = User(username='Seller', email='seller@mail.com', password_hash='test', profile_type=True, cash=2000)
+# sofa = Goods(name='digg sofa', description='deilig og lite brukt', price=69)
+# db.session.add(sofa)
+# db.session.commit()
