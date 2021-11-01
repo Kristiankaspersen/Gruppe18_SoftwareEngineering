@@ -31,7 +31,6 @@ class User(db.Model, UserMixin):
         return bcrypt.check_password_hash(self.password_hash, password_attempted)
 
 
-#  Need to connect with user
 class Goods(db.Model):
     # __bind_key__ = 'goods'
     id = db.Column(db.Integer, primary_key=True)
@@ -51,3 +50,5 @@ class Goods(db.Model):
 def is_the_user_authenticated(self):
     return self.authenticated
 
+# db.drop_all() # Slette alle tabeller
+# db.create_all() # Lage alle tabller manuelt
