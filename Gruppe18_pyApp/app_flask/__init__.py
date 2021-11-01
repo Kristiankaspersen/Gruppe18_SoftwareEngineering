@@ -7,7 +7,7 @@ from flask_login import LoginManager
 app = Flask(__name__)
 # Config for our DB, so flask recognises our DB, pointing to our file
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///appDB.db'
-app.config["SQLALCHEMY_BINDS"] = {'goods': 'sqlite:///goods.db'}  # Binds to be able to have multiple databases
+#app.config["SQLALCHEMY_BINDS"] = {'goods': 'sqlite:///goods.db'}  # Binds to be able to have multiple databases
 # Secret key, security layer in order to display forms, and users to submit to DB
 app.config['SECRET_KEY'] = '5f4b0959c458e6b06c51097e'
 # SQLAlckemy instance, and its convention calling it db, takes in app as param
