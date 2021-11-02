@@ -1,13 +1,7 @@
 import pytest
-from flask import url_for
-from flask_sqlalchemy import SQLAlchemy
-
 from app_flask import app, db
-import os
-import tempfile
-from app_flask.routes import add_goods_with_parameter, delete_goods
-from app_flask.forms import FormGoods
-from app_flask.models import Goods, User
+from app_flask.routes import add_goods_with_parameter
+from app_flask.models import Goods
 
 
 def test_if_app_name_is_app_flask():
@@ -49,27 +43,3 @@ def test_new_item_to_goods(new_item_to_goods):
     assert new_item_to_goods.price == 69
     assert new_item_to_goods.seller_id == 3
 
-
-@pytest.fixture(scope='module')
-def app():
-    with app.app_context():
-        db.create_all()
-        benk = Goods(name="benk", description="deilig og lite brukt", price=69, seller_id=3)
-        db.session.add(benk)
-        db.session.commit()
-        yield app
-
-
-@pytest.fixture(scope='module')
-def client(app):
-    return app.test_client()
-
-
-def test_delete_goods(client):
-    with client.client:
-        start = Goods.query.count()  # num of entries in db
-        client.client.post(
-            url_for("delete", identity=1),
-            follow_redirects=True)
-        end = Goods.query.count()  # num of entries in db after deletion
-        client.assertTrue(start > end)  # check if delete has gone through
