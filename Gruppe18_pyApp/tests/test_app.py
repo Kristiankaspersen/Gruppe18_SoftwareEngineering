@@ -1,4 +1,5 @@
 import pytest
+from flask import url_for
 from flask_sqlalchemy import SQLAlchemy
 
 from app_flask import app, db
@@ -6,7 +7,7 @@ import os
 import tempfile
 from app_flask.routes import add_goods_with_parameter, delete_goods
 from app_flask.forms import FormGoods
-from app_flask.models import Goods
+from app_flask.models import Goods, User
 
 
 def test_if_app_name_is_app_flask():
@@ -33,3 +34,42 @@ def test_add_row_to_table_goods():  # Lagd en ny funksjon som tar parametere, te
 def test_delete_row_from_table_goods():
     assert Goods.query.filter_by(name='benk').delete()
     db.session.commit()
+
+
+@pytest.fixture(scope='module')
+def new_item_to_goods():
+    benk = Goods(name="benk", description="deilig og lite brukt", price=69, seller_id=3)
+    return benk
+
+
+def test_new_item_to_goods(new_item_to_goods):
+    """Testing if Goods model work properly when creating a new 'goods'"""
+    assert new_item_to_goods.name == "benk"
+    assert new_item_to_goods.description == "deilig og lite brukt"
+    assert new_item_to_goods.price == 69
+    assert new_item_to_goods.seller_id == 3
+
+
+@pytest.fixture(scope='module')
+def app():
+    with app.app_context():
+        db.create_all()
+        benk = Goods(name="benk", description="deilig og lite brukt", price=69, seller_id=3)
+        db.session.add(benk)
+        db.session.commit()
+        yield app
+
+
+@pytest.fixture(scope='module')
+def client(app):
+    return app.test_client()
+
+
+def test_delete_goods(client):
+    with client.client:
+        start = Goods.query.count()  # num of entries in db
+        client.client.post(
+            url_for("delete", identity=1),
+            follow_redirects=True)
+        end = Goods.query.count()  # num of entries in db after deletion
+        client.assertTrue(start > end)  # check if delete has gone through
