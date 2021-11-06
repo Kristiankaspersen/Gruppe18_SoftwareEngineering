@@ -2,7 +2,10 @@ import pytest
 from app_flask.models import User, db
 
 
-@pytest.fixture
+"""
+This doenst work sense , has to be wriiten in conftest
+ 
+ @pytest.fixture
 def add_user_in_db():
     user = User(username="test_user",
                 email="test_user@mail.com",
@@ -15,7 +18,12 @@ def add_user_in_db():
     yield user
     db.session.delete(user)
     db.session.commit()
-
-
-def test_models_create_user_in_db(add_user_in_db):
+    
+    
+    
+    def test_models_create_user_in_db(add_user_in_db):
     assert add_user_in_db
+
+"""
+
+

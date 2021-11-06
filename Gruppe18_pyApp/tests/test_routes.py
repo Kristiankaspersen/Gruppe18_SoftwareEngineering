@@ -1,39 +1,54 @@
-def test_routes_status_home_page_with_fixture(client):
-    response = client.get('/')
-    assert response.status_code == 200
-    response = client.get('/home')
-    assert response.status_code == 200
-    assert b"Welcome to App" in response.data
+"""
+This file (test_models )contain  functional test for the fake users blueprint.
+These test use GETs and POSTs to diffirent URLs to check
+"""
 
 
-def test_routes_status_login(client):
+def test_login_page(client):
     response = client.get('/login')
     assert response.status_code == 200
-    assert b"you have now logged in" in response.data
+    assert b'Login' in response.data
+    # når login.html får email og passord. kan det testes.
 
 
-def test_routes_login(client):
-    response = client.post('/login')
+def test_valid_login_logout(client, init_db):
+    response = client.post('/login',
+                           data=dict(email='test_user@mail.com', password="12345678"),
+                           follow_redirects=True)
     assert response.status_code == 200
-    assert b"reenter log in" not in response.data
+    assert b'You are logged in as: {user_attempted.username}'
+    assert b'Login' in response.data
+    # not in register check
 
-
-def test_routes_status_logout(client):
-    response = client.get('/logout')
-    assert response.status_code == 302
-    assert b"you have now logged out" in response.data
-
-
-def test_routes_status_register_page(client):
-    response = client.get("/register")
+    response = client.get('/logout', follow_redirects=True)
     assert response.status_code == 200
-    assert b"Don't have a account?" in response.data
+    assert b'You have logged out' in response.data
+    assert b'Logout' not in response.data
+    assert b'Login' in response.data
+    assert b'Register' in response.data
 
 
-def test_routes_status_add_goods_page(client):
-    assert client.get("/goods").status_code == 200
+def test_invalid_login(client, init_db):
+    response = client.post('/login',
+                           data=dict(email='test_user@mail.com', password="12345678"),
+                           follow_redirects=True)
+    assert response.status_code == 200
+    # assert b'Incorret login' in response.data
+    assert b'Logout' not in response.data
+    assert b'Login' in response.data
+    assert b'Register' in response.data
 
-# create post for register page, while get and post for goods
+""" 
+ Test registeruser from conftest, by adding a new user
+"""
 
-# TODO:Disse testene skal bort (funker ikke), eller de må justeres
 
+def test_RegisterUserForm(client):
+    response = client.get('/register')
+    assert response.status_code == 200
+    assert b'Register' in response.data
+
+# response = client.get("/")
+
+
+# def test_valid_registration
