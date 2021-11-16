@@ -23,6 +23,17 @@ class RegisterUserForm(FlaskForm):
     password2 = PasswordField(label="Confirm password", validators=[EqualTo("password1"), DataRequired()])
     submit = SubmitField(label="Create account")
 
+class RegisterStoreForm(FlaskForm):
+    store_name = StringField(label="chose name of store", validators=[Length(min=2, max=40), DataRequired()])
+    street_number = IntegerField(label="street number", validators=[DataRequired()])
+    street_address = StringField(label="Address", validators=[DataRequired()])
+    postal_code = IntegerField(label="zip code", validators=[DataRequired()])
+    province = StringField(label="province", validators=[DataRequired()])
+    store_email = StringField(label="Store email", validators=[DataRequired()])
+    store_phone = IntegerField("store phone number", validators=[DataRequired()])
+
+    submit = SubmitField(label="Register store")
+
 
 class FormGoods(FlaskForm):
     name = StringField(label='Choose a title for the ad', validators=[Length(min=1, max=30), DataRequired()])
@@ -41,3 +52,6 @@ class LoginFormUser(FlaskForm):
 
 class LoginFormStore(FlaskForm):
     submit = SubmitField(label="Login Store")
+
+class BuyGoodsForm(FlaskForm):
+    submit = SubmitField(label="Buy product")

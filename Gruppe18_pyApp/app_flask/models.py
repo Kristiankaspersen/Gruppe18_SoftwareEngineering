@@ -20,6 +20,8 @@ class User(db.Model, UserMixin):
     goods = db.relationship('Goods', backref='goods_owned_by_user', lazy=True)
     store = db.relationship('Store', backref='store_owner', lazy=True)
 
+    def have_enough_cash(self, bought_item):
+        return self.cash >= bought_item.price
 
     @property
     def password(self):
@@ -47,6 +49,12 @@ class Goods(db.Model):
     # Adding a relationship between goods, user and store
     user_owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
     store_owner = db.Column(db.Integer(), db.ForeignKey('store.id'))
+
+    def purchase(self, user):
+        self.user_owner = user.id
+        self.store_owner = 0
+        user.cash -= self.price
+        db.session.commit()
 
 
     def __repr__(self):

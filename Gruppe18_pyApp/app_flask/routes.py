@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from app_flask import app, db
-from app_flask.forms import RegisterUserForm, LoginFormUser, LoginFormStore, FormGoods
-from app_flask.models import User, Goods
+from app_flask.forms import RegisterUserForm, LoginFormUser, LoginFormStore, FormGoods, BuyGoodsForm, RegisterStoreForm
+from app_flask.models import User, Goods, Store
 
 
 @app.route("/")
@@ -32,6 +32,31 @@ def register_user_page():
             flash(f"Error creating user: {err_message}")
     return render_template("registerUser.html", form=form)
 
+@app.route("/registerStore", methods=["GET", "POST"])
+def register_store():
+    form = RegisterStoreForm()
+
+    if form.validate_on_submit():
+        create_store = Store(
+                        store_name=form.store_name.data,
+                        street_address=form.street_address.data,
+                        street_number=form.street_number.data,
+                        postal_code=form.postal_code.data,
+                        province=form.province.data,
+                        store_email=form.store_email.data,
+                        store_phone=form.store_phone.data
+                             )
+
+        create_store.owner = current_user.id
+        db.session.add(create_store)
+        current_user.profile_type = 1
+        db.session.commit()
+
+        flash("You have made a new store")
+        return redirect(url_for('market_page'))
+
+    return render_template("registerStore.html", form=form)
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
@@ -50,7 +75,7 @@ def login_page():
         ):
             login_user(user_attempted)
             flash(f"You are logged in as: {user_attempted.username}")
-            return redirect(url_for("show_goods"))
+            return redirect(url_for("store_page"))
         else:
             flash("Wrong password, or username")
 
@@ -87,14 +112,38 @@ def add_goods_with_parameter(name, description, price, seller_id):
     db.session.commit()
 
 
-@app.route('/store', methods=['GET', 'POST'])
-def show_goods():
-    db_goods = db.session.query(User, Goods).filter(User.id == Goods.seller_id).all()
+@app.route('/owned_goods', methods=['GET', 'POST'])
+def show_owned_goods():
+    db_goods = db.session.query(User, Goods).filter(User.id == Goods.user_owner).all()
 
     # return render_template('friends.html', userList=userList)
     # db_goods = Goods.query.order_by(Goods.name)
 
     return render_template('showGoods.html', db_goods=db_goods)
+
+
+@app.route("/store", methods=["POST", "GET"])
+def store_page():
+    buy_form = BuyGoodsForm()
+
+    if request.method == "POST":
+        buy_item = request.form.get('bought_item')
+        bought_item = Goods.query.filter_by(name=buy_item).first()
+        print(bought_item)
+        if bought_item is not None:
+            if current_user.have_enough_cash(bought_item):
+                bought_item.purchase(current_user)
+                flash(f"You have bought {bought_item.name} for {bought_item.price}")
+            else:
+                flash(f"You don't have enough money to purchase {bought_item.name}")
+        return redirect(url_for('store_page'))
+
+    if request.method == "GET":
+        # items = db.session.query(Goods, Store).join(Store).all()
+        items = db.session.query(Goods, Store).filter(Store.id == Goods.store_owner).all()
+        print(items)
+
+        return render_template("store.html", items=items, buy_form=buy_form)
 
 
 @app.route('/delete/<int:id>')
