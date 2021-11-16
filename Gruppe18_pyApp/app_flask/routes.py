@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user
 from app_flask import app, db
-from app_flask.forms import RegisterUserForm, LoginForm, FormGoods
+from app_flask.forms import RegisterUserForm, LoginFormUser, LoginFormStore, FormGoods
 from app_flask.models import User, Goods
 
 
@@ -35,9 +35,16 @@ def register_user_page():
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user_attempted = User.query.filter_by(username="Seller").first()  # If you want to change user, write Buyer
+    form_user = LoginFormUser()
+    form_store = LoginFormStore()
+    if form_user.validate_on_submit():
+        if request.form.get('Geir') is not None:
+            user_attempted = User.query.filter_by(username="Geir").first()
+        elif request.form.get('Tor') is not None:
+            user_attempted = User.query.filter_by(username="Tor").first()
+        else:
+            user_attempted = None
+
         if (user_attempted is not None) and user_attempted.checking_password_with_hash(
                 password_attempted="12345678"
         ):
@@ -47,7 +54,7 @@ def login_page():
         else:
             flash("Wrong password, or username")
 
-    return render_template("login.html", form=form)
+    return render_template("login.html", form_user=form_user, form_store=form_store)
 
 
 @app.route("/logout")

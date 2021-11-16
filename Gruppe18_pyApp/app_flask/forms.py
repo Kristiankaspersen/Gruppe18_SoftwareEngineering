@@ -32,8 +32,12 @@ class FormGoods(FlaskForm):
 
 
 # log in
-class LoginForm(FlaskForm):
+class LoginFormUser(FlaskForm):
     # for user log in
     # email = StringField('email', validators=[DataRequired()])
     # password = PasswordField('password', validators=[DataRequired()])
-    submit = SubmitField(label="Login")
+    submit = SubmitField(label="Login User")
+
+
+class LoginFormStore(FlaskForm):
+    submit = SubmitField(label="Login Store")

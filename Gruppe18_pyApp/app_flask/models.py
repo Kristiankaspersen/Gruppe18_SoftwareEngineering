@@ -16,8 +16,10 @@ class User(db.Model, UserMixin):
     profile_type = db.Column(db.Boolean(), nullable=False, default=False)
     cash = db.Column(db.Integer(), nullable=False, default=2000)
 
-    # Adding a relationship between goods and user
+    # Adding a relationship between goods, user and store, user
     goods = db.relationship('Goods', backref='goods_owned_by_user', lazy=True)
+    store = db.relationship('Store', backref='store_owner', lazy=True)
+
 
     @property
     def password(self):
@@ -30,6 +32,9 @@ class User(db.Model, UserMixin):
     def checking_password_with_hash(self, password_attempted):
         return bcrypt.check_password_hash(self.password_hash, password_attempted)
 
+    def __repr__(self):
+        return f"User table: \n id: {self.id} username: {self.username} | email: {self.email} | password_hash: {self.password_hash} | budget: {self.cash} | profile_type: {self.profile_type}"
+
 
 class Goods(db.Model):
     # __bind_key__ = 'goods'
@@ -37,12 +42,34 @@ class Goods(db.Model):
     name = db.Column(db.String(30), unique=True, nullable=False)
     description = db.Column(db.String(70), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
+    product_number = db.Column(db.String(length=6), nullable=False, unique=True)
 
-    # Adding a relationship between goods and user
-    seller_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    # Adding a relationship between goods, user and store
+    user_owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    store_owner = db.Column(db.Integer(), db.ForeignKey('store.id'))
+
 
     def __repr__(self):
-        return '<Goods %r>' % self.name
+        return f"Item table: \n id: {self.id} name: {self.name} | price: {self.price} | barcode {self.product_number} | description: {self.description} | user owner: {self.user_owner} | store owner {self.store_owner} "
+
+
+class Store(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    store_name = db.Column(db.String(length=30), nullable=False, unique=True)
+    street_address = db.Column(db.String(length=40), nullable=False)
+    street_number = db.Column(db.Integer(), nullable=False)
+    postal_code = db.Column(db.Integer(), nullable=False)
+    province = db.Column(db.String(length=50), nullable=False)
+    store_email = db.Column(db.String(length=50), nullable=False, unique=True)
+    store_phone = db.Column(db.Integer(), nullable=False)
+
+    user_owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    goods = db.relationship('Goods', backref='owned_store', lazy=True)
+
+    def __repr__(self):
+        return f"Store table: \n id: {self.id} store_name: {self.store_name} | Address: {self.street_address} \n" \
+               f" {self.street_number} | postal_code: {self.postal_code} | province: {self.province} \n  " \
+               f"| store_email: {self.store_email} | phonenumber: {self.store_phone} | owner: {self.user_owner} "
 
 
 # Return if the user is authenticated (true)

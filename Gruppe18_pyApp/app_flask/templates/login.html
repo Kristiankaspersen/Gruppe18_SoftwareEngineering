@@ -6,13 +6,22 @@
 {% block content %}
 <body class="text-center">
     <div class="container">
-     <form method="POST" class="form-register" style="color:white">
-         {{ form.hidden_tag() }}
-         </br>
-         {{form.submit(class="btn btn-lg btn-block btn-primary")}}
-         </br>
-         {{form.submit(class="btn btn-lg btn-block btn-success")}}
+         <form method="POST" class="form-register" style="color:white">
+         {{ form_user.hidden_tag() }}
 
+         </br>
+         <input id="okse1" name="Geir" type="hidden" value="okse20">
+         {{ form_user.submit(class="btn btn-lg btn-block btn-primary") }}
+         </br>
+
+
+     </form>
+     <form method="POST" class="form-register" style="color:white">
+         {{ form_store.hidden_tag() }}
+
+         </br>
+         <input id="dog1" name="Tor" type="hidden" value="dog20">
+         {{ form_store.submit(class="btn btn-lg btn-block btn-success") }}
 
      </form>
     </div>
