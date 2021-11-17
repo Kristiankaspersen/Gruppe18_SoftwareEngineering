@@ -93,7 +93,12 @@ def logout_page():
 def add_goods():
     form = FormGoods()
     if form.validate_on_submit():
-        new_goods = Goods(name=form.name.data, description=form.description.data, price=form.price.data)
+        new_goods = Goods(
+            name=form.name.data,
+            description=form.description.data,
+            price=form.price.data,
+            product_number=form.product_number.data
+        )
         # Clear the form ''
         form.name.data = ''
         form.description.data = ''
