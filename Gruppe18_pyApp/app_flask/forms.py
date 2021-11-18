@@ -23,6 +23,7 @@ class RegisterUserForm(FlaskForm):
     password2 = PasswordField(label="Confirm password", validators=[EqualTo("password1"), DataRequired()])
     submit = SubmitField(label="Create account")
 
+
 class RegisterStoreForm(FlaskForm):
     store_name = StringField(label="chose name of store", validators=[Length(min=2, max=40), DataRequired()])
     street_number = IntegerField(label="street number", validators=[DataRequired()])
@@ -53,6 +54,11 @@ class LoginFormUser(FlaskForm):
 
 class LoginFormStore(FlaskForm):
     submit = SubmitField(label="Login Store")
+
+
+class LoginFormAdmin(FlaskForm):
+    submit = SubmitField(label="Login Admin")
+
 
 class BuyGoodsForm(FlaskForm):
     submit = SubmitField(label="Buy product")

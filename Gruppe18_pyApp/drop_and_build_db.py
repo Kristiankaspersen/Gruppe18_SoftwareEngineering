@@ -47,6 +47,21 @@ if user_exist is None:
     db.session.add(user)
     db.session.commit()
 
+
+# Creating a admin user
+user_exist = User.query.filter_by(username="Admin").first()
+if user_exist is None:
+    user = User(
+        username="Admin",
+        email="Admin@example.com",
+        password="12345678",
+        profile_type=1  # Vurdere å bruke noe annet en boolean? Slik at man kan ha flere enn to typer
+    )
+
+    db.session.add(user)
+    db.session.commit()
+
+
 # Makes items directly in the DB. Uses username Geir as owner of the items.
 
 laptop_exist = Goods.query.filter_by(name="Laptop").first()
@@ -148,6 +163,7 @@ if item_exist is None:
 print(User.query.filter_by(username="Geir").first())
 print(User.query.filter_by(username="Tor").first())
 print(User.query.filter_by(username="Bob").first())
+print(User.query.filter_by(username="Admin").first())
 print(Goods.query.filter_by(name="Laptop").first())
 print(Goods.query.filter_by(name="Iphone 10").first())
 print(Goods.query.filter_by(name="book").first())

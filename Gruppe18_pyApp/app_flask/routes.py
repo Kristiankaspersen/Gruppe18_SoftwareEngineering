@@ -1,7 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user
 from app_flask import app, db
-from app_flask.forms import RegisterUserForm, LoginFormUser, LoginFormStore, FormGoods, BuyGoodsForm, RegisterStoreForm
+from app_flask.forms import RegisterUserForm, LoginFormUser, LoginFormStore, FormGoods, BuyGoodsForm, RegisterStoreForm, \
+    LoginFormAdmin
 from app_flask.models import User, Goods, Store
 
 
@@ -31,6 +32,7 @@ def register_user_page():
         for err_message in form.errors.values():
             flash(f"Error creating user: {err_message}")
     return render_template("registerUser.html", form=form)
+
 
 @app.route("/registerStore", methods=["GET", "POST"])
 def register_store():
@@ -62,11 +64,16 @@ def register_store():
 def login_page():
     form_user = LoginFormUser()
     form_store = LoginFormStore()
+    # Admin
+    form_admin = LoginFormAdmin()
     if form_user.validate_on_submit():
         if request.form.get('Geir') is not None:
             user_attempted = User.query.filter_by(username="Geir").first()
         elif request.form.get('Tor') is not None:
             user_attempted = User.query.filter_by(username="Tor").first()
+            # Admin
+        elif request.form.get('Admin') is not None:
+            user_attempted = User.query.filter_by(username="Admin").first()
         else:
             user_attempted = None
 
@@ -79,7 +86,7 @@ def login_page():
         else:
             flash("Wrong password, or username")
 
-    return render_template("login.html", form_user=form_user, form_store=form_store)
+    return render_template("login.html", form_user=form_user, form_store=form_store, form_admin=form_admin)
 
 
 @app.route("/logout")
@@ -149,6 +156,15 @@ def store_page():
         print(items)
 
         return render_template("store.html", items=items, buy_form=buy_form)
+
+
+@app.route('/users', methods=['GET', 'POST'])
+def show_users():
+
+    db_users = User.query.order_by(User.username)
+    # db_goods = Goods.query.order_by(Goods.name)
+
+    return render_template('users.html', db_users=db_users)
 
 
 @app.route('/delete/<int:id>')

@@ -27,7 +27,22 @@
                     <a class="nav-link" href="{{ url_for('store_page') }}">Store</a>
                 </li>
             </ul>
-            {% if current_user.is_authenticated and current_user.profile_type==1 %}
+
+            {% if current_user.username=="Admin" %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('show_users') }}">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">{{ current_user.username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout_page') }}">logout</a>
+                </li>
+
+            </ul>
+
+            {% elif current_user.is_authenticated and current_user.profile_type==1 %}
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('add_goods')}}">Post an item</a>
@@ -41,7 +56,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('logout_page') }}">logout</a>
                 </li>
+
             </ul>
+
             {% elif current_user.is_authenticated %}
             <ul class="navbar-nav">
                 <li class="nav-item">

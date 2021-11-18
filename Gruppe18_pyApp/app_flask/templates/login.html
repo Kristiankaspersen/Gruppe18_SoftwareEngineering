@@ -24,6 +24,15 @@
          {{ form_store.submit(class="btn btn-lg btn-block btn-success") }}
 
      </form>
+
+        <form method="POST" class="form-register" style="color:white">
+         {{ form_store.hidden_tag() }}
+
+         </br>
+         <input id="cat1" name="Admin" type="hidden" value="cat20">
+         {{ form_admin.submit(class="btn btn-lg btn-block btn-warning") }}
+
+     </form>
     </div>
 </body>
 {% endblock %}
