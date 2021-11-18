@@ -160,11 +160,17 @@ def store_page():
 
 @app.route('/users', methods=['GET', 'POST'])
 def show_users():
-
-    db_users = User.query.order_by(User.username)
-    # db_goods = Goods.query.order_by(Goods.name)
-
+    db_users = User.query.filter(User.username.isnot("Admin"))
     return render_template('users.html', db_users=db_users)
+
+
+@app.route('/delete/<int:id>')
+def delete_user(id):
+    user_to_delete = User.query.filter_by(id=id).first()
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    db_users = User.query.order_by(User.username)
+    return render_template('index.html',  db_users=db_users)
 
 
 @app.route('/delete/<int:id>')
