@@ -5,21 +5,22 @@
 {% endblock %}
 
 {% block content %}
-            <table class="table table-hover table-dark">
-    <thead>
-        <tr>
-            <!-- Your Columns HERE -->
-            <th scope="col">Store</th>
-            <th scope="col">Name</th>
-            <th scope="col">Product number</th>
-            <th scope="col">Price</th>
-            <th scope="col">Action</th>
-            <th scope="col">Options</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Your rows inside the table HERE: -->
-
+<div class="row" style="margin:20px; margin-left:20px">
+    <div class="col-8">
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <!-- Columns -->
+                    <th scope="col">Store</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Product number</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Action</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data inside the table  -->
                 {% for item, store in items %}
                 {% include 'include/goods_modals.html' %}
                 <tr>
@@ -31,11 +32,37 @@
                     <td>
                         <button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button>
                         <button class="btn btn-outline btn-success" data-toggle="modal" data-target="#Modal-PurchaseConfirm-{{ item.id }}" >Purchase</button>
-                        <button class="btn btn-outline btn-primary" >Auction</button>
+                        <button class="btn btn-outline btn-primary" data-toggle="modal" data-target="#Modal-AuctionConfirm-{{ item.id }}" >Auction</button>
                     </td>
                 </tr>
                 {% endfor %}
 
-    </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-4">
+
+        <h2>Highest auction offers</h2>
+        <p>Click on accept offer to complete the sale</p>
+        <br>
+        <div>
+            {% for bidding_item in bidding_items %}
+            {% include 'include/bidding_modal.html' %}
+                <div class="col-md-6">
+                    <div style="margin-bottom: 5px" class="card text-center bg-dark">
+                        <div class="card-body">
+                             <h6 class="card-title"> {{ bidding_item.user_name }} is bidding on {{ bidding_item.item_name }}</h6>
+                            <button type="button" class="btn btn-outline-primary" style="margin-bottom: 5px"
+                            data-toggle="modal" data-target="#Modal-OfferConfirm-{{ bidding_item.id }}">
+                            Accept offer
+                            </button>
+                            <p class="card-text"><strong>Current offer {{bidding_item.offer}} NOK</strong></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+   </div>
+</div>
 {% endblock %}

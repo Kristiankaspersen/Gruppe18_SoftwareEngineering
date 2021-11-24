@@ -68,3 +68,41 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="Modal-AuctionConfirm-{{ item.id }}"
+     tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">
+          {{ item.name }}
+        </h5>
+        <button type="button" class="btn-close"
+                data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">x</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {{ auction_form.hidden_tag() }}
+          <h4 class="text-center">
+            Are you sure you want to bid for {{ item.name }}?
+          </h4>
+          <h6 class="text-center"> You can minimum bid 10 NOK greater than {{ item.price }} NOK</h6>
+          <h6 class="text-center">
+            By clicking bid, you will bid for this item.
+          </h6>
+          <input id="store_owner1" name="store_owner1" type="hidden" value="{{ store.user_owner }}">
+          <input id="bid_item" name="bid_item" type="hidden" value="{{ item.name }}">
+          {{ auction_form.offer(class="form-control", placeholder="place your offer") }}
+          {{ auction_form.submit(class="btn btn-outline-primary btn-block") }}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+                data-bs-dismiss="modal">Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

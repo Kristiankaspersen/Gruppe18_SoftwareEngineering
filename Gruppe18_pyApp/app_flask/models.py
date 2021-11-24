@@ -87,6 +87,16 @@ class Store(db.Model):
                f"| store_email: {self.store_email} | phonenumber: {self.store_phone} | owner: {self.user_owner} " \
                f"| date_created: {self.date_created}"
 
+class Bidding(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    item_id = db.Column(db.Integer(), nullable=False)
+    item_name = db.Column(db.String(30), nullable=False)
+    user_id = db.Column(db.Integer(), nullable=False)
+    user_name = db.Column(db.String(), nullable=False)
+    store_user_id = db.Column(db.Integer(), nullable=False)
+    offer = db.Column(db.Integer(), nullable=False)
+    date_created = db.Column(db.DateTime(), default=datetime.utcnow)
+
 
 # Return if the user is authenticated (true)
 def is_the_user_authenticated(self):

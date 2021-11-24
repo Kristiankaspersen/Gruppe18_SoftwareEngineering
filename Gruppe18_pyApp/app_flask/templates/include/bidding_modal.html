@@ -1,0 +1,41 @@
+<style>
+  .modal-content {
+    background-color: #212121;
+  }
+</style>
+<div class="modal fade" id="Modal-OfferConfirm-{{ bidding_item.id }}"
+     tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">
+          {{ bidding_item.item_name }}
+        </h5>
+        <button type="button" class="btn-close"
+                data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">x</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {{ accept_form.hidden_tag() }}
+          <h4 class="text-center">
+            Do you want to accept {{ bidding_item.item_name }} for {{ bidding_item.offer }} NOK from {{ bidding_item.user_name }} ?
+          </h4>
+          <h6 class="text-center">
+            By clicking Sell, you will put this back on market.
+          </h6>
+          <input id="accepting_user" name="accepting_user" type="hidden" value="{{ bidding_item.user_id }}">
+          <input id="accepting_item" name="accepting_item" type="hidden" value="{{ bidding_item.item_name }}">
+          {{ accept_form.submit(class="btn btn-outline-primary btn-block") }}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+                data-bs-dismiss="modal">Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

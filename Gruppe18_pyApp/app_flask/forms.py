@@ -62,3 +62,10 @@ class LoginFormAdmin(FlaskForm):
 
 class BuyGoodsForm(FlaskForm):
     submit = SubmitField(label="Buy product")
+
+class AuctionGoodsForm(FlaskForm):
+    offer = IntegerField(label="What is your offer?")
+    submit = SubmitField(label="bid for product")
+
+class AcceptAuctionForm(FlaskForm):
+    submit = SubmitField(label="Accept offer")
