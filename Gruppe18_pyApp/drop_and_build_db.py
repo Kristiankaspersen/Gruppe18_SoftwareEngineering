@@ -133,6 +133,17 @@ if item_exist is None:
     db.session.add(iphone)
     db.session.commit()
 
+item_exist = Goods.query.filter_by(name="Radio").first()
+if item_exist is None:
+    radio = Goods(
+        name='Radio',
+        description='description',
+        product_number='223458',
+        price=800
+    )
+    radio.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    db.session.add(radio)
+    db.session.commit()
 
 book_exist = Goods.query.filter_by(name="book").first()
 if book_exist is None:
