@@ -1,5 +1,6 @@
 from app_flask import db, bcrypt, login_manager
 from flask_login import UserMixin
+from datetime import datetime
 
 
 @login_manager.user_loader
@@ -15,6 +16,7 @@ class User(db.Model, UserMixin):
     # Authenticated for the user set False:
     profile_type = db.Column(db.Boolean(), nullable=False, default=False)
     cash = db.Column(db.Integer(), nullable=False, default=2000)
+    date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # Adding a relationship between goods, user and store, user
     goods = db.relationship('Goods', backref='goods_owned_by_user', lazy=True)
@@ -35,7 +37,9 @@ class User(db.Model, UserMixin):
         return bcrypt.check_password_hash(self.password_hash, password_attempted)
 
     def __repr__(self):
-        return f"User table: \n id: {self.id} username: {self.username} | email: {self.email} | password_hash: {self.password_hash} | budget: {self.cash} | profile_type: {self.profile_type}"
+        return f"User table: \n id: {self.id} username: {self.username} | email: {self.email} " \
+               f"| password_hash: {self.password_hash} | budget: {self.cash} | profile_type: {self.profile_type}" \
+               f"| date_created: {self.date_created}"
 
 
 class Goods(db.Model):
@@ -45,20 +49,22 @@ class Goods(db.Model):
     description = db.Column(db.String(70), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
     product_number = db.Column(db.String(length=6), nullable=False, unique=True)
+    date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # Adding a relationship between goods, user and store
     user_owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
     store_owner = db.Column(db.Integer(), db.ForeignKey('store.id'))
 
-    def purchase(self, user):
+    def purchase(self, user, store_item_owner):
         self.user_owner = user.id
-        self.store_owner = 0
+        self.store_owner = None
         user.cash -= self.price
+        store_item_owner.cash += self.price
         db.session.commit()
 
-
     def __repr__(self):
-        return f"Item table: \n id: {self.id} name: {self.name} | price: {self.price} | barcode {self.product_number} | description: {self.description} | user owner: {self.user_owner} | store owner {self.store_owner} "
+        return f"Item table: \n id: {self.id} name: {self.name} | price: {self.price} | barcode {self.product_number} | " \
+               f"description: {self.description} | user owner: {self.user_owner} | store owner {self.store_owner}  | date_created: {self.date_created}"
 
 
 class Store(db.Model):
@@ -70,6 +76,7 @@ class Store(db.Model):
     province = db.Column(db.String(length=50), nullable=False)
     store_email = db.Column(db.String(length=50), nullable=False, unique=True)
     store_phone = db.Column(db.Integer(), nullable=False)
+    date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
     user_owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
     goods = db.relationship('Goods', backref='owned_store', lazy=True)
@@ -77,7 +84,8 @@ class Store(db.Model):
     def __repr__(self):
         return f"Store table: \n id: {self.id} store_name: {self.store_name} | Address: {self.street_address} \n" \
                f" {self.street_number} | postal_code: {self.postal_code} | province: {self.province} \n  " \
-               f"| store_email: {self.store_email} | phonenumber: {self.store_phone} | owner: {self.user_owner} "
+               f"| store_email: {self.store_email} | phonenumber: {self.store_phone} | owner: {self.user_owner} " \
+               f"| date_created: {self.date_created}"
 
 
 # Return if the user is authenticated (true)

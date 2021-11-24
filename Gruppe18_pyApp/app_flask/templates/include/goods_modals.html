@@ -55,6 +55,7 @@
           <h6 class="text-center">
             By clicking Purchase, you will purchase this item.
           </h6>
+          <input id="store_owner" name="store_owner" type="hidden" value="{{ store.user_owner }}">
           <input id="bought_item" name="bought_item" type="hidden" value="{{ item.name }}">
           {{ buy_form.submit(class="btn btn-outline-success btn-block") }}
         </form>

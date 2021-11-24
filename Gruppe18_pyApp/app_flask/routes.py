@@ -140,11 +140,14 @@ def store_page():
 
     if request.method == "POST":
         buy_item = request.form.get('bought_item')
+        bought_from_store = request.form.get('store_owner')
+        # Here it can be wise to pick up the product number instead
         bought_item = Goods.query.filter_by(name=buy_item).first()
+        store_owner_item = User.query.filter_by(id=bought_from_store).first()
         print(bought_item)
-        if bought_item is not None:
+        if (bought_item is not None) and (store_owner_item is not None):
             if current_user.have_enough_cash(bought_item):
-                bought_item.purchase(current_user)
+                bought_item.purchase(current_user, store_owner_item)
                 flash(f"You have bought {bought_item.name} for {bought_item.price}")
             else:
                 flash(f"You don't have enough money to purchase {bought_item.name}")
