@@ -4,6 +4,7 @@
     <option name="poetryVirtualenvPaths">
       <set>
         <option value="C:\Users\mr-gu\AppData\Local\pypoetry\Cache\virtualenvs\gruppe18-pyapp-7Lx8rm0s-py3.9\Scripts\python.exe" />
+        <option value="$USER_HOME$/Library/Caches/pypoetry/virtualenvs/gruppe18-pyapp-H4zjTv5e-py3.10/bin/python" />
       </set>
     </option>
   </component>
