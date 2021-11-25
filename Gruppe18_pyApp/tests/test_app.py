@@ -1,6 +1,7 @@
 import pytest
-from app_flask import app
+from app_flask import app, db
 from app_flask.models import Goods
+from app_flask.routes import delete_goods
 
 
 def test_if_app_name_is_app_flask():
@@ -39,3 +40,17 @@ def test_if_model_goods_can_create_object(new_object_of_goods):
     assert new_object_of_goods.description == "Laget i tre"
     assert new_object_of_goods.price == 50
 
+
+def test_query_all_rows_from_goods():
+    rows = db.session.query(Goods).count()
+    assert rows == 5
+
+
+def test_remove_a_item_from_goods():
+    rows = db.session.query(Goods).count()
+    assert delete_goods(id=2)
+
+
+def test_if_admin_user_can_be_found_in_user_list(client):
+    user = client.get('/users')
+    assert b"Admin" not in user.data

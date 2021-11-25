@@ -3,7 +3,6 @@ from app_flask import app
 from app_flask.models import User, db
 
 
-# module byttes til hvis alle, function hører til routes
 @pytest.fixture(scope='module')
 def client():
     app.config["TESTING"] = True
@@ -26,11 +25,10 @@ def init_db(client):
     db.session.delete(user)
     db.session.commit()
 
-#TODO: Create a new fake_user and connect with test_routes and create def for test_valid_regist
+# TODO: Create a new fake_user and connect with test_routes and create def for test_valid_regist
 # TODO: create full login.html, so it will be esaier to have more tests
 
 # this has to get connected with login_validation, right now dont work
-
 
 
 @pytest.fixture(scope='function')
