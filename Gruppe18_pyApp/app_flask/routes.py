@@ -5,6 +5,11 @@ from app_flask.forms import RegisterUserForm, LoginFormUser, LoginFormStore, For
     LoginFormAdmin, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func
+import os
+
+# this for image
+picFolder = os.path.join('static', 'pics')
+app.config['UPLOADE_FOLDER'] = picFolder
 
 
 @app.route("/")
@@ -28,7 +33,7 @@ def register_user_page():
                                    profile_type=form.profile_type.data)
         db.session.add(creating_user_in_db)
         db.session.commit()
-        return redirect(url_for('show_goods'))
+        return redirect(url_for('show_owned_goods'))
     if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
         for err_message in form.errors.values():
             flash(f"Error creating user: {err_message}")
@@ -41,14 +46,14 @@ def register_store():
 
     if form.validate_on_submit():
         create_store = Store(
-                        store_name=form.store_name.data,
-                        street_address=form.street_address.data,
-                        street_number=form.street_number.data,
-                        postal_code=form.postal_code.data,
-                        province=form.province.data,
-                        store_email=form.store_email.data,
-                        store_phone=form.store_phone.data
-                             )
+            store_name=form.store_name.data,
+            street_address=form.street_address.data,
+            street_number=form.street_number.data,
+            postal_code=form.postal_code.data,
+            province=form.province.data,
+            store_email=form.store_email.data,
+            store_phone=form.store_phone.data
+        )
 
         create_store.owner = current_user.id
         db.session.add(create_store)
@@ -141,9 +146,8 @@ def store_page():
     auction_form = AuctionGoodsForm()
     accept_form = AcceptAuctionForm()
 
-
     if request.method == "POST":
-        #Buying product:
+        # Buying product:
         buy_item = request.form.get('bought_item')
         bought_from_store = request.form.get('store_owner')
         # Here it can be wise to pick up the product number instead
@@ -158,7 +162,7 @@ def store_page():
 
         # Bidding on product:
         bid_item = request.form.get('bid_item')
-        #current_price = request.form.get('current_price')
+        # current_price = request.form.get('current_price')
         bid_from_store = request.form.get('store_owner1')
         # Here it can be wise to pick up the product number instead
         item_bidded_on = Goods.query.filter_by(name=bid_item).first()
@@ -201,15 +205,17 @@ def store_page():
         try:
             current_store = Store.query.filter_by(user_owner=current_user.id).first()
             if current_store is not None:
-                    bidding_items = Bidding.query. \
-                        with_entities(Bidding.item_name, Bidding.offer, Bidding.user_name,Bidding.user_id, Bidding.id, func.max(Bidding.offer)) \
-                        .group_by(Bidding.item_name).filter_by(store_user_id=current_user.id)
+                bidding_items = Bidding.query. \
+                    with_entities(Bidding.item_name, Bidding.offer, Bidding.user_name, Bidding.user_id, Bidding.id,
+                                  func.max(Bidding.offer)) \
+                    .group_by(Bidding.item_name).filter_by(store_user_id=current_user.id)
             else:
                 bidding_items = []
         except AttributeError:
             bidding_items = []
 
-        return render_template("store.html", items=items, buy_form=buy_form, auction_form=auction_form, bidding_items=bidding_items, accept_form=accept_form)
+        return render_template("store.html", items=items, buy_form=buy_form, auction_form=auction_form,
+                               bidding_items=bidding_items, accept_form=accept_form)
 
 
 @app.route('/users', methods=['GET', 'POST'])
@@ -224,7 +230,7 @@ def delete_user(id):
     db.session.delete(user_to_delete)
     db.session.commit()
     db_users = User.query.order_by(User.username)
-    return render_template('index.html',  db_users=db_users)
+    return render_template('index.html', db_users=db_users)
 
 
 @app.route('/delete/<int:id>')

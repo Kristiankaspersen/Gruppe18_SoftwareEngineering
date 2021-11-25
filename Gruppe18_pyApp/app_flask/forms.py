@@ -18,20 +18,20 @@ class RegisterUserForm(FlaskForm):
 
     username = StringField(label="Choose user name", validators=[Length(min=2, max=40), DataRequired()])
     email = StringField(label="Write your E-mail", validators=[Email(), DataRequired()])
-    profile_type = BooleanField(label="what type of user")
+    profile_type = BooleanField(label="Would you like to be, auctioneers?")
     password1 = PasswordField(label="Write password", validators=[Length(min=8), DataRequired()])
     password2 = PasswordField(label="Confirm password", validators=[EqualTo("password1"), DataRequired()])
     submit = SubmitField(label="Create account")
 
 
 class RegisterStoreForm(FlaskForm):
-    store_name = StringField(label="chose name of store", validators=[Length(min=2, max=40), DataRequired()])
-    street_number = IntegerField(label="street number", validators=[DataRequired()])
+    store_name = StringField(label="Chose name of store", validators=[Length(min=2, max=40), DataRequired()])
+    street_number = IntegerField(label="Street number", validators=[DataRequired()])
     street_address = StringField(label="Address", validators=[DataRequired()])
-    postal_code = IntegerField(label="zip code", validators=[DataRequired()])
-    province = StringField(label="province", validators=[DataRequired()])
+    postal_code = IntegerField(label="Zip code", validators=[DataRequired()])
+    province = StringField(label="Province", validators=[DataRequired()])
     store_email = StringField(label="Store email", validators=[DataRequired()])
-    store_phone = IntegerField("store phone number", validators=[DataRequired()])
+    store_phone = IntegerField("Store phone number", validators=[DataRequired()])
 
     submit = SubmitField(label="Register store")
 
