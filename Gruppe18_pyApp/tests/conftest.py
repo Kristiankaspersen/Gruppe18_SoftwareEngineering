@@ -1,7 +1,7 @@
 import pytest
 from app_flask import app
 from app_flask.models import User, db
-
+import requests
 
 @pytest.fixture(scope='module')
 def client():
@@ -9,6 +9,21 @@ def client():
     with app.test_client() as client:
         yield client
 
+@pytest.fixture()
+def register_user():
+    url = "http://127.0.0.1:5000/register"
+    requests.Session().post(url, data={
+        "username": "Geir",
+        "email": "dsad@dsad.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    })
+
+    user = User.query.filter_by(username="Geir").first()
+    yield user
+    db.session.delete(user)
+    db.session.commit()
 
 # kaller den init_db ( brukt for i add_user_in_db kun byttet)
 @pytest.fixture(scope='module')
