@@ -1,6 +1,7 @@
 import pytest
 from app_flask import app
 from app_flask.models import User, db
+import requests
 
 
 # module byttes til hvis alle, function hører til routes
@@ -22,6 +23,22 @@ def init_db(client):
     db.session.commit()
 
     user = User.query.filter_by(username="test_user").first()
+    yield user
+    db.session.delete(user)
+    db.session.commit()
+
+@pytest.fixture
+def register_user():
+    url = "http://127.0.0.1:5000/register"
+    requests.Session().post(url, data={
+        "username": "Geir",
+        "email": "dsad@dsad.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    })
+
+    user = User.query.filter_by(username="Geir").first()
     yield user
     db.session.delete(user)
     db.session.commit()

@@ -50,5 +50,8 @@ def test_RegisterUserForm(client):
 
 # response = client.get("/")
 
+def test_routes_register_page(register_user):
+    assert register_user
+
 
 # def test_valid_registration
