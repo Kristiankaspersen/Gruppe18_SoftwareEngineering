@@ -7,6 +7,63 @@ import json
 from app_flask.models import db, User, Goods, Store
 from app_flask import create_app
 
+def test_auth_routes_register_user_page(client):
+    data = {
+        "username": "testUser",
+        "email": "testUser2@testuser.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    response = client.post('/register', data=data, follow_redirects=True)
+    assert response.status_code == 200 #Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
+    assert b'Login' in response.data #get_data(as_text=True), find unique data here, better data. And get request 302.
+    user = User.query.filter_by(username="testUser").first()
+    assert user is not None
+    db.session.delete(user)
+    db.session.commit()
+
+def test_auth_routes_register_user_that_already_exists(client, existing_user):
+    data = {
+        "username": "test_user",
+        "email": "test_user@mail.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    response = client.post('/register', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"Error creating user: " in response.data #Get the both validations.
+    assert existing_user is not None
+
+def test_auth_routes_register_user_with_same_email(client, existing_user):
+    data = {
+        "username": "new_user",
+        "email": "test_user@mail.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    response = client.post('/register', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"Error creating user: " in response.data
+    assert existing_user is not None
+
+
+def test_auth_routes_register_user_with_same_username(client, existing_user):
+    data = {
+        "username": "test_user",
+        "email": "another_email@mail.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    response = client.post('/register', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"Error creating user: " in response.data
+    assert existing_user is not None
+
+
 
 def test_login_page(client):
     response = client.get('/login')
@@ -52,62 +109,5 @@ def test_RegisterUserForm(client):
     assert response.status_code == 200
     assert b'Register' in response.data
 
-def test_auth_routes_register_user_page(client):
-    data = {
-        "username": "testUser2",
-        "email": "testUser2@testuser.com",
-        "password1": "12345678",
-        "password2": "12345678",
-        "submit": "Create+account"
-    }
-    response = client.post('/register', data=data, follow_redirects=True)
-    assert response.status_code == 200 #Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
-    assert b'Login' in response.data #get_data(as_text=True)
-    user = User.query.filter_by(username="testUser2").first()
-    assert user is not None
-    db.session.delete(user)
-    db.session.commit()
 
-def test_auth_routes_register_user_that_already_exists(client, existing_user):
-    data = {
-        "username": "test_user",
-        "email": "test_user@mail.com",
-        "password1": "12345678",
-        "password2": "12345678",
-        "submit": "Create+account"
-    }
-    response = client.post('/register', data=data, follow_redirects=True)
-    assert response.status_code == 200  # Problem here, I want the response to be 302, it worked before I restructured, when follow_redirect=False
-    assert b"Error creating user: " in response.data
-    #user = User.query.filter_by(username="test_user").first()
-    assert existing_user is not None
-
-def test_auth_routes_register_user_with_same_email(client, existing_user):
-    data = {
-        "username": "new_user",
-        "email": "test_user@mail.com",
-        "password1": "12345678",
-        "password2": "12345678",
-        "submit": "Create+account"
-    }
-    response = client.post('/register', data=data, follow_redirects=True)
-    assert response.status_code == 200  # Problem here, I want the response to be 302, it worked before I restructured, when follow_redirect=False
-    assert b"Error creating user: " in response.data
-    # user = User.query.filter_by(username="test_user").first()
-    assert existing_user is not None
-
-
-def test_auth_routes_register_user_with_same_username(client, existing_user):
-    data = {
-        "username": "test_user",
-        "email": "another_email@mail.com",
-        "password1": "12345678",
-        "password2": "12345678",
-        "submit": "Create+account"
-    }
-    response = client.post('/register', data=data, follow_redirects=True)
-    assert response.status_code == 200  # Problem here, I want the response to be 302, it worked before I restructured, when follow_redirect=False
-    assert b"Error creating user: " in response.data
-    # user = User.query.filter_by(username="test_user").first()
-    assert existing_user is not None
 
