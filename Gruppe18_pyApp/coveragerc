@@ -1,2 +1,2 @@
 [run]
-source = app_flask
+source = app_flask.main

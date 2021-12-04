@@ -52,7 +52,7 @@ def test_RegisterUserForm(client):
     assert response.status_code == 200
     assert b'Register' in response.data
 
-def test_routes_register_page(client):
+def test_routes_register_user_page(client):
     data = {
         "username": "testUser2",
         "email": "testUser2@testuser.com",
