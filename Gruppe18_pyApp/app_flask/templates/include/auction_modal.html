@@ -3,7 +3,6 @@
     background-color: #212121;
   }
 </style>
-<!-- Modal -->
 <div class="modal fade" id="Modal-MoreInfo-{{ item.id }}"
      tabindex="-1"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -21,7 +20,7 @@
       <div class="modal-body">
         {{ item.description }}
         <form method="POST">
-          {{ buy_form.hidden_tag() }}
+          {{ auction_form.hidden_tag() }}
         </form>
       </div>
       <div class="modal-footer">
@@ -32,7 +31,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="Modal-PurchaseConfirm-{{ item.id }}"
+<div class="modal fade" id="Modal-AuctionConfirm-{{ item.id }}"
      tabindex="-1"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -48,16 +47,18 @@
       </div>
       <div class="modal-body">
         <form method="POST">
-          {{ buy_form.hidden_tag() }}
+          {{ auction_form.hidden_tag() }}
           <h4 class="text-center">
-            Are you sure you want to buy {{ item.name }} for {{ item.price }} NOK ?
+            Are you sure you want to bid for {{ item.name }}?
           </h4>
+          <h6 class="text-center"> You can minimum bid 10 NOK greater than {{ item.price }} NOK</h6>
           <h6 class="text-center">
-            By clicking Purchase, you will purchase this item.
+            By clicking bid, you will bid for this item.
           </h6>
-          <input id="store_owner" name="store_owner" type="hidden" value="{{ store.user_owner }}">
-          <input id="bought_item" name="bought_item" type="hidden" value="{{ item.name }}">
-          {{ buy_form.submit(class="btn btn-outline-success btn-block") }}
+          <input id="store_owner1" name="store_owner1" type="hidden" value="{{ store.user_owner }}">
+          <input id="bid_item" name="bid_item" type="hidden" value="{{ item.name }}">
+          {{ auction_form.offer(class="form-control", placeholder="place your offer") }}
+          {{ auction_form.submit(class="btn btn-outline-primary btn-block") }}
         </form>
       </div>
       <div class="modal-footer">

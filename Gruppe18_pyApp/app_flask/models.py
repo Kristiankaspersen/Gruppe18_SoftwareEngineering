@@ -49,6 +49,7 @@ class Goods(db.Model):
     description = db.Column(db.String(70), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
     product_number = db.Column(db.String(length=6), nullable=False, unique=True)
+    profile_type = db.Column(db.Boolean(), nullable=False, default=False)
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # Adding a relationship between goods, user and store

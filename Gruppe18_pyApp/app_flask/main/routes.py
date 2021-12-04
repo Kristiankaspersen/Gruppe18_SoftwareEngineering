@@ -52,8 +52,6 @@ def show_owned_goods():
 @bp.route("/store", methods=["POST", "GET"])
 def store_page():
     buy_form = BuyGoodsForm()
-    auction_form = AuctionGoodsForm()
-    accept_form = AcceptAuctionForm()
 
     if request.method == "POST":
         # Buying product:
@@ -69,6 +67,21 @@ def store_page():
             else:
                 flash(f"You don't have enough money to purchase {bought_item.name}")
 
+        return redirect(url_for('main.store_page'))
+
+    if request.method == "GET":
+        # items = db.session.query(Goods, Store).join(Store).all()
+        # FIXME: Change the filtering here so only bought items show
+        items = db.session.query(Goods, Store).filter(Store.id == Goods.store_owner).all()
+
+        return render_template("store.html", items=items, buy_form=buy_form)
+
+@bp.route("/auction", methods=["POST", "GET"])
+def auction_page():
+    auction_form = AuctionGoodsForm()
+    accept_form = AcceptAuctionForm()
+
+    if request.method == "POST":
         # Bidding on product:
         bid_item = request.form.get('bid_item')
         # current_price = request.form.get('current_price')
@@ -106,10 +119,11 @@ def store_page():
                 db.session.commit()
             else:
                 flash(f"{user_bidding_item.username} don't have enough money to purchase {accepting_item.name}")
-        return redirect(url_for('main.store_page'))
+        return redirect(url_for('main.auction_page'))
 
     if request.method == "GET":
         # items = db.session.query(Goods, Store).join(Store).all()
+        # FIXME: Change the filtering here so only auctioned items show
         items = db.session.query(Goods, Store).filter(Store.id == Goods.store_owner).all()
         try:
             current_store = Store.query.filter_by(user_owner=current_user.id).first()
@@ -123,8 +137,10 @@ def store_page():
         except AttributeError:
             bidding_items = []
 
-        return render_template("store.html", items=items, buy_form=buy_form, auction_form=auction_form,
-                               bidding_items=bidding_items, accept_form=accept_form)
+        return render_template("auction.html", items=items, auction_form=auction_form, bidding_items=bidding_items, accept_form=accept_form)
+
+
+
 
 
 @bp.route('/users', methods=['GET', 'POST'])
