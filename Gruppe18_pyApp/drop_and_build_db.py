@@ -1,4 +1,8 @@
 from app_flask.models import db, User, Goods, Store
+from app_flask import create_app
+app = create_app()
+ctx = app.app_context()
+ctx.push()
 
 # Deletes everything in the DB, og oppretter den på nytt med nye tabeller.
 
@@ -170,7 +174,6 @@ if item_exist is None:
     db.session.commit()
 
 
-
 print(User.query.filter_by(username="Geir").first())
 print(User.query.filter_by(username="Tor").first())
 print(User.query.filter_by(username="Bob").first())
@@ -181,3 +184,5 @@ print(Goods.query.filter_by(name="book").first())
 print(Goods.query.filter_by(name="Chair").first())
 print(Store.query.filter_by(store_name="Store_AS").first())
 print(Store.query.filter_by(store_name="Old_AS").first())
+
+ctx.pop()
