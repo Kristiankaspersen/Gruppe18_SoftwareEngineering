@@ -25,7 +25,7 @@ def test_page():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register_user_page():
-    form = RegisterUserForm()
+    form = RegisterUserForm(request.form, csrf_enabled=False)
     if form.validate_on_submit():
         creating_user_in_db = User(username=form.username.data,
                                    email=form.email.data,

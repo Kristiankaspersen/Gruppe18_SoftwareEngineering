@@ -2,6 +2,10 @@
 This file (test_models )contain  functional test for the fake users blueprint.
 These test use GETs and POSTs to diffirent URLs to check
 """
+import json
+
+from app_flask.models import db, User, Goods, Store
+from app_flask import create_app
 
 
 def test_login_page(client):
@@ -48,9 +52,17 @@ def test_RegisterUserForm(client):
     assert response.status_code == 200
     assert b'Register' in response.data
 
-# response = client.get("/")
-
-def test_routes_register_page(register_user):
-    assert register_user
-
-# def test_valid_registration
+def test_routes_register_page(client):
+    data = {
+        "username": "testUser2",
+        "email": "testUser2@testuser.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    respoone = client.post('/register', data=data, follow_redirects=False)
+    assert respoone.status_code == 302
+    user = User.query.filter_by(username="testUser2").first()
+    assert user is not None
+    db.session.delete(user)
+    db.session.commit()
