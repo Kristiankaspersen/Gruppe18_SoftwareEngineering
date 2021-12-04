@@ -2,10 +2,9 @@
 This file (test_models )contain  functional test for the fake users blueprint.
 These test use GETs and POSTs to diffirent URLs to check
 """
-import json
+# import json, possible that I know.
 
-from app_flask.models import db, User, Goods, Store
-from app_flask import create_app
+from app_flask.models import db, User, Store
 
 def test_auth_routes_register_user_page(client):
     data = {
@@ -17,7 +16,9 @@ def test_auth_routes_register_user_page(client):
     }
     response = client.post('/register', data=data, follow_redirects=True)
     assert response.status_code == 200 #Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
-    assert b'Login' in response.data #get_data(as_text=True), find unique data here, better data. And get request 302.
+    assert b'Login User' in response.data #get_data(as_text=True), find unique data here, better data. And get request 302.
+    assert b'Login Admin' in response.data
+    assert b'Login Store' in response.data
     user = User.query.filter_by(username="testUser").first()
     assert user is not None
     db.session.delete(user)
@@ -63,6 +64,14 @@ def test_auth_routes_register_user_with_same_username(client, existing_user):
     assert b"Error creating user: " in response.data
     assert existing_user is not None
 
+def test_auth_routes_register_store(client, login_default_user):
+    pass
+
+def test_auth_routes_register_store_that_exists(client, login_default_user):
+    pass
+
+def test_auth_routes_register_store_same_email(client, login_default_user):
+    pass
 
 
 def test_login_page(client):
@@ -99,15 +108,7 @@ def test_invalid_login(client, existing_user):
     assert b'Login' in response.data
     assert b'Register' in response.data
 
-""" 
- Test registeruser from conftest, by adding a new user
-"""
 
-
-def test_RegisterUserForm(client):
-    response = client.get('/register')
-    assert response.status_code == 200
-    assert b'Register' in response.data
 
 
 

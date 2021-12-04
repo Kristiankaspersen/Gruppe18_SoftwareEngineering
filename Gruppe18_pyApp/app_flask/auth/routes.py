@@ -18,7 +18,7 @@ def register_user_page():
                                    profile_type=form.profile_type.data)
         db.session.add(creating_user_in_db)
         db.session.commit()
-        return redirect(url_for('main.show_owned_goods'))
+        return redirect(url_for('auth.login_page'))
     if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
         for err_message in form.errors.values():
             flash(f"Error creating user: {err_message}")
@@ -45,7 +45,7 @@ def register_store():
         db.session.commit()
 
         flash("You have made a new store")
-        return redirect(url_for('auth.login_page'))
+        return redirect(url_for('main.store_page'))
 
     return render_template("registerStore.html", form=form)
 

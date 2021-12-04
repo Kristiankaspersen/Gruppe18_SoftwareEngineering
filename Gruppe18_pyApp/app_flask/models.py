@@ -98,16 +98,8 @@ class Bidding(db.Model):
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
 
-# Return if the user is authenticated (true)
-def is_the_user_authenticated(self):
-    return self.authenticated
+# # Return if the user is authenticated (true)
+# def is_the_user_authenticated(self):
+#     return self.authenticated
 
 
-"""Manually creating tables, and adding some data"""
-# db.drop_all() # Slette alle tabeller
-
-# db.create_all() # Lage alle tabller manuelt
-# seller = User(username='Seller', email='seller@mail.com', password_hash='test', profile_type=True, cash=2000)
-# sofa = Goods(name='digg sofa', description='deilig og lite brukt', price=69)
-# db.session.add(sofa)
-# db.session.commit()

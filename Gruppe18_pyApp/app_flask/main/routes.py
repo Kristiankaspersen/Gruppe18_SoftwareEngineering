@@ -11,11 +11,6 @@ from sqlalchemy.sql.expression import func
 def home_page():
     return render_template("index.html")
 
-
-@bp.route("/test")
-def test_page():
-    return "<h1>Home Page</h1>"
-
 @bp.route('/goods', methods=['GET', 'POST'])
 def add_goods():
     form = FormGoods()
