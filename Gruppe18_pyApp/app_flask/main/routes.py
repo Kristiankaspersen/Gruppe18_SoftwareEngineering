@@ -2,9 +2,10 @@ from flask import render_template, flash, redirect, url_for, request, current_ap
 from flask_login import login_user, logout_user, current_user
 from app_flask import db
 from app_flask.main import bp
-from app_flask.main.forms import FormGoods, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
+from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
-from sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func, and_
+
 
 @bp.route("/")
 @bp.route("/home")
@@ -13,25 +14,44 @@ def home_page():
 
 @bp.route('/goods', methods=['GET', 'POST'])
 def add_goods():
-    form = FormGoods()
-    if form.validate_on_submit():
-        new_goods = Goods(
-            name=form.name.data,
-            description=form.description.data,
-            price=form.price.data,
-            product_number=form.product_number.data
-        )
-        # Clear the form ''
-        form.name.data = ''
-        form.description.data = ''
-        form.price.data = ''
-        db.session.add(new_goods)
-        db.session.commit()
-        flash("Item added to the store")
+    form_auction = AddGoodsToAuction()
+    form_market = AddGoodsToMarket()
 
-    db_goods = Goods.query.order_by(Goods.name)
-    return render_template('addGoods.html', form=form, db_goods=db_goods)
+    if request.method == "POST":
+        auction_value = request.form.get('auctionItem')
+        print(auction_value)
+        if auction_value == "ItemForAuction":
+            new_goods = Goods(
+                name=form_auction.name.data,
+                description=form_auction.description.data,
+                price=form_auction.price.data,
+                product_number=form_auction.product_number.data,
+                store_owner=current_user.id,
+                goods_type=0
+            )
+            db.session.add(new_goods)
+            db.session.commit()
+            flash("Item added to the auction market")
+        else:
+            new_goods = Goods(
+                name=form_market.name.data,
+                description=form_market.description.data,
+                price=form_market.price.data,
+                product_number=form_market.product_number.data,
+                store_owner=current_user.id,
+                goods_type=1
+            )
 
+            db.session.add(new_goods)
+            db.session.commit()
+
+            flash("Item added to the market")
+
+        return redirect(url_for('main.add_goods'))
+
+    if request.method == "GET":
+
+        return render_template('addGoods.html', form_auction=form_auction, form_market=form_market)
 
 def add_goods_with_parameter(name, description, price, seller_id):
     new_goods = Goods(name=name, description=description, price=price, seller_id=seller_id)
@@ -70,9 +90,8 @@ def store_page():
         return redirect(url_for('main.store_page'))
 
     if request.method == "GET":
-        # items = db.session.query(Goods, Store).join(Store).all()
-        # FIXME: Change the filtering here so only bought items show
-        items = db.session.query(Goods, Store).filter(Store.id == Goods.store_owner).all()
+
+        items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
 
         return render_template("store.html", items=items, buy_form=buy_form)
 
@@ -123,8 +142,7 @@ def auction_page():
 
     if request.method == "GET":
         # items = db.session.query(Goods, Store).join(Store).all()
-        # FIXME: Change the filtering here so only auctioned items show
-        items = db.session.query(Goods, Store).filter(Store.id == Goods.store_owner).all()
+        items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
         try:
             current_store = Store.query.filter_by(user_owner=current_user.id).first()
             if current_store is not None:
@@ -138,9 +156,6 @@ def auction_page():
             bidding_items = []
 
         return render_template("auction.html", items=items, auction_form=auction_form, bidding_items=bidding_items, accept_form=accept_form)
-
-
-
 
 
 @bp.route('/users', methods=['GET', 'POST'])

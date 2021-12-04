@@ -67,19 +67,6 @@ if user_exist is None:
 
 
 # Makes items directly in the DB. Uses username Geir as owner of the items.
-
-laptop_exist = Goods.query.filter_by(name="Laptop").first()
-if laptop_exist is None:
-    laptop = Goods(
-        name='Laptop',
-        description='description',
-        product_number='123456',
-        price=800
-    )
-    laptop.user_owner = User.query.filter_by(username="Geir").first().id
-    db.session.add(laptop)
-    db.session.commit()
-
 store_exist = Store.query.filter_by(store_name="Store_AS").first()
 if store_exist is None:
     store = Store(
@@ -119,7 +106,8 @@ if laptop_exist is None:
         name='Laptop',
         description='description',
         product_number='123457',
-        price=800
+        price=800,
+        goods_type=1
     )
     laptop.user_owner = User.query.filter_by(username="Geir").first().id
     db.session.add(laptop)
@@ -131,7 +119,8 @@ if item_exist is None:
         name='Iphone 10',
         description='description',
         product_number='123458',
-        price=800
+        price=800,
+        goods_type=0
     )
     iphone.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
     db.session.add(iphone)
@@ -143,7 +132,8 @@ if item_exist is None:
         name='Radio',
         description='description',
         product_number='223458',
-        price=800
+        price=800,
+        goods_type=0
     )
     radio.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
     db.session.add(radio)
@@ -155,7 +145,8 @@ if book_exist is None:
         name='book',
         description='description',
         product_number='123459',
-        price=300
+        price=300,
+        goods_type=0
     )
     book.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
     db.session.add(book)
@@ -167,7 +158,8 @@ if item_exist is None:
         name='Chair',
         description='description',
         product_number='1234569',
-        price=500
+        price=500,
+        goods_type=1
     )
     chair.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
     db.session.add(chair)

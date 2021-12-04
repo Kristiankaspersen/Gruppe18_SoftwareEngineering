@@ -1,26 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}
-    User registration
+    Login
 {% endblock %}
 
 {% block content %}
-<div class="container">
-
-    <form method="POST" class="form-register" style="color:white">
-        <h1>Add your item to the market</h1>
-
-        {{ form.hidden_tag() }}
-
-        {{ form.name.label }} {{ form.name(class="form-control", placeholder="write a name of the ad") }}
-
-        {{ form.description.label }} {{ form.description(class="form-control", placeholder="write a description for the item") }}
-
-        {{ form.price.label }} {{ form.price(class="form-control", placeholder="give the ad a price") }}
-        {{ form.product_number.label }} {{ form.price(class="form-control", placeholder="product number") }}
-
-        </br>
-        {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
-    </form>
-
-</div>
+<body class="text-center">
+    <div class="container">
+        <button type="button" style="margin:20px;" class="btn btn-primary" data-toggle="modal" data-target="#Modal-AddAuction">Add item Auction</button>
+        <button type="button" style="margin:20px;" class="btn btn-primary" data-toggle="modal" data-target="#Modal-AddStore">Add item to Store</button>
+        {% include 'include/add_goods_auction_modal.html' %}
+        {% include 'include/add_goods_store_modal.html' %}
+    </div>
+</body>
 {% endblock %}

@@ -49,7 +49,7 @@ class Goods(db.Model):
     description = db.Column(db.String(70), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
     product_number = db.Column(db.String(length=6), nullable=False, unique=True)
-    profile_type = db.Column(db.Boolean(), nullable=False, default=False)
+    goods_type = db.Column(db.Boolean(), nullable=False, default=False)
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # Adding a relationship between goods, user and store
@@ -65,7 +65,8 @@ class Goods(db.Model):
 
     def __repr__(self):
         return f"Item table: \n id: {self.id} name: {self.name} | price: {self.price} | barcode {self.product_number} | " \
-               f"description: {self.description} | user owner: {self.user_owner} | store owner {self.store_owner}  | date_created: {self.date_created}"
+               f"description: {self.description} | user owner: {self.user_owner} | store owner {self.store_owner}  | " \
+               f"goods_type: {self.goods_type} |date_created: {self.date_created}"
 
 
 class Store(db.Model):

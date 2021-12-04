@@ -1,0 +1,48 @@
+<style>
+  .modal-content {
+    background-color: #212121;
+  }
+</style>
+<div class="modal fade bd-example-modal-lg" id="Modal-AddStore"
+     tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">
+          Add item for Market
+        </h5>
+        <button type="button" class="btn-close"
+                data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">x</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" class="form-register" style="color:white">
+        <h1>Add your item to the market</h1>
+
+        {{ form_market.hidden_tag() }}
+
+        {{ form_market.name.label }}
+        {{ form_market.name(class="form-control", placeholder="write a name of the ad") }}
+
+        {{ form_market.description.label }}
+        {{ form_market.description(class="form-control", placeholder="write a description for the item") }}
+
+        {{ form_market.price.label }}
+        {{ form_market.price(class="form-control", placeholder="give the ad a price") }}
+
+        {{ form_market.product_number.label }}
+        {{ form_market.product_number(class="form-control", placeholder="product number") }}
+
+        </br>
+        {{ form_market.submit(class="btn btn-lg btn-block btn-primary") }}
+    </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+                data-bs-dismiss="modal">Close
+        </button>
+    </div>
+  </div>
+</div>
+</div>
