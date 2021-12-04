@@ -20,7 +20,7 @@
                 {% for users in db_users %}
                 <tr>
                     <td class=".table-striped">{{ users.username}}</td>
-                    <td class=".table-striped"><a href="{{ url_for('delete_user', id=users.id)}}">Delete</a></td>
+                    <td class=".table-striped"><a href="{{ url_for('main.delete_user', id=users.id)}}">Delete</a></td>
                 </tr>
                 {% endfor %}
 

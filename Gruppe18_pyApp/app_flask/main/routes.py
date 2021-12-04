@@ -1,29 +1,24 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, current_app
 from flask_login import login_user, logout_user, current_user
-from app_flask import app, db
-from app_flask.forms import RegisterUserForm, LoginFormUser, LoginFormStore, FormGoods, BuyGoodsForm, RegisterStoreForm, \
+from app_flask import db
+from app_flask.main import bp
+from app_flask.main.forms import RegisterUserForm, LoginFormUser, LoginFormStore, FormGoods, BuyGoodsForm, RegisterStoreForm, \
     LoginFormAdmin, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func
-import os
 
-# this for image
-picFolder = os.path.join('static', 'pics')
-app.config['UPLOADE_FOLDER'] = picFolder
-
-
-@app.route("/")
-@app.route("/home")
+@bp.route("/")
+@bp.route("/home")
 def home_page():
     return render_template("index.html")
 
 
-@app.route("/test")
+@bp.route("/test")
 def test_page():
     return "<h1>Home Page</h1>"
 
 
-@app.route("/register", methods=['GET', 'POST'])
+@bp.route("/register", methods=['GET', 'POST'])
 def register_user_page():
     form = RegisterUserForm()
     if form.validate_on_submit():
@@ -40,7 +35,7 @@ def register_user_page():
     return render_template("registerUser.html", form=form)
 
 
-@app.route("/registerStore", methods=["GET", "POST"])
+@bp.route("/registerStore", methods=["GET", "POST"])
 def register_store():
     form = RegisterStoreForm()
 
@@ -61,12 +56,12 @@ def register_store():
         db.session.commit()
 
         flash("You have made a new store")
-        return redirect(url_for('main.home_page'))
+        return redirect(url_for('main.market_page'))
 
     return render_template("registerStore.html", form=form)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@bp.route("/login", methods=["GET", "POST"])
 def login_page():
     form_user = LoginFormUser()
     form_store = LoginFormStore()
@@ -88,21 +83,21 @@ def login_page():
         ):
             login_user(user_attempted)
             flash(f"You are logged in as: {user_attempted.username}")
-            return redirect(url_for("store_page"))
+            return redirect(url_for("main.store_page"))
         else:
             flash("Wrong password, or username")
 
     return render_template("login.html", form_user=form_user, form_store=form_store, form_admin=form_admin)
 
 
-@app.route("/logout")
+@bp.route("/logout")
 def logout_page():
     logout_user()
     flash("You have logged out")
-    return redirect(url_for('home_page'))
+    return redirect(url_for('main.home_page'))
 
 
-@app.route('/goods', methods=['GET', 'POST'])
+@bp.route('/goods', methods=['GET', 'POST'])
 def add_goods():
     form = FormGoods()
     if form.validate_on_submit():
@@ -130,7 +125,7 @@ def add_goods_with_parameter(name, description, price, seller_id):
     db.session.commit()
 
 
-@app.route('/owned_goods', methods=['GET', 'POST'])
+@bp.route('/owned_goods', methods=['GET', 'POST'])
 def show_owned_goods():
     db_goods = db.session.query(User, Goods).filter(User.id == Goods.user_owner).all()
 
@@ -140,7 +135,7 @@ def show_owned_goods():
     return render_template('showGoods.html', db_goods=db_goods)
 
 
-@app.route("/store", methods=["POST", "GET"])
+@bp.route("/store", methods=["POST", "GET"])
 def store_page():
     buy_form = BuyGoodsForm()
     auction_form = AuctionGoodsForm()
@@ -197,7 +192,7 @@ def store_page():
                 db.session.commit()
             else:
                 flash(f"{user_bidding_item.username} don't have enough money to purchase {accepting_item.name}")
-        return redirect(url_for('store_page'))
+        return redirect(url_for('main.store_page'))
 
     if request.method == "GET":
         # items = db.session.query(Goods, Store).join(Store).all()
@@ -218,13 +213,13 @@ def store_page():
                                bidding_items=bidding_items, accept_form=accept_form)
 
 
-@app.route('/users', methods=['GET', 'POST'])
+@bp.route('/users', methods=['GET', 'POST'])
 def show_users():
     db_users = User.query.filter(User.username.isnot("Admin"))
     return render_template('users.html', db_users=db_users)
 
 
-@app.route('/delete/<int:id>')
+@bp.route('/delete/<int:id>')
 def delete_user(id):
     user_to_delete = User.query.filter_by(id=id).first()
     db.session.delete(user_to_delete)
@@ -233,7 +228,7 @@ def delete_user(id):
     return render_template('index.html', db_users=db_users)
 
 
-@app.route('/delete/<int:id>')
+@bp.route('/delete/<int:id>')
 def delete_goods(id):
     goods_to_delete = Goods.query.filter_by(id=id).first()
     form = FormGoods()

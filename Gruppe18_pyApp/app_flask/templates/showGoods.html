@@ -28,7 +28,7 @@
           <td class=".table-striped">{{ goods.description}}</td>
           <td class=".table-striped">{{ goods.price}}</td>
           <td class=".table-striped">{{ users.username}}</td>
-          <td class=".table-striped"><a href="{{ url_for('delete_goods', id=goods.id)}}">Delete</a></td>
+          <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=goods.id)}}">Delete</a></td>
           <td class=".table-striped"><button type="button" class="btn btn-light">BUY/CONTACT SELLER</button></td>
         </tr>
       {% endfor %}
