@@ -34,7 +34,7 @@
             {% if current_user.username=="Admin" %}
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.show_users') }}">Users</a>
+                    <a class="nav-link" href="{{ url_for('main.display_admin_panel') }}">Admin panel</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link">{{ current_user.username }}</a>

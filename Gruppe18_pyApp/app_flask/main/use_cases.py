@@ -38,7 +38,7 @@ def add_goods_item(name, description, price, product_number, store_owner):
     )
     db.session.add(new_goods)
     db.session.commit()
-    #here put the item they have put inside
+    # here put the item they have put inside
     flash("Item added to the auction market")
     ctx.pop()
     return new_goods
@@ -62,7 +62,7 @@ def buying_product(buy_item, bought_from_store, current_user_id):
 
     ctx.pop()
 
-def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id ):
+def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id):
     app = create_app()
     ctx = app.app_context()
     ctx.push()
@@ -86,3 +86,37 @@ def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user
             flash("You have to bid more than that")
 
     ctx.pop()
+
+
+def delete_goods_from_store(user_id):
+    app = create_app()
+    ctx = app.app_context()
+    ctx.push()
+    goods_to_delete = Goods.query.filter_by(id=user_id).first()
+    db.session.delete(goods_to_delete)
+    db.session.commit()
+    flash("Item deleted")
+    ctx.pop()
+
+
+def delete_user_from_platform(user_id):
+    app = create_app()
+    ctx = app.app_context()
+    ctx.push()
+    user_to_delete = User.query.filter_by(id=user_id).first()
+    # This will also delete the store
+    db.session.query(Store).filter(Store.user_owner == user_id).delete()
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    flash("User deleted")
+    ctx.pop()
+
+
+def show_users_from_db():
+    """Query all users that is not Admin"""
+    app = create_app()
+    ctx = app.app_context()
+    ctx.push()
+    user_query = User.query.filter(User.username.isnot("Admin"))
+    ctx.pop()
+    return user_query

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}
+    Market Page
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <p>This is the panel for admin where they can manage the platform</p>
+</div>
+
+<div class="container">
+    <h2>Users</h2>
+    <p>Overview of all users on the platform.</p>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for users in db_users %}
+            <tr>
+                <td class=".table-striped">{{ users.username}}</td>
+                <td class=".table-striped"><a href="{{ url_for('main.delete_user', id=users.id)}}">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <h2>Goods</h2>
+    <p>Overview of store owner's and their goods.</p>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Store</th>
+                <th scope="col">Name</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item, store in items %}
+            {% include 'include/goods_modals.html' %}
+            <tr>
+                <td class=".table-striped">{{store.store_name}}</td>
+                <td class=".table-striped">{{item.name}}</td>
+                <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=item.id)}}">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container">
+    <h2>Auctions</h2>
+    <p>Overview of all auctions and the store owner.</p>
+    <table class="table table-hover table-dark">
+        <thead>
+        <tr>
+            <th scope="col">Store</th>
+            <th scope="col">Name</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item, store in auction_items %}
+        {% include 'include/auction_modal.html' %}
+        <tr>
+            <td class=".table-striped">{{store.store_name}}</td>
+            <td class=".table-striped">{{item.name}}</td>
+            <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=item.id)}}">Delete</a></td>
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

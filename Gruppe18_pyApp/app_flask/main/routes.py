@@ -5,7 +5,8 @@ from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
-from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product
+from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product, \
+    delete_goods_from_store, delete_user_from_platform, show_users_from_db
 
 
 @bp.route("/")
@@ -146,27 +147,30 @@ def auction_page():
         return render_template("auction.html", items=items, auction_form=auction_form, bidding_items=bidding_items, accept_form=accept_form)
 
 
+#Kan nok slettes
 @bp.route('/users', methods=['GET', 'POST'])
 def show_users():
-
-    db_users = User.query.filter(User.username.isnot("Admin"))
+    db_users = show_users_from_db()
     return render_template('users.html', db_users=db_users)
 
 
-@bp.route('/delete/<int:id>')
+@bp.route('/admin_panel', methods=['GET', 'POST'])
+def display_admin_panel():
+    buy_form = BuyGoodsForm()
+    db_users = show_users_from_db()
+    auction_form = AuctionGoodsForm()
+    items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
+    auction_items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
+    return render_template('adminPanel.html', db_users=db_users, items=items, auction_items=auction_items, buy_form=buy_form, auction_form=auction_form)
+
+
+@bp.route('/delete_user/<int:id>')
 def delete_user(id):
-    #TODO: make a function
-    user_to_delete = User.query.filter_by(id=id).first()
-    db.session.delete(user_to_delete)
-    db.session.commit()
+    delete_user_from_platform(id)
     return render_template('index.html')
 
 
-@bp.route('/delete/<int:id>')
+@bp.route('/delete_goods/<int:id>')
 def delete_goods(id):
-    #TODO: make a function
-    goods_to_delete = Goods.query.filter_by(id=id).first()
-    db.session.delete(goods_to_delete)
-    db.session.commit()
-
+    delete_goods_from_store(id)
     return render_template('index.html')
