@@ -5,11 +5,15 @@ from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
+<<<<<<< HEAD:Gruppe18_pyApp/app_flask/main/routes.py
 <<<<<<< HEAD
 from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product, \
     delete_goods_from_store, delete_user_from_platform, show_users_from_db
 =======
 from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product,\
+=======
+from app_flask.main.use_cases1 import add_auction_item, add_goods_item, buying_product, bidding_on_product,\
+>>>>>>> 0015bb00eb25924f3641d74154dd0174a6f1c510:Gruppe18_pyApp/app_flask/main/routes1.py
     accepting_bidding_offer, show_current_highest_bidding_offer_in_store
 >>>>>>> 2a7ff3a7d49e6b35d37354101741a57c1b165042
 
