@@ -12,7 +12,7 @@ def client():
             yield client
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def existing_user(client):
     user = User(username="test_user", email='test_user@mail.com', password="12345678")
     db.session.add(user)
@@ -23,7 +23,7 @@ def existing_user(client):
     db.session.delete(user)
     db.session.commit()
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def existing_store_user(client):
     user = User(username="test_user_store", email='test_user_store@mail.com', password="12345678", profile_type=1)
     db.session.add(user)
@@ -48,25 +48,27 @@ def existing_store_user(client):
     db.session.commit()
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture()
 def login_default_user(client, existing_user):
     client.post('/login',
-                data=dict(email='test_user@mail.com', password="12345678"),
+                data=dict(username='test_user', password="12345678"),
                 follow_redirects=True)
     yield client
     client.get('/logout', follow_redirects=True)
 
-@pytest.fixture(scope='function')
-def login_default_store(client, existing_store):
+@pytest.fixture()
+def login_default_store(client, existing_store_user):
     client.post('/login',
-                data=dict(email='test_user_store@mail.com', password="12345678"),
+                data=dict(username='test_user_store', password="12345678"),
                 follow_redirects=True)
     yield
     client.get('/logout', follow_redirects=True)
 
 @pytest.fixture
 def login_admin_user(client):
-    pass
+    client.post('/login',
+                data=dict(username='Admin', password="12345678"),
+                follow_redirects=True)
+    yield
+    client.get('/logout', follow_redirects=True)
 
-
-# Her skal jeg sørge for at disse fixturesene er rett.
