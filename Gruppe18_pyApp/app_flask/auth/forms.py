@@ -35,16 +35,20 @@ class RegisterStoreForm(FlaskForm):
 
     submit = SubmitField(label="Register store")
 
-# log in
+class LoginForm(FlaskForm):
+    username = StringField(label="username", validators=[DataRequired()])
+    password = PasswordField(label="Write password", validators=[DataRequired()])
+    submit = SubmitField(label="Login")
+
 class LoginFormUser(FlaskForm):
     # for user log in
     # email = StringField('email', validators=[DataRequired()])
     # password = PasswordField('password', validators=[DataRequired()])
-    submit = SubmitField(label="Login User")
+    submit = SubmitField(label="Login normal user")
 
 
 class LoginFormStore(FlaskForm):
-    submit = SubmitField(label="Login Store")
+    submit = SubmitField(label="Login store user")
 
 
 class LoginFormAdmin(FlaskForm):

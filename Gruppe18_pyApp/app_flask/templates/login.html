@@ -6,7 +6,7 @@
 {% block content %}
 <body class="text-center">
     <div class="container">
-         <form method="POST" class="form-register" style="color:white">
+     <form method="POST" class="form-register" style="color:white">
          {{ form_user.hidden_tag() }}
 
          </br>
@@ -24,14 +24,30 @@
          {{ form_store.submit(class="btn btn-lg btn-block btn-success") }}
          </br>
      </form>
-
-        <form method="POST" class="form-register" style="color:white">
-         {{ form_store.hidden_tag() }}
+    <form method="POST" class="form-register" style="color:white">
+         {{ form_admin.hidden_tag() }}
 
          </br>
          <input id="cat1" name="Admin" type="hidden" value="cat20">
          {{ form_admin.submit(class="btn btn-lg btn-block btn-warning") }}
          </br>
+     </form>
+    <form method="POST" class="form-register" style="color:white">
+         {{ form_store.hidden_tag() }}
+
+         </br>
+        <br>
+        <br>
+        <br>
+        <br>
+         {{ form.hidden_tag() }}
+         <br>
+         {{ form.username(class="form-control", placeholder="User name") }}
+        <br>
+         {{ form.password(class="form-control", placeholder="Password") }}
+         <br>
+         {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
      </form>
     </div>
 </body>
