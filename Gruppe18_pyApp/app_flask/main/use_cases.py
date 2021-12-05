@@ -2,6 +2,7 @@ from flask import flash
 
 from app_flask.models import db, User, Goods, Store, Bidding
 from app_flask import create_app
+from sqlalchemy.sql.expression import func, and_
 
 
 def add_auction_item(name, description, price, product_number, store_owner):
@@ -109,5 +110,22 @@ def accepting_bidding_offer(accept_item, accept_from_user, current_user_id):
 
     ctx.pop()
     return None
+
+def show_current_highest_bidding_offer_in_store(current_user_id):
+
+    current_store = Store.query.filter_by(user_owner=current_user_id).first()
+    if current_store is not None:
+        bidding_items = Bidding.query. \
+            with_entities(Bidding.item_name, Bidding.offer, Bidding.user_name, Bidding.user_id, Bidding.id,
+                          func.max(Bidding.offer)) \
+            .group_by(Bidding.item_name).filter_by(store_user_id=current_user_id)
+
+        return bidding_items
+
+    else:
+        bidding_items = []
+
+        return bidding_items
+
 
 

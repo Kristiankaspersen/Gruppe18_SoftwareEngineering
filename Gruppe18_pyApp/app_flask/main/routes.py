@@ -5,7 +5,8 @@ from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
-from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product, accepting_bidding_offer
+from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product,\
+    accepting_bidding_offer, show_current_highest_bidding_offer_in_store
 
 
 @bp.route("/")
@@ -76,12 +77,12 @@ def auction_page():
         bid_item = request.form.get('bid_item')
         # current_price = request.form.get('current_price')
         bid_from_store = request.form.get('store_owner1')
+        user_id = current_user.id
 
         item_bidded_on = Goods.query.filter_by(name=bid_item).first()
         store_bidding_from = User.query.filter_by(id=bid_from_store).first()
         if (item_bidded_on is not None) and (store_bidding_from is not None):
             item_id = item_bidded_on.id
-            print(item_bidded_on.id)
             item_name = item_bidded_on.name
             user_id = current_user.id
             user_name = current_user.username
@@ -92,8 +93,7 @@ def auction_page():
         accept_item = request.form.get('accepting_item')
         accept_from_user = request.form.get('accepting_user')
 
-        current_user_id = current_user.id
-        accepting_bidding_offer(accept_item, accept_from_user, current_user_id)
+        accepting_bidding_offer(accept_item, accept_from_user, user_id)
 
         return redirect(url_for('main.auction_page'))
 
@@ -103,15 +103,8 @@ def auction_page():
         # TODO: Users that don't have a profile can't buy or auction, so if they try, they get a message to log in.
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
         try:
-            #TODO: make this in to a function.
-            current_store = Store.query.filter_by(user_owner=current_user.id).first()
-            if current_store is not None:
-                bidding_items = Bidding.query. \
-                    with_entities(Bidding.item_name, Bidding.offer, Bidding.user_name, Bidding.user_id, Bidding.id,
-                                  func.max(Bidding.offer)) \
-                    .group_by(Bidding.item_name).filter_by(store_user_id=current_user.id)
-            else:
-                bidding_items = []
+            current_user_id = current_user.id
+            bidding_items = show_current_highest_bidding_offer_in_store(current_user_id)
         except AttributeError:
             bidding_items = []
 
