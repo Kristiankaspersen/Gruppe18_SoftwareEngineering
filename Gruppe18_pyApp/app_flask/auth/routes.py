@@ -6,18 +6,22 @@ from app_flask.auth.forms import RegisterUserForm, LoginFormUser, LoginFormStore
     LoginFormAdmin
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func
+from app_flask.auth.use_cases import create_user_and_store_in_db, create_store_in_db
 
 
 @bp.route("/register", methods=['GET', 'POST'])
 def register_user_page():
     form = RegisterUserForm(request.form, csrf_enabled=False)
     if form.validate_on_submit():
-        creating_user_in_db = User(username=form.username.data,
-                                   email=form.email.data,
-                                   password=form.password1.data,
-                                   profile_type=form.profile_type.data)
-        db.session.add(creating_user_in_db)
-        db.session.commit()
+
+        username = form.username.data
+        email = form.email.data
+        password = form.password1.data
+        profile_type = form.profile_type.data
+
+        create_user_and_store_in_db(username, email, password, profile_type)
+
+        flash(f"You have made a user with username: {username}")
         return redirect(url_for('auth.login_page'))
     if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
         for err_message in form.errors.values():
@@ -29,22 +33,19 @@ def register_store():
     form = RegisterStoreForm()
 
     if form.validate_on_submit():
-        create_store = Store(
-            store_name=form.store_name.data,
-            street_address=form.street_address.data,
-            street_number=form.street_number.data,
-            postal_code=form.postal_code.data,
-            province=form.province.data,
-            store_email=form.store_email.data,
-            store_phone=form.store_phone.data
-        )
 
-        create_store.owner = current_user.id
-        db.session.add(create_store)
-        current_user.profile_type = 1
-        db.session.commit()
+        store_name = form.store_name.data
+        street_address = form.street_address.data
+        street_number = form.street_number.data
+        postal_code = form.postal_code.data
+        province = form.province.data
+        store_email = form.store_email.data
+        store_phone = form.store_phone.data
+        owner = current_user.id
 
-        flash("You have made a new store")
+        create_store_in_db(store_name, street_address, street_number, postal_code, province, store_email, store_phone, owner)
+
+        flash(f"You have made a new store with name {store_name}")
         return redirect(url_for('main.store_page'))
 
     return render_template("registerStore.html", form=form)

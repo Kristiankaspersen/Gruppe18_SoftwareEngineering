@@ -73,6 +73,18 @@ def test_auth_routes_register_store_that_exists(client, login_default_user):
 def test_auth_routes_register_store_same_email(client, login_default_user):
     pass
 
+def test_auth_routes_login_store():
+    pass
+
+def test_auth_routes_login_admin():
+    pass
+
+def test_auth_routes_login_user(client, existing_user):
+    response = client.post('/login',
+                           data=dict(email='test_user@mail.com', password="12345678"),
+                           follow_redirects=True)
+    assert response.status_code == 200
+    assert b'You are logged in as: {user_attempted.username}'
 
 def test_login_page(client):
     response = client.get('/login')

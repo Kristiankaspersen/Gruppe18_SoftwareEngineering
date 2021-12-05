@@ -34,9 +34,9 @@ def existing_store(client, existing_user):
         store_email="Test_AS@gmail.com",
         store_phone=67326732
     )
-    # iphone.owner = User.query.filter_by(username="Geir").first().id
+    # update test_user to have 1
+    existing_user.profile_type = 1
     store.user_owner = User.query.filter_by(username="test_user").first().id
-    yield store
     db.session.add(store)
     db.session.commit()
 
@@ -45,7 +45,7 @@ def login_default_user(client, existing_user):
     client.post('/login',
                 data=dict(email='test_user@mail.com', password="12345678"),
                 follow_redirects=True)
-    yield
+    yield client
     client.get('/logout', follow_redirects=True)
 
 @pytest.fixture(scope='function')

@@ -5,6 +5,7 @@ from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
+from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product
 
 
 @bp.route("/")
@@ -19,50 +20,26 @@ def add_goods():
 
     if request.method == "POST":
         auction_value = request.form.get('auctionItem')
-        print(auction_value)
+        name = form_auction.name.data
+        description = form_auction.description.data
+        price = form_auction.price.data
+        product_number = form_auction.product_number.data
+        store_owner = current_user.id
+
         if auction_value == "ItemForAuction":
-            new_goods = Goods(
-                name=form_auction.name.data,
-                description=form_auction.description.data,
-                price=form_auction.price.data,
-                product_number=form_auction.product_number.data,
-                store_owner=current_user.id,
-                goods_type=0
-            )
-            db.session.add(new_goods)
-            db.session.commit()
-            flash("Item added to the auction market")
+            add_auction_item(name, description, price, product_number, store_owner)
         else:
-            new_goods = Goods(
-                name=form_market.name.data,
-                description=form_market.description.data,
-                price=form_market.price.data,
-                product_number=form_market.product_number.data,
-                store_owner=current_user.id,
-                goods_type=1
-            )
-
-            db.session.add(new_goods)
-            db.session.commit()
-
-            flash("Item added to the market")
-
+            add_goods_item(name, description, price, product_number, store_owner)
         return redirect(url_for('main.add_goods'))
 
     if request.method == "GET":
-
         return render_template('addGoods.html', form_auction=form_auction, form_market=form_market)
-
-def add_goods_with_parameter(name, description, price, seller_id):
-    new_goods = Goods(name=name, description=description, price=price, seller_id=seller_id)
-    db.session.add(new_goods)
-    db.session.commit()
 
 
 @bp.route('/owned_goods', methods=['GET', 'POST'])
 def show_owned_goods():
     db_goods = db.session.query(User, Goods).filter(User.id == Goods.user_owner).all()
-
+    # FIXME: Denne trenger og bare vise tingene som eies av en person, template skal ikke inneholde delete.
     # return render_template('friends.html', userList=userList)
     # db_goods = Goods.query.order_by(Goods.name)
 
@@ -74,23 +51,16 @@ def store_page():
     buy_form = BuyGoodsForm()
 
     if request.method == "POST":
-        # Buying product:
         buy_item = request.form.get('bought_item')
         bought_from_store = request.form.get('store_owner')
-        # Here it can be wise to pick up the product number instead
-        bought_item = Goods.query.filter_by(name=buy_item).first()
-        store_owner_item = User.query.filter_by(id=bought_from_store).first()
-        if (bought_item is not None) and (store_owner_item is not None):
-            if current_user.have_enough_cash(bought_item):
-                bought_item.purchase(current_user, store_owner_item)
-                flash(f"You have bought {bought_item.name} for {bought_item.price}")
-            else:
-                flash(f"You don't have enough money to purchase {bought_item.name}")
+
+        buying_product(buy_item, bought_from_store, current_user.id)
 
         return redirect(url_for('main.store_page'))
 
     if request.method == "GET":
 
+        #TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
 
         return render_template("store.html", items=items, buy_form=buy_form)
@@ -101,7 +71,8 @@ def auction_page():
     accept_form = AcceptAuctionForm()
 
     if request.method == "POST":
-        # Bidding on product:
+        #TODO: make this in to a function.
+        #Bidding on product:
         bid_item = request.form.get('bid_item')
         # current_price = request.form.get('current_price')
         bid_from_store = request.form.get('store_owner1')
@@ -144,6 +115,7 @@ def auction_page():
         # items = db.session.query(Goods, Store).join(Store).all()
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
         try:
+            #TODO: make this in to a function.
             current_store = Store.query.filter_by(user_owner=current_user.id).first()
             if current_store is not None:
                 bidding_items = Bidding.query. \
@@ -160,24 +132,25 @@ def auction_page():
 
 @bp.route('/users', methods=['GET', 'POST'])
 def show_users():
+
     db_users = User.query.filter(User.username.isnot("Admin"))
     return render_template('users.html', db_users=db_users)
 
 
 @bp.route('/delete/<int:id>')
 def delete_user(id):
+    #TODO: make a function
     user_to_delete = User.query.filter_by(id=id).first()
     db.session.delete(user_to_delete)
     db.session.commit()
-    db_users = User.query.order_by(User.username)
-    return render_template('index.html', db_users=db_users)
+    return render_template('index.html')
 
 
 @bp.route('/delete/<int:id>')
 def delete_goods(id):
+    #TODO: make a function
     goods_to_delete = Goods.query.filter_by(id=id).first()
-    form = FormGoods()
     db.session.delete(goods_to_delete)
     db.session.commit()
-    db_goods = Goods.query.order_by(Goods.name)
-    return render_template('index.html', form=form, db_goods=db_goods)
+
+    return render_template('index.html')
