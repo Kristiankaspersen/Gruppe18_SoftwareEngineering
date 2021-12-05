@@ -1,4 +1,4 @@
-from app_flask.main.use_cases import add_auction_item
+from app_flask.main.use_cases1 import add_auction_item
 from app_flask.models import db, User, Goods, Store
 from app_flask import create_app
 app = create_app()

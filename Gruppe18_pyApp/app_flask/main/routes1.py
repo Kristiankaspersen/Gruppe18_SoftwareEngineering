@@ -5,7 +5,7 @@ from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
-from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product,\
+from app_flask.main.use_cases1 import add_auction_item, add_goods_item, buying_product, bidding_on_product,\
     accepting_bidding_offer, show_current_highest_bidding_offer_in_store
 
 
