@@ -24,6 +24,7 @@ class RegisterUserForm(FlaskForm):
     submit = SubmitField(label="Create account")
 
 class RegisterStoreForm(FlaskForm):
+    #TODO: More validations of email, and check with user.
     store_name = StringField(label="Chose name of store", validators=[Length(min=2, max=40), DataRequired()])
     street_number = IntegerField(label="Street number", validators=[DataRequired()])
     street_address = StringField(label="Address", validators=[DataRequired()])

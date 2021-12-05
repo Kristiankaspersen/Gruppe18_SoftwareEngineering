@@ -1,6 +1,6 @@
 from flask import flash
 
-from app_flask.models import db, User, Goods, Store
+from app_flask.models import db, User, Goods, Store, Bidding
 from app_flask import create_app
 
 
@@ -62,5 +62,27 @@ def buying_product(buy_item, bought_from_store, current_user_id):
 
     ctx.pop()
 
+def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id ):
+    app = create_app()
+    ctx = app.app_context()
+    ctx.push()
 
-def
+    item_bidded_on = Goods.query.filter_by(name=bid_item).first()
+    store_bidding_from = User.query.filter_by(id=bid_from_store).first()
+    if (item_bidded_on is not None) and (store_bidding_from is not None):
+        if offer >= item_bidded_on.price + 10:  # current_price:
+            item_bidded_on.price = offer
+            new_bid = Bidding(
+                item_id=item_id,
+                item_name=item_name,
+                user_id=user_id,
+                user_name=user_name,
+                store_user_id=store_user_id,
+                offer=offer
+            )
+            db.session.add(new_bid)
+            db.session.commit()
+        else:
+            flash("You have to bid more than that")
+
+    ctx.pop()

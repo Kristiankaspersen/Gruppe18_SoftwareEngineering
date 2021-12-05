@@ -5,7 +5,7 @@ from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
-from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product
+from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product
 
 
 @bp.route("/")
@@ -77,23 +77,39 @@ def auction_page():
         # current_price = request.form.get('current_price')
         bid_from_store = request.form.get('store_owner1')
         # Here it can be wise to pick up the product number instead
+
         item_bidded_on = Goods.query.filter_by(name=bid_item).first()
         store_bidding_from = User.query.filter_by(id=bid_from_store).first()
-        if (item_bidded_on is not None) and (store_bidding_from is not None):
-            if auction_form.offer.data >= item_bidded_on.price + 10:  # current_price:
-                item_bidded_on.price = auction_form.offer.data
-                new_bid = Bidding(
-                    item_id=item_bidded_on.id,
-                    item_name=item_bidded_on.name,
-                    user_id=current_user.id,
-                    user_name=current_user.username,
-                    store_user_id=store_bidding_from.id,
-                    offer=auction_form.offer.data
-                )
-                db.session.add(new_bid)
-                db.session.commit()
-            else:
-                flash("You have to bid more than that")
+
+        item_id = item_bidded_on.id
+        item_name = item_bidded_on.name
+        user_id = current_user.id
+        user_name = current_user.username
+        store_user_id = store_bidding_from.id
+        offer = auction_form.offer.data
+
+        bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
+
+
+        # item_bidded_on = Goods.query.filter_by(name=bid_item).first()
+        # store_bidding_from = User.query.filter_by(id=bid_from_store).first()
+        # if (item_bidded_on is not None) and (store_bidding_from is not None):
+        #     if offer >= item_bidded_on.price + 10:  # current_price:
+        #         item_bidded_on.price = auction_form.offer.data
+        #         new_bid = Bidding(
+        #             item_id=item_bidded_on.id,
+        #             item_name=item_bidded_on.name,
+        #             user_id=current_user.id,
+        #             user_name=current_user.username,
+        #             store_user_id=store_bidding_from.id,
+        #             offer=auction_form.offer.data
+        #         )
+        #         db.session.add(new_bid)
+        #         db.session.commit()
+        #     else:
+        #         flash("You have to bid more than that")
+
+        #TODO: Accept bid, make function:
 
         accept_item = request.form.get('accepting_item')
         accept_from_user = request.form.get('accepting_user')

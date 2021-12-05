@@ -120,7 +120,7 @@ if item_exist is None:
         description='description',
         product_number='123458',
         price=800,
-        goods_type=0
+        goods_type=1
     )
     iphone.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
     db.session.add(iphone)
