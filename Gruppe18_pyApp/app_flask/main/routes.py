@@ -5,7 +5,7 @@ from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
-from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product
+from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product, accepting_bidding_offer
 
 
 @bp.route("/")
@@ -61,6 +61,7 @@ def store_page():
     if request.method == "GET":
 
         #TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
+        #TODO: Users that don't have a profile can't buy or auction, so if they try, they get a message to log in.
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
 
         return render_template("store.html", items=items, buy_form=buy_form)
@@ -71,64 +72,35 @@ def auction_page():
     accept_form = AcceptAuctionForm()
 
     if request.method == "POST":
-        #TODO: make this in to a function.
-        #Bidding on product:
+
         bid_item = request.form.get('bid_item')
         # current_price = request.form.get('current_price')
         bid_from_store = request.form.get('store_owner1')
-        # Here it can be wise to pick up the product number instead
 
         item_bidded_on = Goods.query.filter_by(name=bid_item).first()
         store_bidding_from = User.query.filter_by(id=bid_from_store).first()
-
-        item_id = item_bidded_on.id
-        item_name = item_bidded_on.name
-        user_id = current_user.id
-        user_name = current_user.username
-        store_user_id = store_bidding_from.id
-        offer = auction_form.offer.data
-
-        bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
-
-
-        # item_bidded_on = Goods.query.filter_by(name=bid_item).first()
-        # store_bidding_from = User.query.filter_by(id=bid_from_store).first()
-        # if (item_bidded_on is not None) and (store_bidding_from is not None):
-        #     if offer >= item_bidded_on.price + 10:  # current_price:
-        #         item_bidded_on.price = auction_form.offer.data
-        #         new_bid = Bidding(
-        #             item_id=item_bidded_on.id,
-        #             item_name=item_bidded_on.name,
-        #             user_id=current_user.id,
-        #             user_name=current_user.username,
-        #             store_user_id=store_bidding_from.id,
-        #             offer=auction_form.offer.data
-        #         )
-        #         db.session.add(new_bid)
-        #         db.session.commit()
-        #     else:
-        #         flash("You have to bid more than that")
-
-        #TODO: Accept bid, make function:
+        if (item_bidded_on is not None) and (store_bidding_from is not None):
+            item_id = item_bidded_on.id
+            print(item_bidded_on.id)
+            item_name = item_bidded_on.name
+            user_id = current_user.id
+            user_name = current_user.username
+            store_user_id = store_bidding_from.id
+            offer = auction_form.offer.data
+            bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
 
         accept_item = request.form.get('accepting_item')
         accept_from_user = request.form.get('accepting_user')
-        accepting_item = Goods.query.filter_by(name=accept_item).first()
-        user_bidding_item = User.query.filter_by(id=accept_from_user).first()
-        if (accepting_item is not None) and (user_bidding_item is not None):
-            if user_bidding_item.have_enough_cash(accepting_item):
-                accepting_item.purchase(user_bidding_item, current_user)
-                flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price}")
-                delete_items = Bidding.query.filter_by(item_name=accept_item)
-                for delete_item in delete_items:
-                    db.session.delete(delete_item)
-                db.session.commit()
-            else:
-                flash(f"{user_bidding_item.username} don't have enough money to purchase {accepting_item.name}")
+
+        current_user_id = current_user.id
+        accepting_bidding_offer(accept_item, accept_from_user, current_user_id)
+
         return redirect(url_for('main.auction_page'))
 
     if request.method == "GET":
         # items = db.session.query(Goods, Store).join(Store).all()
+        # TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
+        # TODO: Users that don't have a profile can't buy or auction, so if they try, they get a message to log in.
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
         try:
             #TODO: make this in to a function.
