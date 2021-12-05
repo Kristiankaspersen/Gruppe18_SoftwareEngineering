@@ -109,7 +109,6 @@ def accepting_bidding_offer(accept_item, accept_from_user, current_user_id):
             flash(f"{user_bidding_item.username} don't have enough money to purchase {accepting_item.name}")
 
     ctx.pop()
-<<<<<<< HEAD
 
 
 def delete_goods_from_store(user_id):
@@ -144,8 +143,6 @@ def show_users_from_db():
     user_query = User.query.filter(User.username.isnot("Admin"))
     ctx.pop()
     return user_query
-=======
-    return None
 
 def show_current_highest_bidding_offer_in_store(current_user_id):
 
@@ -163,6 +160,3 @@ def show_current_highest_bidding_offer_in_store(current_user_id):
 
         return bidding_items
 
-
-
->>>>>>> 2a7ff3a7d49e6b35d37354101741a57c1b165042

@@ -2,26 +2,19 @@ from flask import render_template, flash, redirect, url_for, request, current_ap
 from flask_login import login_user, logout_user, current_user
 from app_flask import db
 from app_flask.main import bp
-from app_flask.main.forms import AddGoodsToMarket,AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
+from app_flask.main.forms import AddGoodsToMarket, AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
+from app_flask.main.use_cases1 import buying_product, show_current_highest_bidding_offer_in_store, show_users_from_db, \
+    delete_user_from_platform, delete_goods_from_store, add_goods_item, add_auction_item, bidding_on_product, \
+    accepting_bidding_offer
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
-<<<<<<< HEAD:Gruppe18_pyApp/app_flask/main/routes.py
-<<<<<<< HEAD
-from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product, \
-    delete_goods_from_store, delete_user_from_platform, show_users_from_db
-=======
-from app_flask.main.use_cases import add_auction_item, add_goods_item, buying_product, bidding_on_product,\
-=======
-from app_flask.main.use_cases1 import add_auction_item, add_goods_item, buying_product, bidding_on_product,\
->>>>>>> 0015bb00eb25924f3641d74154dd0174a6f1c510:Gruppe18_pyApp/app_flask/main/routes1.py
-    accepting_bidding_offer, show_current_highest_bidding_offer_in_store
->>>>>>> 2a7ff3a7d49e6b35d37354101741a57c1b165042
 
 
 @bp.route("/")
 @bp.route("/home")
 def home_page():
     return render_template("index.html")
+
 
 @bp.route('/goods', methods=['GET', 'POST'])
 def add_goods():
@@ -69,12 +62,12 @@ def store_page():
         return redirect(url_for('main.store_page'))
 
     if request.method == "GET":
-
-        #TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
-        #TODO: Users that don't have a profile can't buy or auction, so if they try, they get a message to log in.
+        # TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
+        # TODO: Users that don't have a profile can't buy or auction, so if they try, they get a message to log in.
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
 
         return render_template("store.html", items=items, buy_form=buy_form)
+
 
 @bp.route("/auction", methods=["POST", "GET"])
 def auction_page():
@@ -117,10 +110,11 @@ def auction_page():
         except AttributeError:
             bidding_items = []
 
-        return render_template("auction.html", items=items, auction_form=auction_form, bidding_items=bidding_items, accept_form=accept_form)
+        return render_template("auction.html", items=items, auction_form=auction_form, bidding_items=bidding_items,
+                               accept_form=accept_form)
 
 
-#Kan nok slettes
+# Kan nok slettes
 @bp.route('/users', methods=['GET', 'POST'])
 def show_users():
     db_users = show_users_from_db()
@@ -133,8 +127,10 @@ def display_admin_panel():
     db_users = show_users_from_db()
     auction_form = AuctionGoodsForm()
     items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
-    auction_items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
-    return render_template('adminPanel.html', db_users=db_users, items=items, auction_items=auction_items, buy_form=buy_form, auction_form=auction_form)
+    auction_items = db.session.query(Goods, Store).filter(
+        and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
+    return render_template('adminPanel.html', db_users=db_users, items=items, auction_items=auction_items,
+                           buy_form=buy_form, auction_form=auction_form)
 
 
 @bp.route('/delete_user/<int:id>')
