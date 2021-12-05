@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user
 from app_flask import db
 from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket, AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
-from app_flask.main.use_cases1 import buying_product, show_current_highest_bidding_offer_in_store, show_users_from_db, \
+from app_flask.main.use_cases import buying_product, show_current_highest_bidding_offer_in_store, show_users_from_db, \
     delete_user_from_platform, delete_goods_from_store, add_goods_item, add_auction_item, bidding_on_product, \
     accepting_bidding_offer
 from app_flask.models import User, Goods, Store, Bidding

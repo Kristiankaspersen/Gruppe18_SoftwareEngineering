@@ -11,6 +11,9 @@ def client():
         with app.test_client() as client:
             yield client
 
+@pytest.fixture(scope='module')
+def context():
+    pass
 
 @pytest.fixture()
 def existing_user(client):
