@@ -25,6 +25,7 @@ def add_auction_item(name, description, price, product_number, store_owner):
     # here put the item they have put inside
     return new_goods
 
+
 def add_goods_item(name, description, price, product_number, store_owner):
     app = create_app()
     ctx = app.app_context()
@@ -44,6 +45,7 @@ def add_goods_item(name, description, price, product_number, store_owner):
     ctx.pop()
     return new_goods
 
+
 def buying_product(buy_item, bought_from_store, current_user_id):
     app = create_app()
     ctx = app.app_context()
@@ -62,6 +64,7 @@ def buying_product(buy_item, bought_from_store, current_user_id):
             flash(f"You don't have enough money to purchase {bought_item.name}")
 
     ctx.pop()
+
 
 def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id):
     app = create_app()
@@ -88,6 +91,7 @@ def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user
 
     ctx.pop()
 
+
 def accepting_bidding_offer(accept_item, accept_from_user, current_user_id):
     app = create_app()
     ctx = app.app_context()
@@ -100,7 +104,7 @@ def accepting_bidding_offer(accept_item, accept_from_user, current_user_id):
         if user_bidding_item.have_enough_cash(accepting_item):
             accepting_item.purchase(user_bidding_item, current_user)
             flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price}")
-            #Productnumber here?
+            # Productnumber here?
             delete_items = Bidding.query.filter_by(item_name=accept_item)
             for delete_item in delete_items:
                 db.session.delete(delete_item)
@@ -144,8 +148,8 @@ def show_users_from_db():
     ctx.pop()
     return user_query
 
-def show_current_highest_bidding_offer_in_store(current_user_id):
 
+def show_current_highest_bidding_offer_in_store(current_user_id):
     current_store = Store.query.filter_by(user_owner=current_user_id).first()
     if current_store is not None:
         bidding_items = Bidding.query. \
@@ -159,4 +163,3 @@ def show_current_highest_bidding_offer_in_store(current_user_id):
         bidding_items = []
 
         return bidding_items
-
