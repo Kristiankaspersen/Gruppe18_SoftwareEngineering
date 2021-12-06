@@ -85,18 +85,18 @@ def existing_item_in_auction(existing_store_user):
 
 @pytest.fixture()
 def login_default_user(client, existing_user):
-    client.post('/login',
+    response = client.post('/login',
                 data=dict(username='test_user', password="12345678"),
                 follow_redirects=True)
-    yield client
+    yield response
     client.get('/logout', follow_redirects=True)
 
 @pytest.fixture()
 def login_default_store(client, existing_store_user):
-    client.post('/login',
+    respone = client.post('/login',
                 data=dict(username='test_user_store', password="12345678"),
                 follow_redirects=True)
-    yield client
+    yield respone
     client.get('/logout', follow_redirects=True)
 
 @pytest.fixture

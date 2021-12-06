@@ -78,11 +78,11 @@ def test_auth_routes_register_store_same_email(client, login_default_user):
     pass
 
 
-def test_auth_routes_login_store(client, existing_store_user):
-    response = client.post('/login',
-                           data=dict(email='test_user_store@mail.com', password="12345678"),
-                           follow_redirects=True)
-    assert response.status_code == 200
+def test_auth_routes_login_store(existing_store_user, login_default_store):
+    # response = client.post('/login',
+    #                        data=dict(email='test_user_store@mail.com', password="12345678"),
+    #                        follow_redirects=True)
+    assert login_default_store.status_code == 200
     assert b'You are logged in as: {user_attempted.username}'
 
 
