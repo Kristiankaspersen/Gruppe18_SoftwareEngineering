@@ -92,10 +92,12 @@ def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user
         )
         db.session.add(new_bid)
         db.session.commit()
+        ctx.pop()
+        return True
     else:
-        flash("You have to bid more than that")
+        ctx.pop()
+        return False
 
-    ctx.pop()
 
 
 def accepting_bidding_offer(accept_item, accept_from_user, current_user_id):

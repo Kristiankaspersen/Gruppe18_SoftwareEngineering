@@ -99,7 +99,13 @@ def auction_page():
             user_name = current_user.username
             store_user_id = store_bidding_from.id
             offer = auction_form.offer.data
-            bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
+            bool_value = bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
+
+            if bool_value is True:
+                flash(f"You have bid on {item_name} for {offer} NOK")
+            else:
+                flash(f"You have to bid more than that {offer} NOK, at least 10 more NOK than current price")
+
 
         accept_item = request.form.get('accepting_item')
         accept_from_user = request.form.get('accepting_user')
