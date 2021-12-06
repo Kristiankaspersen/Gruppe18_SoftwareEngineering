@@ -4,7 +4,7 @@ from app_flask import db
 from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket, AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
 from app_flask.main.use_cases import buying_product, show_current_highest_bidding_offer_in_store, show_users_from_db, \
-    delete_user_from_platform, delete_goods_from_store, add_goods_item, add_auction_item, bidding_on_product, \
+    delete_user_from_platform, delete_goods_from_store, add_market_item, add_auction_item, bidding_on_product, \
     accepting_bidding_offer
 from app_flask.models import User, Goods, Store, Bidding
 from sqlalchemy.sql.expression import func, and_
@@ -22,17 +22,20 @@ def add_goods():
     form_market = AddGoodsToMarket()
 
     if request.method == "POST":
-        auction_value = request.form.get('auctionItem')
+
         name = form_auction.name.data
         description = form_auction.description.data
         price = form_auction.price.data
         product_number = form_auction.product_number.data
         store_owner = current_user.id
-
-        if auction_value == "ItemForAuction":
+        print(request.form.get('auctionItem'))
+        if request.form.get('auctionItem') is not None:
             add_auction_item(name, description, price, product_number, store_owner)
+            print("dog")
+            flash("(name of item) added to the auction market")
         else:
-            add_goods_item(name, description, price, product_number, store_owner)
+            add_market_item(name, description, price, product_number, store_owner)
+            flash("(name of item) added to the store market")
         return redirect(url_for('main.add_goods'))
 
     if request.method == "GET":
@@ -57,7 +60,13 @@ def store_page():
         buy_item = request.form.get('bought_item')
         bought_from_store = request.form.get('store_owner')
 
-        buying_product(buy_item, bought_from_store, current_user.id)
+        bought_item = Goods.query.filter_by(name=buy_item).first()
+        bool_value = buying_product(buy_item, bought_from_store, current_user.id)
+        if bool_value is True:
+            flash(f"You have bought {bought_item.name} for {bought_item.price}")
+        else:
+            flash(f"You don't have enough money to purchase {bought_item.name}")
+
 
         return redirect(url_for('main.store_page'))
 
