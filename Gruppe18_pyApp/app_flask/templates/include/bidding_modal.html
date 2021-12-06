@@ -27,7 +27,7 @@
             By clicking Sell, you will put this back on market.
           </h6>
           <input id="accepting_user" name="accepting_user" type="hidden" value="{{ bidding_item.user_id }}">
-          <input id="accepting_item" name="accepting_item" type="hidden" value="{{ bidding_item.item_name }}">
+          <input id="accepting_item" name="accepting_item" type="hidden" value="{{ bidding_item.item_id }}">
           {{ accept_form.submit(class="btn btn-outline-primary btn-block") }}
         </form>
       </div>

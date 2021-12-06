@@ -104,18 +104,12 @@ def test_main_use_cases_bidding_on_product_not_enough_money(existing_user, exist
                                     store_user_id)
     assert bool_value == False
 
-
-
-
-
-    # Fixtures jeg trenger. Item i auksjon, butikk det kjøpes fra,
-
-    #Lag en fixture for Bidding item. Bid_item, bid_from_store
-
-
-    pass
+    # Tanker, vil jeg ha en product_number også i bidding item.
 
 def test_main_use_cases_accepting_bidding_offer():
+    # Data: accept_item_id, current_user_id
+
+    # Tanker, har item_id, den er unik, den samme tingen vil ha samme id.
     pass
 
 def test_main_use_cases_show_current_highest_bidding_offer_in_store():

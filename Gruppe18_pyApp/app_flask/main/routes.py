@@ -103,7 +103,9 @@ def auction_page():
         bid_from_store = request.form.get('store_owner1')
         user_id = current_user.id
 
-        item_bidded_on = Goods.query.filter_by(name=bid_item_product_number).first()
+        print(bid_item_product_number)
+        print(bid_from_store)
+        item_bidded_on = Goods.query.filter_by(product_number=bid_item_product_number).first()
         store_bidding_from = User.query.filter_by(id=bid_from_store).first()
         if (item_bidded_on is not None) and (store_bidding_from is not None):
             item_id = item_bidded_on.id
@@ -112,17 +114,21 @@ def auction_page():
             user_name = current_user.username
             store_user_id = store_bidding_from.id
             offer = auction_form.offer.data
-            bool_value = bidding_on_product(bid_item_product_number, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
+            bool_value = bidding_on_product(bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id)
 
             if bool_value is True:
                 flash(f"You have bid on {item_name} for {offer} NOK")
             else:
                 flash(f"You have to bid more than that {offer} NOK, at least 10 more NOK than current price")
+        else:
+            if request.form.get('accepting_item') is None:
+                flash("Ups, something went wrong with the bid, either the store don't exist, or the item is no longer there")
 
-        accept_item = request.form.get('accepting_item')
+
+        accept_item_id = request.form.get('accepting_item')
         accept_from_user = request.form.get('accepting_user')
 
-        accepting_bidding_offer(accept_item, accept_from_user, user_id)
+        accepting_bidding_offer(accept_item_id, accept_from_user, user_id)
 
         return redirect(url_for('main.auction_page'))
 
