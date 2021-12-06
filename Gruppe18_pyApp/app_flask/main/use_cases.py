@@ -15,7 +15,7 @@ def add_auction_item(name, description, price, product_number, store_owner):
         price=price,
         product_number=product_number,
         store_owner=store_owner,
-        goods_type=1
+        goods_type=1 #Auction goods type 1
     )
     db.session.add(new_goods)
     db.session.commit()
@@ -37,7 +37,7 @@ def add_market_item(name, description, price, product_number, store_owner):
         price=price,
         product_number=product_number,
         store_owner=store_owner,
-        goods_type=0
+        goods_type=0 #Market goods type 0
     )
     db.session.add(new_goods)
     db.session.commit()

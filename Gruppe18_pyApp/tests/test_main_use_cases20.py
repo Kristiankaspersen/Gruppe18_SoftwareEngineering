@@ -1,4 +1,4 @@
-from app_flask.main.use_cases import add_auction_item, add_market_item
+from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product
 from app_flask.models import db, User, Goods, Store
 from app_flask import create_app
 
@@ -44,16 +44,22 @@ def test_main_use_cases_add_goods_item(client, existing_store_user):
 
     pass
 
-def test_main_use_cases_buying_product_with_enough_money():
-    data = {
-        "name": "Test_Samsung",
-        "description": "En samsung 11 som er brukt i 2 år",
-        "price": "1500",
-        "product_number": "000000",
-        "auctionItem": "ItemForAuction",
-        "submit": "Submit+ad",
-    }
+def test_main_use_cases_buying_product_with_enough_money(client, existing_store_user, existing_user):
+    # need test item. This item must belong to the test user.  (make a fixture)
+    # need store to buy from
+    # need a test user.
+
+
+
+    assert buying_product() == True
+
+
+
+
+
     pass
+
+
 
 def test_main_use_cases_buying_product_not_enough_money():
     pass
