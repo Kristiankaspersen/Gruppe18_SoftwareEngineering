@@ -1,5 +1,6 @@
 from app_flask.models import db, User, Goods, Store
 from app_flask import create_app
+
 app = create_app()
 ctx = app.app_context()
 ctx.push()
@@ -9,10 +10,10 @@ ctx.push()
 db.drop_all()
 db.create_all()
 
-#Makes the DB again and restores it with information in the tables.
+# Makes the DB again and restores it with information in the tables.
 
 
-#To make this user, you need the server up running, because it sends a post request with an attampted user creation.
+# To make this user, you need the server up running, because it sends a post request with an attampted user creation.
 
 user_exist = User.query.filter_by(username="Geir").first()
 if user_exist is None:
@@ -25,7 +26,6 @@ if user_exist is None:
 
     db.session.add(user)
     db.session.commit()
-
 
 user_exist = User.query.filter_by(username="Tor").first()
 if user_exist is None:
@@ -52,6 +52,18 @@ if user_exist is None:
     db.session.commit()
 
 
+user_exist = User.query.filter_by(username="Per Ove").first()
+if user_exist is None:
+    user = User(
+        username="Per Ove",
+        email="per_ove@email.com",
+        password="12345678",
+        profile_type=0
+    )
+    db.session.add(user)
+    db.session.commit()
+
+
 # Creating a admin user
 user_exist = User.query.filter_by(username="Admin").first()
 if user_exist is None:
@@ -64,7 +76,6 @@ if user_exist is None:
 
     db.session.add(user)
     db.session.commit()
-
 
 # Makes items directly in the DB. Uses username Geir as owner of the items.
 store_exist = Store.query.filter_by(store_name="Store_AS").first()
@@ -83,7 +94,6 @@ if store_exist is None:
     db.session.add(store)
     db.session.commit()
 
-
 store_exist = Store.query.filter_by(store_name="Old_AS").first()
 if store_exist is None:
     store = Store(
@@ -95,7 +105,7 @@ if store_exist is None:
         store_email="Old_AS@gmail.com",
         store_phone=87678767
     )
-    #iphone.owner = User.query.filter_by(username="Geir").first().id
+    # iphone.owner = User.query.filter_by(username="Geir").first().id
     store.user_owner = User.query.filter_by(username="Bob").first().id
     db.session.add(store)
     db.session.commit()
@@ -139,10 +149,10 @@ if item_exist is None:
     db.session.add(radio)
     db.session.commit()
 
-book_exist = Goods.query.filter_by(name="book").first()
+book_exist = Goods.query.filter_by(name="Book").first()
 if book_exist is None:
     book = Goods(
-        name='book',
+        name='Book',
         description='description',
         product_number='123459',
         price=300,
@@ -165,6 +175,96 @@ if item_exist is None:
     db.session.add(chair)
     db.session.commit()
 
+item_exist = Goods.query.filter_by(name="Teapot").first()
+if item_exist is None:
+    teapot = Goods(
+        name='Teapot',
+        description='White old teapot',
+        product_number='534569',
+        price=75,
+        goods_type=1
+    )
+    teapot.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    db.session.add(teapot)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Vase").first()
+if item_exist is None:
+    vase = Goods(
+        name='Vase',
+        description='Very fine',
+        product_number='534169',
+        price=120,
+        goods_type=0
+    )
+    vase.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    db.session.add(vase)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Doll").first()
+if item_exist is None:
+    doll = Goods(
+        name='Doll',
+        description='Kinda creepy',
+        product_number='534129',
+        price=230,
+        goods_type=0
+    )
+    doll.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    db.session.add(doll)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Jewelry").first()
+if item_exist is None:
+    jewelry = Goods(
+        name='Jewelry',
+        description='With diamonds',
+        product_number='534139',
+        price=10000,
+        goods_type=1
+    )
+    jewelry.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    db.session.add(jewelry)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Golden ring").first()
+if item_exist is None:
+    ring = Goods(
+        name='Golden ring',
+        description='Shiny nice ring',
+        product_number='534149',
+        price=5000,
+        goods_type=0
+    )
+    ring.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    db.session.add(ring)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Necklace").first()
+if item_exist is None:
+    necklace = Goods(
+        name='Necklace',
+        description='Owned by a famous singer',
+        product_number='534159',
+        price=999,
+        goods_type=0
+    )
+    necklace.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    db.session.add(necklace)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Bronze necklace").first()
+if item_exist is None:
+    bronze_necklace = Goods(
+        name='Bronze necklace',
+        description='Found in the dirt',
+        product_number='534179',
+        price=145,
+        goods_type=0
+    )
+    bronze_necklace.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    db.session.add(bronze_necklace)
+    db.session.commit()
 
 print(User.query.filter_by(username="Geir").first())
 print(User.query.filter_by(username="Tor").first())

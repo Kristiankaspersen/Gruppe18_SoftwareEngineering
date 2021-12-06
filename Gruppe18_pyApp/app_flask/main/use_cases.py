@@ -36,6 +36,7 @@ def add_market_item(name, description, price, product_number, store_owner):
         description=description,
         price=price,
         product_number=product_number,
+        # user_owner?
         store_owner=store_owner,
         goods_type=0
     )
