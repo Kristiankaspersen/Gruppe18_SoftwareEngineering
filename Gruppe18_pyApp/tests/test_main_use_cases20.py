@@ -10,10 +10,11 @@ def test_main_use_cases_add_auction_item(client, existing_store_user):
     description = "En samsung 11"
     price = 1500
     product_number = "000000"
-    store_owner = existing_store_user.id
+    store_user_owner = existing_store_user.id
 
-    add_auction_item(name, description, price, product_number, store_owner)
+    add_market_item(name, description, price, product_number, store_user_owner)
     auction_item = Goods.query.filter_by(name="Test_samsung").first()
+    store_owner = Store.query.filter_by(id=store_user_owner).first().id
     assert auction_item is not None
     assert auction_item.goods_type == 1
     assert auction_item.name == "Test_samsung"
@@ -28,10 +29,13 @@ def test_main_use_cases_add_goods_item(client, existing_store_user):
     description = "En samsung 11"
     price = 1500
     product_number = "000000"
-    store_owner = existing_store_user.id
+    store_user_owner = existing_store_user.id
 
-    add_market_item(name, description, price, product_number, store_owner)
+
+
+    add_market_item(name, description, price, product_number, store_user_owner)
     auction_item = Goods.query.filter_by(name="Test_samsung").first()
+    store_owner = Store.query.filter_by(id=store_user_owner).first().id
     print(auction_item.goods_type)
     assert auction_item is not None
     assert auction_item.goods_type == 0

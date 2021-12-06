@@ -5,10 +5,11 @@ from app_flask import create_app
 from sqlalchemy.sql.expression import func, and_
 
 
-def add_auction_item(name, description, price, product_number, store_owner):
+def add_auction_item(name, description, price, product_number, store_user_owner):
     app = create_app()
     ctx = app.app_context()
     ctx.push()
+    store_owner = Store.query.filter_by(user_owner=store_user_owner).first().id
     new_goods = Goods(
         name=name,
         description=description,
@@ -20,7 +21,6 @@ def add_auction_item(name, description, price, product_number, store_owner):
     db.session.add(new_goods)
     db.session.commit()
     new_goods = Goods.query.filter_by(product_number=product_number).first()
-    print(new_goods.goods_type)
 
     ctx.pop()
     # here put the item they have put inside
@@ -31,6 +31,7 @@ def add_market_item(name, description, price, product_number, store_owner):
     app = create_app()
     ctx = app.app_context()
     ctx.push()
+    store_owner = Store.query.filter_by(user_owner=store_owner).first().id
     new_goods = Goods(
         name=name,
         description=description,
@@ -43,7 +44,6 @@ def add_market_item(name, description, price, product_number, store_owner):
     db.session.add(new_goods)
     db.session.commit()
     new_goods = Goods.query.filter_by(product_number=product_number).first()
-    print(new_goods.goods_type)
     # here put the item they have put inside
     ctx.pop()
     return new_goods

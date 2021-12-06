@@ -45,7 +45,7 @@ class User(db.Model, UserMixin):
 class Goods(db.Model):
     # __bind_key__ = 'goods'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), unique=True, nullable=False)
+    name = db.Column(db.String(30), nullable=False)
     description = db.Column(db.String(70), unique=False, nullable=False)
     price = db.Column(db.Integer, unique=False, nullable=False)
     product_number = db.Column(db.String(length=6), nullable=False, unique=True)
