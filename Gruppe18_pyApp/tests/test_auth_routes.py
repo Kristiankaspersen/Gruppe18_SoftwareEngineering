@@ -82,8 +82,9 @@ def test_auth_routes_register_store(client, login_default_store):
     assert b'You have now registered a store'
     assert b'Name of the store'
     assert login_default_store.status_code == 200
-    assert login_default_store is not None
-    assert b'Not registered store'
+
+    """assert login_default_store is not None
+    assert b'Not registered store'"""
 
 #kinda confused shoudlnt login be a get
 
