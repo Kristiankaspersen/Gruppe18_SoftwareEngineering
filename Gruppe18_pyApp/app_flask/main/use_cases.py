@@ -48,7 +48,7 @@ def add_market_item(name, description, price, product_number, store_owner):
     return new_goods
 
 
-def buying_product(buy_item, bought_from_store, current_user_id):
+def buying_product(buy_item_product_number, bought_from_store, current_user_id):
     app = create_app()
     ctx = app.app_context()
     ctx.push()
@@ -56,7 +56,7 @@ def buying_product(buy_item, bought_from_store, current_user_id):
     current_user = User.query.filter_by(id=current_user_id).first()
 
     # Change this to product_number:
-    bought_item = Goods.query.filter_by(name=buy_item).first()
+    bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
     store_owner_item = User.query.filter_by(id=bought_from_store).first()
     if (bought_item is not None) and (store_owner_item is not None):
         if current_user.have_enough_cash(bought_item):

@@ -57,11 +57,11 @@ def store_page():
     buy_form = BuyGoodsForm()
 
     if request.method == "POST":
-        buy_item = request.form.get('bought_item')
+        buy_item_product_number = request.form.get('bought_item')
         bought_from_store = request.form.get('store_owner')
 
-        bought_item = Goods.query.filter_by(name=buy_item).first()
-        bool_value = buying_product(buy_item, bought_from_store, current_user.id)
+        bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
+        bool_value = buying_product(buy_item_product_number, bought_from_store, current_user.id)
         if bool_value is True:
             flash(f"You have bought {bought_item.name} for {bought_item.price}")
         else:
