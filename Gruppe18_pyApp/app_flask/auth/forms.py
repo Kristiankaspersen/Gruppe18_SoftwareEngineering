@@ -27,6 +27,7 @@ class RegisterStoreForm(FlaskForm):
 
     def validate_email(self, check_email):
         email = User.query.filter_by(email=check_email.data).first()
+
         if email is not None:
             raise ValidationError('Email is already in use! Use another email')
 
