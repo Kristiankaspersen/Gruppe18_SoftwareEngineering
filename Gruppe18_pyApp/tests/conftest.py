@@ -137,5 +137,8 @@ def add_goods_item_function(client, existing_store_user):
     db.session.delete(auction_item)
     db.session.commit()
 
+pytest.fixture()
+def delete_test_bidding_item():
+    pass
 
 

@@ -77,9 +77,21 @@ def test_main_use_cases_buying_product_not_enough_money(client, existing_store_u
 
 
 def test_main_use_cases_bidding_on_product(existing_user, existing_store_user, existing_item_in_auction):
-    # data bid_item, offer, item_id, item_name, user_id, user_name, store_user_id
+    # data bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id
 
-    bid_item = existing_item_in_auction.product_number
+
+    bid_item_product_number = existing_item_in_auction.product_number
+    offer = 811
+    item_id = existing_item_in_auction.id
+    item_name = existing_item_in_auction.name
+    user_id = existing_user.id
+    user_name = existing_user.username
+    store_user_id = Store.query.filter_by(user_owner=existing_store_user.id).first().id
+
+    bool_value = bidding_on_product(bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id)
+    assert bool_value == True
+
+
 
 
 
