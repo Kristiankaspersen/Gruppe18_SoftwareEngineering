@@ -1,4 +1,5 @@
-from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product, bidding_on_product, accepting_bidding_offer
+from app_flask.main.use_cases import add_auction_item, add_market_item, \
+    buying_product, bidding_on_product, accepting_bidding_offer, show_current_highest_bidding_offer_in_store
 from app_flask.models import db, User, Goods, Store, Bidding
 from app_flask import create_app
 
@@ -106,7 +107,7 @@ def test_main_use_cases_bidding_on_product_not_enough_money(existing_user, exist
 
     # Tanker, vil jeg ha en product_number også i bidding item.
 
-def test_main_use_cases_accepting_bidding_offer_bidder_have_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
+def test_main_use_cases_accepting_bidding_offer_have_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
 
     accept_item_id = existing_item_in_auction.id
     accept_from_user_id = existing_user.id
@@ -116,7 +117,7 @@ def test_main_use_cases_accepting_bidding_offer_bidder_have_enough_cash(existing
 
     assert bool_value is True
 
-def test_main_use_cases_accepting_bidding_offer_bidder_have_not_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
+def test_main_use_cases_accepting_bidding_offer_have_not_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
 
     accept_item_id = existing_item_in_auction.id
     accept_from_user_id = existing_user.id
@@ -127,7 +128,7 @@ def test_main_use_cases_accepting_bidding_offer_bidder_have_not_enough_cash(exis
 
     assert bool_value is False
 
-def test_main_use_cases_accepting_bidding_offer_bidder_have_enough_cash_and_delete_item_from_Bidding_table(existing_user,existing_store_user,existing_item_in_auction, bidding_item):
+def test_main_use_cases_accepting_bidding_offer_have_enough_cash_and_delete_item_from_Bidding_table(existing_user,existing_store_user,existing_item_in_auction, bidding_item):
 
     accept_item_id = existing_item_in_auction.id
     accept_from_user_id = existing_user.id
@@ -140,6 +141,22 @@ def test_main_use_cases_accepting_bidding_offer_bidder_have_enough_cash_and_dele
 
 
 
-def test_main_use_cases_show_current_highest_bidding_offer_in_store():
-    pass
+def test_main_use_cases_show_current_highest_bidding_offer_in_store_with_store_user(existing_store_user, bidding_item):
+    current_user_id = existing_store_user.id
+
+    bidding_items = show_current_highest_bidding_offer_in_store(current_user_id)
+
+    assert bidding_items is not None
+    assert isinstance(bidding_item, Bidding)
+
+
+def test_main_use_cases_show_current_highest_bidding_offer_in_store_with_normal_user(existing_user, bidding_item):
+    current_user_id = existing_user.id
+
+    bidding_items = show_current_highest_bidding_offer_in_store(current_user_id)
+
+    assert isinstance(bidding_items, list)
+    assert len(bidding_items) == 0
+
+
 

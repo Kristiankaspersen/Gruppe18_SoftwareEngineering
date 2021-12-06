@@ -114,9 +114,9 @@ def auction_page():
             user_name = current_user.username
             store_user_id = store_bidding_from.id
             offer = auction_form.offer.data
-            bool_value = bidding_on_product(bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id)
+            bool_value_bidding_on_product = bidding_on_product(bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id)
 
-            if bool_value is True:
+            if bool_value_bidding_on_product is True:
                 flash(f"You have bid on {item_name} for {offer} NOK")
             else:
                 flash(f"You have to bid more than that {offer} NOK, at least 10 more NOK than current price")
@@ -128,14 +128,14 @@ def auction_page():
         accept_item_id = request.form.get('accepting_item')
         accept_from_user_id = request.form.get('accepting_user')
 
-        bool_value = accepting_bidding_offer(accept_item_id, accept_from_user_id, user_id)
+        bool_value_accepting_offer = accepting_bidding_offer(accept_item_id, accept_from_user_id, user_id)
         accepting_item = Goods.query.filter_by(id=accept_item_id).first()
         user_bidding_on_item = User.query.filter_by(id=accept_from_user_id).first()
-        if bool_value is True:
-            flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price}")
-        else:
-            flash("User don't have enough money")
-            flash(f"{user_bidding_on_item.username} don't have enough money to purchase {accepting_item.name}")
+        if request.form.get('accepting_user') is not None:
+            if bool_value_accepting_offer is True:
+                flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price}")
+            else:
+                flash(f"{user_bidding_on_item.username} don't have enough money to purchase {accepting_item.name}")
 
         return redirect(url_for('main.auction_page'))
 
@@ -143,9 +143,6 @@ def auction_page():
         for err_message in auction_form.errors.values():
             flash(f"Error bidding on product: {err_message}")
 
-    if accept_form.errors != {}:  # This happens if the users do somthing wrong when accepting offer
-        for err_message in auction_form.errors.values():
-            flash(f"Error accepting offer: {err_message}")
 
     if request.method == "GET":
         # items = db.session.query(Goods, Store).join(Store).all()
@@ -155,6 +152,7 @@ def auction_page():
         try:
             current_user_id = current_user.id
             bidding_items = show_current_highest_bidding_offer_in_store(current_user_id)
+            print(isinstance(bidding_items, Bidding))
         except AttributeError:
             bidding_items = []
 

@@ -167,5 +167,6 @@ def show_current_highest_bidding_offer_in_store(current_user_id):
 
     else:
         bidding_items = []
+        print(isinstance(bidding_items, list))
 
         return bidding_items

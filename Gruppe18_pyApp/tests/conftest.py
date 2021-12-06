@@ -153,6 +153,7 @@ def bidding_item(existing_user, existing_store_user, existing_item_in_auction):
     )
     db.session.add(new_bid)
     db.session.commit()
+    new_bid = Bidding.query.filter_by(item_id=existing_item_in_auction.id).first()
     yield new_bid
     db.session.delete(new_bid)
     db.session.commit()
