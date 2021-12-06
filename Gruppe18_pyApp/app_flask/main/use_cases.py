@@ -15,18 +15,19 @@ def add_auction_item(name, description, price, product_number, store_owner):
         price=price,
         product_number=product_number,
         store_owner=store_owner,
-        goods_type=0
+        goods_type=1
     )
     db.session.add(new_goods)
     db.session.commit()
+    new_goods = Goods.query.filter_by(product_number=product_number).first()
+    print(new_goods.goods_type)
 
-    flash("Item added to the auction market")
     ctx.pop()
     # here put the item they have put inside
     return new_goods
 
 
-def add_goods_item(name, description, price, product_number, store_owner):
+def add_market_item(name, description, price, product_number, store_owner):
     app = create_app()
     ctx = app.app_context()
     ctx.push()
@@ -36,12 +37,13 @@ def add_goods_item(name, description, price, product_number, store_owner):
         price=price,
         product_number=product_number,
         store_owner=store_owner,
-        goods_type=1
+        goods_type=0
     )
     db.session.add(new_goods)
     db.session.commit()
+    new_goods = Goods.query.filter_by(product_number=product_number).first()
+    print(new_goods.goods_type)
     # here put the item they have put inside
-    flash("Item added to the auction market")
     ctx.pop()
     return new_goods
 
@@ -59,9 +61,10 @@ def buying_product(buy_item, bought_from_store, current_user_id):
     if (bought_item is not None) and (store_owner_item is not None):
         if current_user.have_enough_cash(bought_item):
             bought_item.purchase(current_user, store_owner_item)
-            flash(f"You have bought {bought_item.name} for {bought_item.price}")
+
+            return True
         else:
-            flash(f"You don't have enough money to purchase {bought_item.name}")
+            return False
 
     ctx.pop()
 
