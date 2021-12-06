@@ -15,8 +15,9 @@
                     <th scope="col">Store owner</th>
                     <th scope="col">Product number</th>
                     <th scope="col">Price</th>
-                    {% if current_user.is_authenticated %}
                     <th scope="col">Options</th>
+                    {% if current_user.is_authenticated %}
+                    <th scope="col">Auction</th>
                     {% else %}
                     {% endif %}
                 </tr>
@@ -32,15 +33,12 @@
                     <td>{{item.product_number}}</td>
                     <td>{{item.price}} NOK</td>
                     {% if store.user_owner==current_user.id %}
-                    <td>
-                        <button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button>
-                    </td>
+                    <td><button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button></td>
                     {% elif current_user.is_authenticated %}
-                    <td>
-                        <button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button>
-                        <button class="btn btn-outline btn-primary" data-toggle="modal" data-target="#Modal-AuctionConfirm-{{ item.id }}" >Auction</button>
-                    </td>
+                    <td><button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button></td>
+                    <td><button class="btn btn-outline btn-primary" data-toggle="modal" data-target="#Modal-AuctionConfirm-{{ item.id }}">Bid on auction</button></td>
                     {% else %}
+                    <td><button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button></td>
                     {% endif %}
                 </tr>
                 {% endfor %}
