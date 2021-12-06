@@ -106,16 +106,16 @@ def accepting_bidding_offer(accept_item_id, accept_from_user_id, current_user_st
     if (accepting_item is not None) and (user_bidding_on_item is not None):
         if user_bidding_on_item.have_enough_cash(accepting_item):
             accepting_item.purchase(user_bidding_on_item, current_user_store)
-            flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price}")
-            # Productnumber here?
             delete_items = Bidding.query.filter_by(item_id=accept_item_id)
             for delete_item in delete_items:
                 db.session.delete(delete_item)
             db.session.commit()
+            ctx.pop()
             return True
         else:
+            ctx.pop()
             return False
-            #flash(f"{user_bidding_on_item.username} don't have enough money to purchase {accepting_item.name}")
+
 
     ctx.pop()
 
@@ -157,10 +157,6 @@ def show_users_from_db():
 def show_current_highest_bidding_offer_in_store(current_user_id):
     current_store = Store.query.filter_by(user_owner=current_user_id).first()
     if current_store is not None:
-        # bidding_items = Bidding.query. \
-        #     with_entities(Bidding.item_name, Bidding.offer, Bidding.user_name, Bidding.user_id, Bidding.id,
-        #                   func.max(Bidding.offer)) \
-        #     .group_by(Bidding.item_name).filter_by(store_user_id=current_user_id)
 
         bidding_items = Bidding.query. \
             with_entities(Bidding.item_id, Bidding.item_name, Bidding.offer, Bidding.user_name, Bidding.user_id, Bidding.id,

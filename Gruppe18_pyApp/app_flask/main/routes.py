@@ -126,17 +126,24 @@ def auction_page():
 
 
         accept_item_id = request.form.get('accepting_item')
-        accept_from_user = request.form.get('accepting_user')
+        accept_from_user_id = request.form.get('accepting_user')
 
-        accepting_bidding_offer(accept_item_id, accept_from_user, user_id)
+        bool_value = accepting_bidding_offer(accept_item_id, accept_from_user_id, user_id)
+        accepting_item = Goods.query.filter_by(id=accept_item_id).first()
+        user_bidding_on_item = User.query.filter_by(id=accept_from_user_id).first()
+        if bool_value is True:
+            flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price}")
+        else:
+            flash("User don't have enough money")
+            flash(f"{user_bidding_on_item.username} don't have enough money to purchase {accepting_item.name}")
 
         return redirect(url_for('main.auction_page'))
 
-    if auction_form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+    if auction_form.errors != {}:  # This happens if the users do somthing wrong when bidding on product
         for err_message in auction_form.errors.values():
             flash(f"Error bidding on product: {err_message}")
 
-    if accept_form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+    if accept_form.errors != {}:  # This happens if the users do somthing wrong when accepting offer
         for err_message in auction_form.errors.values():
             flash(f"Error accepting offer: {err_message}")
 
