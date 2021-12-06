@@ -77,7 +77,7 @@ def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user
     ctx = app.app_context()
     ctx.push()
 
-    item_bidded_on = Goods.query.filter_by(name=bid_item).first()
+    item_bidded_on = Goods.query.filter_by(product_number=bid_item).first()
     store_bidding_from = User.query.filter_by(id=bid_from_store).first()
 
     if offer >= item_bidded_on.price + 10:  # current_price:
@@ -97,8 +97,6 @@ def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user
     else:
         ctx.pop()
         return False
-
-
 
 def accepting_bidding_offer(accept_item, accept_from_user, current_user_id):
     app = create_app()

@@ -56,7 +56,7 @@
             By clicking bid, you will bid for this item.
           </h6>
           <input id="store_owner1" name="store_owner1" type="hidden" value="{{ store.user_owner }}">
-          <input id="bid_item" name="bid_item" type="hidden" value="{{ item.name }}">
+          <input id="bid_item" name="bid_item" type="hidden" value="{{ item.product_number }}">
           {{ auction_form.offer(class="form-control", placeholder="place your offer") }}
           {{ auction_form.submit(class="btn btn-outline-primary btn-block") }}
         </form>

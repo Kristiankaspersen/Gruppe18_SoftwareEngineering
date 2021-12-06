@@ -76,8 +76,11 @@ def test_main_use_cases_buying_product_not_enough_money(client, existing_store_u
     assert bool_value == False
 
 
-def test_main_use_cases_bidding_on_product():
+def test_main_use_cases_bidding_on_product(existing_user, existing_store_user, existing_item_in_auction):
     # data bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id
+
+    bid_item = existing_item_in_auction.product_number
+
 
     # Fixtures jeg trenger. Item i auksjon, butikk det kjøpes fra,
 
