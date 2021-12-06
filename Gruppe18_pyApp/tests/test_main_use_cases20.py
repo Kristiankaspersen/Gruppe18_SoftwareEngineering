@@ -54,7 +54,14 @@ def test_main_use_cases_buying_product_with_enough_money(client, existing_store_
 
 
 def test_main_use_cases_buying_product_not_enough_money(client, existing_store_user, existing_user, existing_item_in_market):
-    pass
+    current_user_id = existing_user.id
+    buy_item_product_number = existing_item_in_market.product_number
+    bought_from_store = existing_store_user.id
+
+    existing_user.cash = 0
+    bool_value = buying_product(buy_item_product_number, bought_from_store, current_user_id)
+    assert bool_value == False
+
 
 def test_main_use_cases_bidding_on_product():
     pass
