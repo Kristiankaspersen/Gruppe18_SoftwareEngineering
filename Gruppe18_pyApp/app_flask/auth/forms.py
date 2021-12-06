@@ -18,13 +18,18 @@ class RegisterUserForm(FlaskForm):
 
     username = StringField(label="Choose user name", validators=[Length(min=2, max=40), DataRequired()])
     email = StringField(label="Write your E-mail", validators=[Email(), DataRequired()])
-    profile_type = BooleanField(label="Would you like to be, auctioneers?")
     password1 = PasswordField(label="Write password", validators=[Length(min=8), DataRequired()])
     password2 = PasswordField(label="Confirm password", validators=[EqualTo("password1"), DataRequired()])
     submit = SubmitField(label="Create account")
 
 class RegisterStoreForm(FlaskForm):
     #TODO: More validations of email, and check with user.
+
+    def validate_email(self, check_email):
+        email = User.query.filter_by(email=check_email.data).first()
+        if email is not None:
+            raise ValidationError('Email is already in use! Use another email')
+
     store_name = StringField(label="Chose name of store", validators=[Length(min=2, max=40), DataRequired()])
     street_number = IntegerField(label="Street number", validators=[DataRequired()])
     street_address = StringField(label="Address", validators=[DataRequired()])
