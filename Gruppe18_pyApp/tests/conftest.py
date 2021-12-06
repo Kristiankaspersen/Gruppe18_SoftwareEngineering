@@ -108,17 +108,17 @@ def login_default_user(client, existing_user):
 
 @pytest.fixture()
 def login_default_store(client, existing_store_user):
-    respone = client.post('/login',
+    response = client.post('/login',
                 data=dict(username='test_user_store', password="12345678"),
                 follow_redirects=True)
-    yield respone
+    yield response
     client.get('/logout', follow_redirects=True)
 
 @pytest.fixture
 def login_admin_user(client):
-    client.post('/login',
+    response = client.post('/login',
                 data=dict(username='Admin', password="12345678"),
                 follow_redirects=True)
-    yield client
+    yield response
     client.get('/logout', follow_redirects=True)
 
