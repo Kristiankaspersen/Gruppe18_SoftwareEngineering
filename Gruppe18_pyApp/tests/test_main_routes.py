@@ -4,13 +4,16 @@ from app_flask.main.use_cases import delete_goods_from_store
 from app_flask.models import Goods, db
 
 
-def test_login_store():
-    pass
+
+def test_main_routes_home_page(client):
+    response = client.get('/homepage')
+    response.status_code == 200
+    response = client.get('/')
+    response.status_code == 200
+    assert b'This is hompage'
 
 
-def test_main_routes_home_page():
-    pass
-
+# remember this both post and get met
 
 def test_main_routes_add_goods_add_auction_product(client, login_default_user):
     pass
