@@ -1,4 +1,4 @@
-from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product, bidding_on_product
+from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product, bidding_on_product, accepting_bidding_offer
 from app_flask.models import db, User, Goods, Store, Bidding
 from app_flask import create_app
 
@@ -106,11 +106,40 @@ def test_main_use_cases_bidding_on_product_not_enough_money(existing_user, exist
 
     # Tanker, vil jeg ha en product_number også i bidding item.
 
-def test_main_use_cases_accepting_bidding_offer():
-    # Data: accept_item_id, current_user_id
+def test_main_use_cases_accepting_bidding_offer_bidder_have_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
 
-    # Tanker, har item_id, den er unik, den samme tingen vil ha samme id.
-    pass
+    accept_item_id = existing_item_in_auction.id
+    accept_from_user_id = existing_user.id
+    current_user_store_id = existing_store_user.id
+
+    bool_value = accepting_bidding_offer(accept_item_id, accept_from_user_id, current_user_store_id)
+
+    assert bool_value is True
+
+def test_main_use_cases_accepting_bidding_offer_bidder_have_not_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
+
+    accept_item_id = existing_item_in_auction.id
+    accept_from_user_id = existing_user.id
+    current_user_store_id = existing_store_user.id
+    existing_user.cash = 0
+
+    bool_value = accepting_bidding_offer(accept_item_id, accept_from_user_id, current_user_store_id)
+
+    assert bool_value is False
+
+def test_main_use_cases_accepting_bidding_offer_bidder_have_not_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
+
+    accept_item_id = existing_item_in_auction.id
+    accept_from_user_id = existing_user.id
+    current_user_store_id = existing_store_user.id
+    existing_user.cash = 0
+
+    bool_value = accepting_bidding_offer(accept_item_id, accept_from_user_id, current_user_store_id)
+
+
+    assert bool_value is True
+
 
 def test_main_use_cases_show_current_highest_bidding_offer_in_store():
     pass
+
