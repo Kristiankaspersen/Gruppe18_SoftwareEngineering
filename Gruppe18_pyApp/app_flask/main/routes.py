@@ -60,9 +60,12 @@ def store_page():
         buy_item_product_number = request.form.get('bought_item')
         bought_from_store = request.form.get('store_owner')
 
-        bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
+
         bool_value = buying_product(buy_item_product_number, bought_from_store, current_user.id)
+        bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
         if bool_value is True:
+            bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
+
             flash(f"You have bought {bought_item.name} for {bought_item.price}")
         else:
             flash(f"You don't have enough money to purchase {bought_item.name}")
