@@ -1,7 +1,7 @@
 import pytest
 from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product
 from app_flask import create_app
-from app_flask.models import User, Store, db, Goods
+from app_flask.models import User, Store, db, Goods, Bidding
 import requests
 
 @pytest.fixture(scope='module')
@@ -137,8 +137,24 @@ def add_goods_item_function(client, existing_store_user):
     db.session.delete(auction_item)
     db.session.commit()
 
-pytest.fixture()
+@pytest.fixture()
 def delete_test_bidding_item():
     pass
+
+@pytest.fixture()
+def bidding_item(existing_user, existing_store_user, existing_item_in_auction):
+    new_bid = Bidding(
+        item_id=existing_item_in_auction.id,
+        item_name=existing_item_in_auction.name,
+        user_id=existing_user.id,
+        user_name=existing_user.username,
+        store_user_id=existing_store_user.id,
+        offer=900
+    )
+    db.session.add(new_bid)
+    db.session.commit()
+    yield new_bid
+    db.session.delete(new_bid)
+    db.session.commit()
 
 

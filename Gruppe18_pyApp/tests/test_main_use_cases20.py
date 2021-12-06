@@ -127,17 +127,17 @@ def test_main_use_cases_accepting_bidding_offer_bidder_have_not_enough_cash(exis
 
     assert bool_value is False
 
-def test_main_use_cases_accepting_bidding_offer_bidder_have_not_enough_cash(existing_user,existing_store_user,existing_item_in_auction):
+def test_main_use_cases_accepting_bidding_offer_bidder_have_enough_cash_and_delete_item_from_Bidding_table(existing_user,existing_store_user,existing_item_in_auction, bidding_item):
 
     accept_item_id = existing_item_in_auction.id
     accept_from_user_id = existing_user.id
     current_user_store_id = existing_store_user.id
-    existing_user.cash = 0
 
+    assert Bidding.query.filter_by(item_id=accept_item_id).first() is not None
     bool_value = accepting_bidding_offer(accept_item_id, accept_from_user_id, current_user_store_id)
-
-
+    assert Bidding.query.filter_by(item_id=accept_item_id).first() is None
     assert bool_value is True
+
 
 
 def test_main_use_cases_show_current_highest_bidding_offer_in_store():
