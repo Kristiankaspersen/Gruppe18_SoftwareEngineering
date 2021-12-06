@@ -27,14 +27,14 @@ def add_goods():
         description = form_auction.description.data
         price = form_auction.price.data
         product_number = form_auction.product_number.data
-        store_owner = current_user.id
+        store_user_owner = current_user.id
         print(request.form.get('auctionItem'))
         if request.form.get('auctionItem') is not None:
-            add_auction_item(name, description, price, product_number, store_owner)
+            add_auction_item(name, description, price, product_number, store_user_owner)
             print("dog")
             flash("(name of item) added to the auction market")
         else:
-            add_market_item(name, description, price, product_number, store_owner)
+            add_market_item(name, description, price, product_number, store_user_owner)
             flash("(name of item) added to the store market")
         return redirect(url_for('main.add_goods'))
 
@@ -99,7 +99,13 @@ def auction_page():
             user_name = current_user.username
             store_user_id = store_bidding_from.id
             offer = auction_form.offer.data
-            bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
+            bool_value = bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id)
+
+            if bool_value is True:
+                flash(f"You have bid on {item_name} for {offer} NOK")
+            else:
+                flash(f"You have to bid more than that {offer} NOK, at least 10 more NOK than current price")
+
 
         accept_item = request.form.get('accepting_item')
         accept_from_user = request.form.get('accepting_user')

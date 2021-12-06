@@ -1,4 +1,5 @@
 import pytest
+from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product
 from app_flask import create_app
 from app_flask.models import User, Store, db, Goods
 import requests
@@ -121,4 +122,20 @@ def login_admin_user(client):
                 follow_redirects=True)
     yield response
     client.get('/logout', follow_redirects=True)
+
+@pytest.fixture()
+def add_goods_item_function(client, existing_store_user):
+    name = "Test_samsung"
+    description = "En samsung 11"
+    price = 1500
+    product_number = "000000"
+    store_user_owner = existing_store_user.id
+
+    add_market_item(name, description, price, product_number, store_user_owner)
+    auction_item = Goods.query.filter_by(name="Test_samsung").first()
+    yield auction_item
+    db.session.delete(auction_item)
+    db.session.commit()
+
+
 
