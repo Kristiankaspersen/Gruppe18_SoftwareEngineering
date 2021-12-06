@@ -1,6 +1,6 @@
 import pytest
 from app_flask import create_app
-from app_flask.models import User, Store, db
+from app_flask.models import User, Store, db, Goods
 import requests
 
 @pytest.fixture(scope='module')
@@ -48,6 +48,38 @@ def existing_store_user(client):
     yield user
     db.session.delete(store)
     db.session.delete(user)
+    db.session.commit()
+
+@pytest.fixture()
+def existing_item_in_market(existing_store_user):
+    test_item = Goods(
+        name='test_item',
+        description='description',
+        product_number='010101',
+        price=800,
+        goods_type=0    #Market goods type 0
+    )
+    test_item.user_owner = User.query.filter_by(username=existing_store_user.username).first().id
+    db.session.add(test_item)
+    db.session.commit()
+    yield test_item
+    db.session.delete(test_item)
+    db.session.commit()
+
+@pytest.fixture()
+def existing_item_in_auction(existing_store_user):
+    test_item = Goods(
+        name='test_item',
+        description='description',
+        product_number='010101',
+        price=800,
+        goods_type=1    #Market goods type 0
+    )
+    test_item.user_owner = User.query.filter_by(username=existing_store_user.username).first().id
+    db.session.add(test_item)
+    db.session.commit()
+    yield test_item
+    db.session.delete(test_item)
     db.session.commit()
 
 

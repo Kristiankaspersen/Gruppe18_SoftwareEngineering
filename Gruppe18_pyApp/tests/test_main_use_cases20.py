@@ -1,4 +1,4 @@
-from app_flask.main.use_cases import add_auction_item, add_market_item
+from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product
 from app_flask.models import db, User, Goods, Store
 from app_flask import create_app
 
@@ -42,21 +42,26 @@ def test_main_use_cases_add_goods_item(client, existing_store_user):
     db.session.delete(auction_item)
     db.session.commit()
 
-    pass
 
-def test_main_use_cases_buying_product_with_enough_money():
-    data = {
-        "name": "Test_Samsung",
-        "description": "En samsung 11 som er brukt i 2 år",
-        "price": "1500",
-        "product_number": "000000",
-        "auctionItem": "ItemForAuction",
-        "submit": "Submit+ad",
-    }
-    pass
+def test_main_use_cases_buying_product_with_enough_money(client, existing_store_user, existing_user, existing_item_in_market):
 
-def test_main_use_cases_buying_product_not_enough_money():
-    pass
+    current_user_id = existing_user.id
+    buy_item_product_number = existing_item_in_market.product_number
+    bought_from_store = existing_store_user.id
+
+    bool_value = buying_product(buy_item_product_number, bought_from_store, current_user_id)
+    assert bool_value == True
+
+
+def test_main_use_cases_buying_product_not_enough_money(client, existing_store_user, existing_user, existing_item_in_market):
+    current_user_id = existing_user.id
+    buy_item_product_number = existing_item_in_market.product_number
+    bought_from_store = existing_store_user.id
+
+    existing_user.cash = 0
+    bool_value = buying_product(buy_item_product_number, bought_from_store, current_user_id)
+    assert bool_value == False
+
 
 def test_main_use_cases_bidding_on_product():
     pass
