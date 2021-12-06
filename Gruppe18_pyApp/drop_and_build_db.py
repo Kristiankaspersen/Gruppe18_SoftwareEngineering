@@ -19,7 +19,7 @@ user_exist = User.query.filter_by(username="Geir").first()
 if user_exist is None:
     user = User(
         username="Geir",
-        email="Geir@dsad.com",
+        email="Geir@mail.com",
         password="12345678",
         profile_type=0
     )
@@ -31,7 +31,7 @@ user_exist = User.query.filter_by(username="Tor").first()
 if user_exist is None:
     user = User(
         username="Tor",
-        email="Tor@dsad.com",
+        email="Tor@hotmail.com",
         password="12345678",
         profile_type=1
     )
@@ -78,10 +78,10 @@ if user_exist is None:
     db.session.commit()
 
 # Makes items directly in the DB. Uses username Geir as owner of the items.
-store_exist = Store.query.filter_by(store_name="Store_AS").first()
+store_exist = Store.query.filter_by(store_name="Tors treasure").first()
 if store_exist is None:
     store = Store(
-        store_name='Store_AS',
+        store_name='Tors treasure',
         street_address="StoreAsAdress",
         street_number=22,
         postal_code=4314,
@@ -94,10 +94,10 @@ if store_exist is None:
     db.session.add(store)
     db.session.commit()
 
-store_exist = Store.query.filter_by(store_name="Old_AS").first()
+store_exist = Store.query.filter_by(store_name="Old'n nice AS").first()
 if store_exist is None:
     store = Store(
-        store_name='Old_AS',
+        store_name="Old'n nice AS",
         street_address="OldAsAdress",
         street_number=24,
         postal_code=4329,
@@ -110,30 +110,43 @@ if store_exist is None:
     db.session.add(store)
     db.session.commit()
 
-laptop_exist = Goods.query.filter_by(name="Laptop").first()
-if laptop_exist is None:
-    laptop = Goods(
-        name='Laptop',
+item_exist = Goods.query.filter_by(name="Leather hat").first()
+if item_exist is None:
+    leather_hat = Goods(
+        name='Leather hat',
         description='description',
         product_number='123457',
         price=800,
         goods_type=1
     )
-    laptop.user_owner = User.query.filter_by(username="Geir").first().id
-    db.session.add(laptop)
+    leather_hat.user_owner = User.query.filter_by(username="Geir").first().id
+    db.session.add(leather_hat)
     db.session.commit()
 
-item_exist = Goods.query.filter_by(name="Iphone 10").first()
+item_exist = Goods.query.filter_by(name="Rustic hammer").first()
 if item_exist is None:
-    iphone = Goods(
-        name='Iphone 10',
+    hammer = Goods(
+        name='Rustic hammer',
         description='description',
         product_number='123458',
-        price=800,
+        price=15,
         goods_type=1
     )
-    iphone.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
-    db.session.add(iphone)
+    hammer.store_owner = Store.query.filter_by(store_name="Tors treasure").first().id
+    db.session.add(hammer)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Cabint").first()
+if item_exist is None:
+    hammer = Goods(
+        name='Cabint',
+        description='This is a huge cabinet',
+        product_number='923458',
+        price=329,
+        goods_type=1
+    )
+    hammer.store_owner = Store.query.filter_by(store_name="Tors treasure").first().id
+    db.session.add(hammer)
     db.session.commit()
 
 item_exist = Goods.query.filter_by(name="Radio").first()
@@ -145,7 +158,7 @@ if item_exist is None:
         price=800,
         goods_type=0
     )
-    radio.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    radio.store_owner = Store.query.filter_by(store_name="Tors treasure").first().id
     db.session.add(radio)
     db.session.commit()
 
@@ -158,7 +171,7 @@ if book_exist is None:
         price=300,
         goods_type=0
     )
-    book.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    book.store_owner = Store.query.filter_by(store_name="Old'n nice AS").first().id
     db.session.add(book)
     db.session.commit()
 
@@ -171,7 +184,7 @@ if item_exist is None:
         price=500,
         goods_type=1
     )
-    chair.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    chair.store_owner = Store.query.filter_by(store_name="Old'n nice AS").first().id
     db.session.add(chair)
     db.session.commit()
 
@@ -184,7 +197,7 @@ if item_exist is None:
         price=75,
         goods_type=1
     )
-    teapot.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    teapot.store_owner = Store.query.filter_by(store_name="Old'n nice AS").first().id
     db.session.add(teapot)
     db.session.commit()
 
@@ -197,7 +210,7 @@ if item_exist is None:
         price=120,
         goods_type=0
     )
-    vase.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    vase.store_owner = Store.query.filter_by(store_name="Old'n nice AS").first().id
     db.session.add(vase)
     db.session.commit()
 
@@ -210,7 +223,7 @@ if item_exist is None:
         price=230,
         goods_type=0
     )
-    doll.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    doll.store_owner = Store.query.filter_by(store_name="Tors treasure").first().id
     db.session.add(doll)
     db.session.commit()
 
@@ -223,7 +236,7 @@ if item_exist is None:
         price=10000,
         goods_type=1
     )
-    jewelry.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    jewelry.store_owner = Store.query.filter_by(store_name="Tors treasure").first().id
     db.session.add(jewelry)
     db.session.commit()
 
@@ -236,7 +249,7 @@ if item_exist is None:
         price=5000,
         goods_type=0
     )
-    ring.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    ring.store_owner = Store.query.filter_by(store_name="Tors treasure").first().id
     db.session.add(ring)
     db.session.commit()
 
@@ -249,7 +262,7 @@ if item_exist is None:
         price=999,
         goods_type=0
     )
-    necklace.store_owner = Store.query.filter_by(store_name="Store_AS").first().id
+    necklace.store_owner = Store.query.filter_by(store_name="Tors treasure").first().id
     db.session.add(necklace)
     db.session.commit()
 
@@ -262,7 +275,7 @@ if item_exist is None:
         price=145,
         goods_type=0
     )
-    bronze_necklace.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    bronze_necklace.store_owner = Store.query.filter_by(store_name="Old'n nice AS").first().id
     db.session.add(bronze_necklace)
     db.session.commit()
 
@@ -275,7 +288,7 @@ if item_exist is None:
         price=1450,
         goods_type=0
     )
-    antique_shoes.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    antique_shoes.store_owner = Store.query.filter_by(store_name="Old'n nice AS").first().id
     db.session.add(antique_shoes)
     db.session.commit()
 
@@ -288,7 +301,7 @@ if item_exist is None:
         price=9001,
         goods_type=1
     )
-    viking_helmet.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    viking_helmet.store_owner = Store.query.filter_by(store_name="Old'n nice AS").first().id
     db.session.add(viking_helmet)
     db.session.commit()
 
@@ -296,11 +309,9 @@ print(User.query.filter_by(username="Geir").first())
 print(User.query.filter_by(username="Tor").first())
 print(User.query.filter_by(username="Bob").first())
 print(User.query.filter_by(username="Admin").first())
-print(Goods.query.filter_by(name="Laptop").first())
-print(Goods.query.filter_by(name="Iphone 10").first())
 print(Goods.query.filter_by(name="book").first())
 print(Goods.query.filter_by(name="Chair").first())
-print(Store.query.filter_by(store_name="Store_AS").first())
-print(Store.query.filter_by(store_name="Old_AS").first())
+print(Store.query.filter_by(store_name="Tors treasure").first())
+print(Store.query.filter_by(store_name="Old'n nice AS").first())
 
 ctx.pop()
