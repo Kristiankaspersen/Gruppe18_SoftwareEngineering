@@ -12,24 +12,16 @@
       <thead>
         <tr>
           <th scope="col">Title</th>
-          <th scope="col">Description</th>
           <th scope="col">Price</th>
           <th scope="col">Sold by</th>
-          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
       {%for users, goods in db_goods%}
         <tr>
-          <th scope="row" class=".table-striped">
-                {{ goods.name }}
-            <br>
-            </th>
-          <td class=".table-striped">{{ goods.description}}</td>
+          <td class=".table-striped">{{ goods.name}}</td>
           <td class=".table-striped">{{ goods.price}}</td>
           <td class=".table-striped">{{ users.username}}</td>
-          <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=goods.id)}}">Delete</a></td>
-          <td class=".table-striped"><button type="button" class="btn btn-light">BUY/CONTACT SELLER</button></td>
         </tr>
       {% endfor %}
       </tbody>

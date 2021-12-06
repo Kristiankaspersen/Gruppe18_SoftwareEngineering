@@ -77,7 +77,8 @@ def login_page():
         ):
             login_user(user_attempted)
             flash(f"You are logged in as: {user_attempted.username}")
-            return redirect(url_for("main.store_page"))
+            # Changed store_page to home_page
+            return redirect(url_for("main.home_page"))
         elif (real_user_attempted is not None) and real_user_attempted.checking_password_with_hash(
                 password_attempted=form.password.data
             ):

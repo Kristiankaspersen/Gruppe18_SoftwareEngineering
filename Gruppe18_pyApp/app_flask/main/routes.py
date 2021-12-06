@@ -148,6 +148,17 @@ def display_admin_panel():
                            buy_form=buy_form, auction_form=auction_form)
 
 
+@bp.route('/store_panel', methods=['GET', 'POST'])
+def display_store_panel():
+    buy_form = BuyGoodsForm()
+    auction_form = AuctionGoodsForm()
+    items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
+    auction_items = db.session.query(Goods, Store).filter(
+        and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
+    return render_template('storePanel.html', items=items, auction_items=auction_items,
+                           buy_form=buy_form, auction_form=auction_form)
+
+
 @bp.route('/delete_user/<int:id>')
 def delete_user(id):
     delete_user_from_platform(id)

@@ -17,7 +17,6 @@
                     <th scope="col">Product number</th>
                     <th scope="col">Price</th>
                     <th scope="col">Options</th>
-                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,13 +32,12 @@
                     <td>
                         <button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button>
                     </td>
-                    <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=item.id)}}">Delete</a></td>
                 </tr>
 
                 {% else %}
                 <tr>
-                    <td>{{store.store_name}}</td>
                     <td>{{item.name}}</td>
+                    <td>{{store.store_name}}</td>
                     <td>{{item.product_number}}</td>
                     <td>{{item.price}} NOK</td>
                     <td>
@@ -62,6 +60,7 @@
                     <th scope="col">Product number</th>
                     <th scope="col">Price</th>
                     <th scope="col">Options</th>
+                    <th scope="col">Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,10 +71,8 @@
                     <td>{{item.name}}</td>
                     <td>{{item.product_number}}</td>
                     <td>{{item.price}} NOK</td>
-                    <td>
-                        <button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button>
-                        <button class="btn btn-outline btn-success" data-toggle="modal" data-target="#Modal-PurchaseConfirm-{{ item.id }}" >Purchase</button>
-                    </td>
+                    <td><button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button></td>
+                    <td><button class="btn btn-outline btn-success" data-toggle="modal" data-target="#Modal-PurchaseConfirm-{{ item.id }}" >Purchase</button></td>
                 </tr>
                 {% endfor %}
             </tbody>
