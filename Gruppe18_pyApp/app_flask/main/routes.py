@@ -41,14 +41,6 @@ def add_goods():
             flash("(name of item) added to the store market")
         return redirect(url_for('main.add_goods'))
 
-    if form_auction.errors != {}:  # This happens if the users do somthing wrong when creating a user
-        for err_message in form_auction.errors.values():
-            flash(f"Error posting market product: {err_message}")
-
-    if form_market.errors != {}:  # This happens if the users do somthing wrong when creating a user
-        for err_message in form_market.errors.values():
-            flash(f"Error posting market product: {err_message}")
-
     if request.method == "GET":
         return render_template('addGoods.html', form_auction=form_auction, form_market=form_market)
 
