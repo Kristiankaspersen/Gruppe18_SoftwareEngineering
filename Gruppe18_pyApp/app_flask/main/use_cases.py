@@ -70,8 +70,6 @@ def buying_product(buy_item_product_number, bought_from_store, current_user_id):
     ctx.pop()
     return #print("error: bought item, or store owner does not exist")
 
-
-
 def bidding_on_product(bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id):
     app = create_app()
     ctx = app.app_context()

@@ -38,6 +38,14 @@ def add_goods():
             flash("(name of item) added to the store market")
         return redirect(url_for('main.add_goods'))
 
+    if form_auction.errors != {}:  # This happens if the users do somthing wrong when creating a user
+        for err_message in form_auction.errors.values():
+            flash(f"Error posting market product: {err_message}")
+
+    if form_market.errors != {}:  # This happens if the users do somthing wrong when creating a user
+        for err_message in form_market.errors.values():
+            flash(f"Error posting market product: {err_message}")
+
     if request.method == "GET":
         return render_template('addGoods.html', form_auction=form_auction, form_market=form_market)
 
@@ -66,12 +74,14 @@ def store_page():
         if bool_value is True:
             bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
 
-            flash(f"You have bought {bought_item.name} for {bought_item.price}")
+            flash(f"You have bought {bought_item.name} for {bought_item.price} NOK")
         else:
-            flash(f"You don't have enough money to purchase {bought_item.name}")
-
+            flash(f"You don't have enough money to purchase {bought_item.name} NOK")
 
         return redirect(url_for('main.store_page'))
+    if buy_form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+        for err_message in buy_form.errors.values():
+            flash(f"Error creating store: {err_message}")
 
     if request.method == "GET":
         # TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
@@ -109,13 +119,20 @@ def auction_page():
             else:
                 flash(f"You have to bid more than that {offer} NOK, at least 10 more NOK than current price")
 
-
         accept_item = request.form.get('accepting_item')
         accept_from_user = request.form.get('accepting_user')
 
         accepting_bidding_offer(accept_item, accept_from_user, user_id)
 
         return redirect(url_for('main.auction_page'))
+
+    if auction_form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+        for err_message in auction_form.errors.values():
+            flash(f"Error bidding on product: {err_message}")
+
+    if accept_form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+        for err_message in auction_form.errors.values():
+            flash(f"Error accepting offer: {err_message}")
 
     if request.method == "GET":
         # items = db.session.query(Goods, Store).join(Store).all()

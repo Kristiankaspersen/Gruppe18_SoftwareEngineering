@@ -47,6 +47,9 @@ def register_store():
 
         flash(f"You have made a new store with name {store_name}")
         return redirect(url_for('main.store_page'))
+    if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+        for err_message in form.errors.values():
+            flash(f"Error creating store: {err_message}")
 
     return render_template("registerStore.html", form=form)
 
