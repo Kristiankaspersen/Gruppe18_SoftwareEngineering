@@ -5,10 +5,10 @@ from app_flask.models import Goods, db
 
 
 def test_main_routes_home_page(client):
-    response = client.get('/homepage')
+    response = client.get('/')
     assert response.status_code == 404
     assert b'This is homepage is not found'
-    response = client.get('/')
+    response = client.get('/homepage')
     assert response.status_code == 200
     assert b'This is homepage'
 
