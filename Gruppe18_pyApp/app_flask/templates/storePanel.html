@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}
+    Market Page
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <p>This is the panel you can manage your goods for sale, and auctions.</p>
+</div>
+
+<div class="container">
+    <h2>Goods</h2>
+    <p>Overview all your goods for sale.</p>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Item name</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item, store in items %}
+            {% include 'include/goods_modals.html' %}
+            {% if store.user_owner==current_user.id %}
+            <tr>
+                <td class=".table-striped">{{item.name}}</td>
+                <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=item.id)}}">Delete</a></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container">
+    <h2>Auctions</h2>
+    <p>Overview of all your auctions.</p>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Auction name</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item, store in auction_items %}
+        {% include 'include/auction_modal.html' %}
+        {% if store.user_owner==current_user.id %}
+            <tr>
+                <td class=".table-striped">{{item.name}}</td>
+                <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=item.id)}}">Delete</a></td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -11,36 +11,47 @@
             <thead>
                 <tr>
                     <!-- Columns -->
-                    <th scope="col">Store</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Auction item</th>
+                    <th scope="col">Store owner</th>
                     <th scope="col">Product number</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Action</th>
+                    {% if current_user.is_authenticated %}
                     <th scope="col">Options</th>
+                    {% else %}
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
                 <!-- Data inside the table  -->
                 {% for item, store in items %}
                 {% include 'include/auction_modal.html' %}
+
                 <tr>
                     <td>{{store.store_name}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.product_number}}</td>
                     <td>{{item.price}} NOK</td>
-                    <td class=".table-striped"><a href="{{ url_for('main.delete_goods', id=item.id)}}">Delete</a></td>
+                    {% if store.user_owner==current_user.id %}
+                    <td>
+                        <button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button>
+                    </td>
+                    {% elif current_user.is_authenticated %}
                     <td>
                         <button class="btn btn-outline btn-info" data-toggle="modal" data-target="#Modal-MoreInfo-{{ item.id }}">More Info</button>
                         <button class="btn btn-outline btn-primary" data-toggle="modal" data-target="#Modal-AuctionConfirm-{{ item.id }}" >Auction</button>
                     </td>
+                    {% else %}
+                    {% endif %}
                 </tr>
                 {% endfor %}
 
             </tbody>
         </table>
     </div>
-    <div class="col-4">
 
+    {% if current_user.is_authenticated %}
+
+    <div class="col-4">
         <h2>Highest auction offers</h2>
         <p>Click on accept offer to complete the sale</p>
         <br>
@@ -60,8 +71,9 @@
                     </div>
                 </div>
             {% endfor %}
-
         </div>
    </div>
+    {% else %}
+    {% endif %}
 </div>
 {% endblock %}

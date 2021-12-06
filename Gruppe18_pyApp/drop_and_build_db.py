@@ -266,6 +266,32 @@ if item_exist is None:
     db.session.add(bronze_necklace)
     db.session.commit()
 
+item_exist = Goods.query.filter_by(name="Antique shoes").first()
+if item_exist is None:
+    antique_shoes = Goods(
+        name='Antique shoes',
+        description='Found in the dirt',
+        product_number='534170',
+        price=1450,
+        goods_type=0
+    )
+    antique_shoes.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    db.session.add(antique_shoes)
+    db.session.commit()
+
+item_exist = Goods.query.filter_by(name="Viking helmet").first()
+if item_exist is None:
+    viking_helmet = Goods(
+        name='Viking helmet',
+        description='From Norway',
+        product_number='534171',
+        price=9001,
+        goods_type=1
+    )
+    viking_helmet.store_owner = Store.query.filter_by(store_name="Old_AS").first().id
+    db.session.add(viking_helmet)
+    db.session.commit()
+
 print(User.query.filter_by(username="Geir").first())
 print(User.query.filter_by(username="Tor").first())
 print(User.query.filter_by(username="Bob").first())

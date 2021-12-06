@@ -8,34 +8,32 @@
     <div class="container">
      <form method="POST" class="form-register" style="color:white">
          {{ form_user.hidden_tag() }}
-
-         </br>
+         <br>
+         <br>
          <input id="okse1" name="Geir" type="hidden" value="okse20">
          {{ form_user.submit(class="btn btn-lg btn-block btn-primary") }}
-         </br>
-
+         <br>
 
      </form>
      <form method="POST" class="form-register" style="color:white">
          {{ form_store.hidden_tag() }}
-
-         </br>
+         <br>
          <input id="dog1" name="Tor" type="hidden" value="dog20">
          {{ form_store.submit(class="btn btn-lg btn-block btn-success") }}
-         </br>
+         <br>
      </form>
+
     <form method="POST" class="form-register" style="color:white">
          {{ form_admin.hidden_tag() }}
-
-         </br>
+         <br>
          <input id="cat1" name="Admin" type="hidden" value="cat20">
          {{ form_admin.submit(class="btn btn-lg btn-block btn-warning") }}
-         </br>
-     </form>
+         <br>
+    </form>
+
     <form method="POST" class="form-register" style="color:white">
          {{ form_store.hidden_tag() }}
-
-         </br>
+        <br>
         <br>
         <br>
         <br>
@@ -47,8 +45,8 @@
          {{ form.password(class="form-control", placeholder="Password") }}
          <br>
          {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+    </form>
 
-     </form>
     </div>
 </body>
 {% endblock %}
