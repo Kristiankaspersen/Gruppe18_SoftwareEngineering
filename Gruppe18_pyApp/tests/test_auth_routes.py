@@ -73,34 +73,54 @@ def test_auth_routes_register_store(client, login_default_store):
         "street_number": "28",
         "postal_code": "1778",
         "province": "Testens2",
-        "store_email": "Test2_ASA",
+        "store_email": "Test2_ASA@gmail.com",
         "store_phone": "21000001"
     }
-    response = client.post('/registerStore', data=data,follow_redirects=True)
+    response = client.post('/registerStore', data=data, follow_redirects=True)
     assert response.status_code == 200
     assert b'Register a store?'
     assert b'You have now registered a store'
-    assert b'Name of the store'
+    assert b'You have now made a store with name {store_name} '
     assert login_default_store.status_code == 200
 
-    """assert login_default_store is not None
-    assert b'Not registered store'"""
 
-#kinda confused shoudlnt login be a get
+# kinda confused shoudlnt login be a get
 
-
-def test_auth_routes_register_store_that_exists(client, login_default_user):
-    pass
+"""def test_auth_routes_register_store_that_exists(client, login_default_user):"""
 
 
+def test_auth_routes_register_store_that_exists(client,existing_store_user):
+    data = {
+        "store_name": "Test_AS",
+        "street_adress": "TestAdress",
+        "street_number": "28",
+        "postal_code": "6329",
+        "province": "Testens",
+        "store_email": "Test_AS@gmail.com",
+        "store_phone": "67326732"
+    }
+    response = client.post('/registerStore', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    #assert b"Store is alredy registerd" in response.data , dont know how to make it work
+    assert existing_store_user is not None
 
 
 
+def test_auth_routes_register_store_same_email(client, existing_store_user):
+    data = {
+        "store_name": "Test_Ltd",
+        "street_adress": "TestAdress_ltd",
+        "street_number": "289",
+        "postal_code": "63291",
+        "province": "Testens3",
+        "store_email": "Test_AS@gmail.com",
+        "store_phone": "673267325"
+    }
+    response = client.post('/registerStore', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    #assert b"Error the email is taken: " in response.data
+    assert existing_store_user is not None
 
-
-
-def test_auth_routes_register_store_same_email(client, login_default_user):
-    pass
 
 
 def test_auth_routes_login_store(existing_store_user, login_default_store):
@@ -128,7 +148,7 @@ def test_login_page(client):
     response = client.get('/login')
     assert response.status_code == 200
     assert b'Login' in response.data
-    # når login.html får email og passord. kan det testes.
+
 
 
 def test_valid_login_logout(client, existing_user):
