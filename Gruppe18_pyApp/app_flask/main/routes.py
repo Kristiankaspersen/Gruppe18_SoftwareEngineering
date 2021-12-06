@@ -28,10 +28,13 @@ def add_goods():
         price = form_auction.price.data
         product_number = form_auction.product_number.data
         store_user_owner = current_user.id
-        print(request.form.get('auctionItem'))
+
+        if not(isinstance(price, int) or isinstance(product_number, int)):
+            error_message = f"Product number and price needs to be a number, try again"
+            flash(error_message)
+            return redirect(url_for('main.add_goods'))
         if request.form.get('auctionItem') is not None:
             add_auction_item(name, description, price, product_number, store_user_owner)
-            print("dog")
             flash("(name of item) added to the auction market")
         else:
             add_market_item(name, description, price, product_number, store_user_owner)

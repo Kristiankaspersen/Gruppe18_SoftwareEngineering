@@ -24,7 +24,7 @@ def add_auction_item(name, description, price, product_number, store_user_owner)
 
     ctx.pop()
     # here put the item they have put inside
-    return new_goods
+    #return new_goods
 
 
 def add_market_item(name, description, price, product_number, store_owner):
@@ -46,7 +46,7 @@ def add_market_item(name, description, price, product_number, store_owner):
     new_goods = Goods.query.filter_by(product_number=product_number).first()
     # here put the item they have put inside
     ctx.pop()
-    return new_goods
+    #return new_goods
 
 
 def buying_product(buy_item_product_number, bought_from_store, current_user_id):
