@@ -52,15 +52,18 @@ def existing_store_user(client):
 
 @pytest.fixture()
 def existing_item_in_market(existing_store_user):
-    laptop = Goods(
+    test_item = Goods(
         name='test_item',
         description='description',
         product_number='010101',
         price=800,
         goods_type=0    #Market goods type 0
     )
-    laptop.user_owner = User.query.filter_by(username=existing_store_user.username).first().id
-    db.session.add(laptop)
+    test_item.user_owner = User.query.filter_by(username=existing_store_user.username).first().id
+    db.session.add(test_item)
+    db.session.commit()
+    yield test_item
+    db.session.delete(test_item)
     db.session.commit()
 
 @pytest.fixture()

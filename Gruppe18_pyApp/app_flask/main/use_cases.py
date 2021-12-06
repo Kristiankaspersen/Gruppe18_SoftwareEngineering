@@ -61,12 +61,14 @@ def buying_product(buy_item_product_number, bought_from_store, current_user_id):
     if (bought_item is not None) and (store_owner_item is not None):
         if current_user.have_enough_cash(bought_item):
             bought_item.purchase(current_user, store_owner_item)
-
+            ctx.pop()
             return True
         else:
+            ctx.pop()
             return False
-
     ctx.pop()
+    return #print("error: bought item, or store owner does not exist")
+
 
 
 def bidding_on_product(bid_item, bid_from_store, offer, item_id, item_name, user_id, user_name, store_user_id):

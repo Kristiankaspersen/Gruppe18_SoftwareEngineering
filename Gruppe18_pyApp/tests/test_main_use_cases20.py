@@ -44,26 +44,16 @@ def test_main_use_cases_add_goods_item(client, existing_store_user):
 
 
 def test_main_use_cases_buying_product_with_enough_money(client, existing_store_user, existing_user, existing_item_in_market):
-    # need test item. This item must belong to the test user.  (make a fixture)
-    # need store to buy from
-    # need a test user.
 
-    # data I need:
-    # buy_item = name,
-    # bought_from_store,
-    # current_user_id
+    current_user_id = existing_user.id
+    buy_item_product_number = existing_item_in_market.product_number
+    bought_from_store = existing_store_user.id
 
-    assert buying_product() == True
+    bool_value = buying_product(buy_item_product_number, bought_from_store, current_user_id)
+    assert bool_value == True
 
 
-
-
-
-    pass
-
-
-
-def test_main_use_cases_buying_product_not_enough_money():
+def test_main_use_cases_buying_product_not_enough_money(client, existing_store_user, existing_user, existing_item_in_market):
     pass
 
 def test_main_use_cases_bidding_on_product():
