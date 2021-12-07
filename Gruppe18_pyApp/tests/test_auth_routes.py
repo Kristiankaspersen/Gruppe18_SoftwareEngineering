@@ -79,7 +79,7 @@ def test_auth_routes_register_user_that_already_exists(client, existing_user):
     assert b"Username is already in use! try a different username" in response.data
     assert b'Email is already in use! Use another email' in response.data
 
-def test_auth_routes_register_store(client, login_normal_user):
+def test_auth_routes_register_store_with_store_that_dont_exist(client, login_normal_user):
     data = {
         "store_name": "Test_ASA",
         "street_address": "TestAdress",
@@ -99,21 +99,54 @@ def test_auth_routes_register_store(client, login_normal_user):
     db.session.delete(store)
     db.session.commit()
 
-def test_auth_routes_register_store_that_already_exists(client, login_normal_user):
+def test_auth_routes_register_store_with_same_store_name(client, login_normal_user, existing_store_with_user):
     data = {
-        "store_name": "Test_ASA",
+        "store_name": "Test_AS2",
         "street_address": "TestAdress",
         "street_number": "28",
-        "postal_code": "1778",
+        "postal_code": "6329",
         "province": "Testnes",
-        "store_email": "Test_ASA@gmail.com",
-        "store_phone": "21000001",
+        "store_email": "Test_AS2@gmail.com",
+        "store_phone": "67326732",
         "submit": "Register+store"
     }
+    assert existing_store_with_user is not None
     response = client.post('/registerStore', data=data, follow_redirects=True)
     assert response.status_code == 200
     assert login_normal_user.status_code == 200
-    assert b"you have made a new store with name Test_ASA" in response.data
+    assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
+
+def test_auth_routes_register_store_with_postal_code_as_text(client, login_normal_user, existing_store_with_user):
+    data = {
+        "store_name": "Test_AS3",
+        "street_address": "TestAdress",
+        "street_number": "28",
+        "postal_code": "this_is_text",
+        "province": "Testnes",
+        "store_email": "Test_AS3@gmail.com",
+        "store_phone": "67326732",
+        "submit": "Register+store"
+    }
+    assert existing_store_with_user is not None
+    response = client.post('/registerStore', data=data, follow_redirects=True)
+    assert b"phone number and postal code needs to be a number, try again" in response.data
+
+def test_auth_routes_register_store_that_already_exists(client, login_normal_user, existing_store_with_user):
+    data = {
+        "store_name": "Test_AS2",
+        "street_address": "TestAdress",
+        "street_number": "28",
+        "postal_code": "6329",
+        "province": "Testnes",
+        "store_email": "Test_AS2@gmail.com",
+        "store_phone": "67326732",
+        "submit": "Register+store"
+    }
+    assert existing_store_with_user is not None
+    response = client.post('/registerStore', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert login_normal_user.status_code == 200
+    assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
 
 
 
