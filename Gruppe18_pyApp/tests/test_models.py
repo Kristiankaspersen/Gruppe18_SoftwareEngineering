@@ -36,7 +36,6 @@ def test_models_Goods_create_goods(client):
     db.session.delete(goods)
     db.session.commit()
 
-# Store model
 def test_models_store_create_store(client):
     """Testing if model Store can create an object"""
     store = Store(
