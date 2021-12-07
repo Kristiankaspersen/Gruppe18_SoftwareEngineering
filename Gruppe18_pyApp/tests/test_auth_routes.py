@@ -148,29 +148,16 @@ def test_auth_routes_register_store_that_already_exists(client, login_normal_use
     assert login_normal_user.status_code == 200
     assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
 
-def test_auth_routes_register_store_same_email(client, existing_store_user):
-    data = {
-        "store_name": "Test_Ltd",
-        "street_adress": "TestAdress_ltd",
-        "street_number": "289",
-        "postal_code": "63291",
-        "province": "Testens3",
-        "store_email": "Test_AS@gmail.com",
-        "store_phone": "673267325"
-    }
-    response = client.post('/registerStore', data=data, follow_redirects=True)
+def test_auth_routes_login_with_correct_password_and_username(client, existing_user):
+    response = client.get("/login")
     assert response.status_code == 200
-    #assert b"Error the email is taken: " in response.data
-    assert existing_store_user is not None
+    response = client.post('/login',
+                           data=dict(username='test_user', password="12345678"),
+                           follow_redirects=True)
+    assert b"You are logged in as: Geir" in response.data
 
 
 
-def test_auth_routes_login_store(existing_store_user, login_default_store):
-    # response = client.post('/login',
-    #                        data=dict(email='test_user_store@mail.com', password="12345678"),
-    #                        follow_redirects=True)
-    assert login_default_store.status_code == 200
-    assert b'You are logged in as: {user_attempted.username}'
 
 
 def test_auth_routes_login_admin(client, login_admin_user):
