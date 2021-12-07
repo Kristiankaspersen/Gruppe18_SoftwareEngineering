@@ -110,18 +110,6 @@ if store_exist is None:
     db.session.add(store)
     db.session.commit()
 
-item_exist = Goods.query.filter_by(name="Leather hat").first()
-if item_exist is None:
-    leather_hat = Goods(
-        name='Leather hat',
-        description='description',
-        product_number='123457',
-        price=800,
-        goods_type=1
-    )
-    leather_hat.user_owner = User.query.filter_by(username="Geir").first().id
-    db.session.add(leather_hat)
-    db.session.commit()
 
 item_exist = Goods.query.filter_by(name="Rustic hammer").first()
 if item_exist is None:

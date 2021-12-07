@@ -48,10 +48,6 @@ def add_goods():
 @bp.route('/owned_goods', methods=['GET', 'POST'])
 def show_owned_goods():
     db_goods = db.session.query(User, Goods).filter(User.id == Goods.user_owner).all()
-    # FIXME: Denne trenger og bare vise tingene som eies av en person, template skal ikke inneholde delete.
-    # return render_template('friends.html', userList=userList)
-    # db_goods = Goods.query.order_by(Goods.name)
-
     return render_template('showGoods.html', db_goods=db_goods)
 
 

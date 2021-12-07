@@ -28,8 +28,8 @@
                 {% include 'include/auction_modal.html' %}
 
                 <tr>
-                    <td>{{store.store_name}}</td>
                     <td>{{item.name}}</td>
+                    <td>{{store.store_name}}</td>
                     <td>{{item.product_number}}</td>
                     <td>{{item.price}} NOK</td>
                     {% if store.user_owner==current_user.id %}
