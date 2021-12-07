@@ -54,7 +54,6 @@ def register_store():
             flash(f"Store name {store_name} is already in use! try a different store name", category='danger')
             return redirect(url_for('auth.register_store'))
 
-
         create_store_in_db(store_name, street_address, street_number, postal_code, province, store_email, store_phone, owner)
 
         flash(f"You have made a new store with name {store_name}")

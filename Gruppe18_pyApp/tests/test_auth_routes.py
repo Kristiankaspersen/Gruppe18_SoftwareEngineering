@@ -79,7 +79,7 @@ def test_auth_routes_register_user_that_already_exists(client, existing_user):
     assert b"Username is already in use! try a different username" in response.data
     assert b'Email is already in use! Use another email' in response.data
 
-def test_auth_routes_register_store(client, login_default_store):
+def test_auth_routes_register_store(client, login_normal_user):
     data = {
         "store_name": "Test_ASA",
         "street_adress": "TestAdress2",
@@ -87,14 +87,15 @@ def test_auth_routes_register_store(client, login_default_store):
         "postal_code": "1778",
         "province": "Testens2",
         "store_email": "Test2_ASA@gmail.com",
-        "store_phone": "21000001"
+        "store_phone": "21000001",
+        "submit": "Register+store"
     }
     response = client.post('/registerStore', data=data, follow_redirects=True)
     assert response.status_code == 200
     assert b'Register a store?'
     assert b'You have now registered a store'
     assert b'You have now made a store with name {store_name} '
-    assert login_default_store.status_code == 200
+    assert login_normal_user.status_code == 200
 
 
 # kinda confused shoudlnt login be a get
