@@ -6,7 +6,7 @@ These test use GETs and POSTs to diffirent URLs to check
 
 from app_flask.models import db, User, Store
 
-
+# TC - 001
 def test_auth_routes_register_user_page_and_check_if_stored_in_db(client):
     data = {
         "username": "testUser",
@@ -23,6 +23,7 @@ def test_auth_routes_register_user_page_and_check_if_stored_in_db(client):
     db.session.delete(user)
     db.session.commit()
 
+# TC - 002
 def test_auth_routes_register_user_page_check_valid_user(client):
     data = {
         "username": "testUser",
@@ -36,7 +37,7 @@ def test_auth_routes_register_user_page_check_valid_user(client):
     db.session.delete(user)
     db.session.commit()
     assert b'You have made a user with username testUser' in response.data
-
+# TC - 003
 def test_auth_routes_register_user_with_same_usename(client, existing_user):
     data = {
         "username": "test_user",
@@ -49,7 +50,7 @@ def test_auth_routes_register_user_with_same_usename(client, existing_user):
     response = client.post('/register', data=data, follow_redirects=True)
     assert response.status_code == 200
     assert b'Username is already in use! try a different username' in response.data
-
+# TC - 004
 def test_auth_routes_register_user_with_same_email(client, existing_user):
     data = {
         "username": "another_user_name",
@@ -62,7 +63,7 @@ def test_auth_routes_register_user_with_same_email(client, existing_user):
     response = client.post('/register', data=data, follow_redirects=True)
     assert response.status_code == 200
     assert b'Email is already in use! Use another email' in response.data
-
+# TC - 005
 def test_auth_routes_register_user_that_already_exists(client, existing_user):
     data = {
         "username": "test_user",
@@ -95,6 +96,7 @@ def test_auth_routes_register_user_that_already_exists(client, existing_user):
 #     db.session.delete(store)
 #     db.session.commit()
 
+# TC - 006
 def test_auth_routes_register_store_with_same_store_name(client, login_normal_user, existing_store_with_user):
     data = {
         "store_name": "Test_AS2",
@@ -111,7 +113,7 @@ def test_auth_routes_register_store_with_same_store_name(client, login_normal_us
     assert response.status_code == 200
     assert login_normal_user.status_code == 200
     assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
-
+# TC - 007
 def test_auth_routes_register_store_with_different_email_adress(client, login_normal_user, existing_store_with_user):
     data = {
         "store_name": "Another_username",
@@ -129,6 +131,7 @@ def test_auth_routes_register_store_with_different_email_adress(client, login_no
     assert login_normal_user.status_code == 200
     assert b"Email Test_AS2@gmail.com is already in use! use a different email" in response.data
 
+# TC-008
 def test_auth_routes_register_store_that_already_exists(client, login_normal_user, existing_store_with_user):
     data = {
         "store_name": "Test_AS2",
@@ -146,6 +149,7 @@ def test_auth_routes_register_store_that_already_exists(client, login_normal_use
     assert login_normal_user.status_code == 200
     assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
 
+# TC - 009
 def test_auth_routes_login_with_correct_password_and_username(client, existing_user):
     data = {
         "username": "test_user",
@@ -158,6 +162,7 @@ def test_auth_routes_login_with_correct_password_and_username(client, existing_u
     assert b"You are logged in as test_user" in response.data
     client.post('/logout')
 
+# TC - 010
 def test_auth_routes_login_with_wrong_password(client, existing_user):
     data = {
         "username": "test_user",
@@ -169,7 +174,7 @@ def test_auth_routes_login_with_wrong_password(client, existing_user):
     response = client.post('/login', data=data, follow_redirects=True)
     assert b"Wrong password, or username" in response.data
     client.post('/logout')
-
+# TC - 011
 def test_auth_routes_login_with_wrong_username(client, existing_user):
     data = {
         "username": "wrong_username",
