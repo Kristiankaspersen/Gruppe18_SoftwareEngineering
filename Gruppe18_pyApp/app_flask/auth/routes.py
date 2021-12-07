@@ -43,10 +43,10 @@ def register_store():
         store_phone = form.store_phone.data
         owner = current_user.id
 
-        # if not(isinstance(postal_code, int) or isinstance(postal_code, int)):
-        #     error_message = "phone number and postal code needs to be a number, try again"
-        #     flash(error_message, category='danger')
-        #     return redirect(url_for('auth.register_store'))
+        if not(isinstance(store_phone, int) or isinstance(postal_code, int)):
+            error_message = "phone number and postal code needs to be a number, try again"
+            flash(error_message, category='danger')
+            return redirect(url_for('auth.register_store'))
 
         store_name_exists = Store.query.filter_by(store_name=store_name).first()
 
@@ -54,13 +54,17 @@ def register_store():
             flash(f"Store name {store_name} is already in use! try a different store name", category='danger')
             return redirect(url_for('auth.register_store'))
 
+        email_exists = Store.query.filter_by(store_email=store_email).first()
+
+        if email_exists is not None:
+            flash(f"Email {store_email} is already in use! use a different email", category='danger')
+            return redirect(url_for('auth.register_store'))
+
         create_store_in_db(store_name, street_address, street_number, postal_code, province, store_email, store_phone, owner)
 
         flash(f"You have made a new store with name {store_name}")
         return redirect(url_for('main.store_page'))
-    if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
-        for err_message in form.errors.values():
-            flash(f"Error creating store: {err_message}")
+
 
     return render_template("registerStore.html", form=form)
 

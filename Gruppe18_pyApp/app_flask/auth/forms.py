@@ -23,13 +23,6 @@ class RegisterUserForm(FlaskForm):
     submit = SubmitField(label="Create account")
 
 class RegisterStoreForm(FlaskForm):
-    #TODO: More validations of email, and check with user.
-
-    def validate_email(self, check_email):
-        email = Store.query.filter_by(store_email=check_email.data).first()
-
-        if email is not None:
-            raise ValidationError('Email is already in use! Use another email')
 
     store_name = StringField(label="Chose name of store", validators=[Length(min=2, max=40), DataRequired()])
     street_number = StringField(label="Street number", validators=[DataRequired()])

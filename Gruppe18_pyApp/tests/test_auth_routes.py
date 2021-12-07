@@ -114,21 +114,22 @@ def test_auth_routes_register_store_with_same_store_name(client, login_normal_us
     assert login_normal_user.status_code == 200
     assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
 
-def test_auth_routes_register_store_with_postal_code_as_text_and_phone_number(client, login_normal_user, existing_store_with_user):
+def test_auth_routes_register_store_with_different_email_adress(client, login_normal_user, existing_store_with_user):
     data = {
-        "store_name": "Test_AS3",
+        "store_name": "Another_username",
         "street_address": "TestAdress",
         "street_number": "28",
-        "postal_code": "this_is_text",
+        "postal_code": "6329",
         "province": "Testnes",
-        "store_email": "Test_AS3@gmail.com",
-        "store_phone": "dsadadsa",
+        "store_email": "Test_AS2@gmail.com",
+        "store_phone": "67326732",
         "submit": "Register+store"
     }
     assert existing_store_with_user is not None
     response = client.post('/registerStore', data=data, follow_redirects=True)
-    assert b'This field is required' in response.data
-    assert b'This field is required' in response.data
+    assert response.status_code == 200
+    assert login_normal_user.status_code == 200
+    assert b"Email Test_AS2@gmail.com is already in use! use a different email" in response.data
 
 def test_auth_routes_register_store_that_already_exists(client, login_normal_user, existing_store_with_user):
     data = {
@@ -154,20 +155,7 @@ def test_auth_routes_register_store_that_already_exists(client, login_normal_use
 """def test_auth_routes_register_store_that_exists(client, login_default_user):"""
 
 
-def test_auth_routes_register_store_that_exists(client,existing_store_user):
-    data = {
-        "store_name": "Test_AS",
-        "street_adress": "TestAdress",
-        "street_number": "28",
-        "postal_code": "6329",
-        "province": "Testens",
-        "store_email": "Test_AS@gmail.com",
-        "store_phone": "67326732"
-    }
-    response = client.post('/registerStore', data=data, follow_redirects=True)
-    assert response.status_code == 200
-    assert b"Store is alredy registerd" in response.data
-    assert existing_store_user is not None
+¨
 
 
 
