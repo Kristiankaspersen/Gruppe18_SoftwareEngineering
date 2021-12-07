@@ -71,7 +71,7 @@ def store_page():
 
             flash(f"You have bought {bought_item.name} for {bought_item.price} NOK")
         else:
-            flash(f"You don't have enough money to purchase {bought_item.name} NOK")
+            flash(f"You don't have enough money to purchase {bought_item.name}")
 
         return redirect(url_for('main.store_page'))
     if buy_form.errors != {}:  # This happens if the users do somthing wrong when creating a user

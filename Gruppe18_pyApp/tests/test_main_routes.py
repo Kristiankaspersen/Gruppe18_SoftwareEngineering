@@ -124,7 +124,7 @@ def test_main_routes_store_page_buy_product_enough_money(client, existing_store_
     assert response.status_code == 200
     response = client.post('/store', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b'You have bought test_item for 800 NOK' in response.data
+    assert b"You have bought test_item for 800 NOK" in response.data
 
 def test_main_routes_store_page_buy_product_not_enough_money(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
     product_number = existing_item_in_market.product_number
@@ -134,6 +134,7 @@ def test_main_routes_store_page_buy_product_not_enough_money(client, existing_st
         "bought_item": f"{product_number}",
         "submit": "Buy+product"
     }
+    existing_user.cash = 0
 
     assert existing_item_in_market.store_owner == existing_store_with_user.id
 
@@ -141,7 +142,7 @@ def test_main_routes_store_page_buy_product_not_enough_money(client, existing_st
     assert response.status_code == 200
     response = client.post('/store', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b'You have bought test_item for 800 NOK' in response.data
+    assert b"You don/'t" in response.data
 
 
 def test_main_routes_store_page_buy_product_ownership_of_goods_change(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
