@@ -15,8 +15,28 @@ def test_auth_routes_register_user_page(client):
         "password2": "12345678",
         "submit": "Create+account"
     }
+    response = client.post('/register')
+    assert response == 200
     response = client.post('/register', data=data, follow_redirects=True)
-    assert response.status_code == 200  # Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
+    #assert response.status_code == 200  # Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
+    assert b'Login ' in response.data  # get_data(as_text=True), find unique data here, better data. And get request 302.
+    user = User.query.filter_by(username="testUser").first()
+    assert user is not None
+    db.session.delete(user)
+    db.session.commit()
+
+def test_auth_routes_register_user_page(client):
+    data = {
+        "username": "testUser",
+        "email": "testUser2@testuser.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    response = client.post('/register')
+    assert response == 200
+    response = client.post('/register', data=data, follow_redirects=True)
+    #assert response.status_code == 200  # Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
     assert b'Login ' in response.data  # get_data(as_text=True), find unique data here, better data. And get request 302.
     user = User.query.filter_by(username="testUser").first()
     assert user is not None

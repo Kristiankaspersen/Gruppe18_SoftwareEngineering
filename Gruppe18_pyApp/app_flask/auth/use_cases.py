@@ -4,14 +4,14 @@ from app_flask.models import db, User, Goods, Store
 from app_flask import create_app
 
 
-def create_user_and_store_in_db(username, email, password, profile_type):
+def create_user_and_store_in_db(username, email, password):
     app = create_app()
     ctx = app.app_context()
     ctx.push()
     creating_user_in_db = User(username=username,
                                email=email,
                                password=password,
-                               profile_type=profile_type)
+                               )
 
     db.session.add(creating_user_in_db)
     db.session.commit()

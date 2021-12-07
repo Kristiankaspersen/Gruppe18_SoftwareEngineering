@@ -17,9 +17,9 @@ def register_user_page():
         username = form.username.data
         email = form.email.data
         password = form.password1.data
-        profile_type = form.profile_type.data
 
-        create_user_and_store_in_db(username, email, password, profile_type)
+
+        create_user_and_store_in_db(username, email, password)
 
         flash(f"You have made a user with username: {username}")
         return redirect(url_for('auth.login_page'))
