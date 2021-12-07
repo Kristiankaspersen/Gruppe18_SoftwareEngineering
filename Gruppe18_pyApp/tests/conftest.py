@@ -52,6 +52,31 @@ def existing_store_user(client):
     db.session.commit()
 
 @pytest.fixture()
+def existing_store_with_user(client):
+    user = User(username="test_user_store2", email='test_user_store2@mail.com', password="12345678", profile_type=1)
+    db.session.add(user)
+    db.session.commit()
+
+    store = Store(
+        store_name='Test_AS2',
+        street_address="TestAdress",
+        street_number=28,
+        postal_code=6329,
+        province="Testnes",
+        store_email="Test_AS2@gmail.com",
+        store_phone=67326732
+    )
+    db.session.add(store)
+    db.session.commit()
+    store.user_owner = User.query.filter_by(username="test_user_store2").first().id
+    user = User.query.filter_by(username="test_user_store2").first()
+    store = Store.query.filter_by(store_name="Test_AS2").first()
+    yield store
+    db.session.delete(store)
+    db.session.delete(user)
+    db.session.commit()
+
+@pytest.fixture()
 def existing_item_owned_by_user(existing_user):
     test_item = Goods(
         name='test_item',

@@ -29,7 +29,7 @@ def add_goods():
         product_number = form_auction.product_number.data
         store_user_owner = current_user.id
 
-        if not(isinstance(price, int) or isinstance(product_number, int)):
+        if not(isinstance(price, int)) or not(isinstance(product_number, int)):
             error_message = f"Product number and price needs to be a number, try again"
             flash(error_message)
             return redirect(url_for('main.add_goods'))
