@@ -7,7 +7,7 @@ These test use GETs and POSTs to diffirent URLs to check
 from app_flask.models import db, User, Store
 
 
-def test_auth_routes_register_user_page(client):
+def test_auth_routes_register_user_page_and_check_if_stored_in_db(client):
     data = {
         "username": "testUser",
         "email": "testUser2@testuser.com",
@@ -17,15 +17,13 @@ def test_auth_routes_register_user_page(client):
     }
     response = client.post('/register')
     assert response == 200
-    response = client.post('/register', data=data, follow_redirects=True)
-    #assert response.status_code == 200  # Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
-    assert b'Login ' in response.data  # get_data(as_text=True), find unique data here, better data. And get request 302.
+    client.post('/register', data=data, follow_redirects=True)
     user = User.query.filter_by(username="testUser").first()
     assert user is not None
     db.session.delete(user)
     db.session.commit()
 
-def test_auth_routes_register_user_page(client):
+def test_auth_routes_register_user_page_check_valid_user(client):
     data = {
         "username": "testUser",
         "email": "testUser2@testuser.com",
@@ -34,15 +32,38 @@ def test_auth_routes_register_user_page(client):
         "submit": "Create+account"
     }
     response = client.post('/register')
-    assert response == 200
+    assert response.status_code == 200
     response = client.post('/register', data=data, follow_redirects=True)
-    #assert response.status_code == 200  # Problem here, I want the response to be 302, it work sometimes, when follow_redirect=False
-    assert b'Login ' in response.data  # get_data(as_text=True), find unique data here, better data. And get request 302.
     user = User.query.filter_by(username="testUser").first()
-    assert user is not None
     db.session.delete(user)
     db.session.commit()
+    assert b'You have made a user with username testUser' in response.data
 
+def test_auth_routes_register_user_with_same_usename(client, existing_user):
+    data = {
+        "username": "test_user",
+        "email": "another@mail.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    assert existing_user is not None
+    response = client.post('/register', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'Username is already in use! try a different username' in response.data
+
+def test_auth_routes_register_user_with_same_email(client, existing_user):
+    data = {
+        "username": "another_user_name",
+        "email": "test_user@mail.com",
+        "password1": "12345678",
+        "password2": "12345678",
+        "submit": "Create+account"
+    }
+    assert existing_user is not None
+    response = client.post('/register', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'Email is already in use! Use another email' in response.data
 
 def test_auth_routes_register_user_that_already_exists(client, existing_user):
     data = {
@@ -52,39 +73,11 @@ def test_auth_routes_register_user_that_already_exists(client, existing_user):
         "password2": "12345678",
         "submit": "Create+account"
     }
+    assert existing_user is not None
     response = client.post('/register', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b"Error creating user: " in response.data  # Get the both validations.
-    assert existing_user is not None
-
-
-def test_auth_routes_register_user_with_same_email(client, existing_user):
-    data = {
-        "username": "new_user",
-        "email": "test_user@mail.com",
-        "password1": "12345678",
-        "password2": "12345678",
-        "submit": "Create+account"
-    }
-    response = client.post('/register', data=data, follow_redirects=True)
-    assert response.status_code == 200
-    assert b"Error creating user: " in response.data
-    assert existing_user is not None
-
-
-def test_auth_routes_register_user_with_same_username(client, existing_user):
-    data = {
-        "username": "test_user",
-        "email": "another_email@mail.com",
-        "password1": "12345678",
-        "password2": "12345678",
-        "submit": "Create+account"
-    }
-    response = client.post('/register', data=data, follow_redirects=True)
-    assert response.status_code == 200
-    assert b"Error creating user: " in response.data
-    assert existing_user is not None
-
+    assert b"Username is already in use! try a different username" in response.data
+    assert b'Email is already in use! Use another email' in response.data
 
 def test_auth_routes_register_store(client, login_default_store):
     data = {

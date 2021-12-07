@@ -21,11 +21,11 @@ def register_user_page():
 
         create_user_and_store_in_db(username, email, password)
 
-        flash(f"You have made a user with username: {username}")
+        flash(f"You have made a user with username {username}")
         return redirect(url_for('auth.login_page'))
     if form.errors != {}:  # This happens if the users do somthing wrong when creating a user
         for err_message in form.errors.values():
-            flash(f"Error creating user: {err_message}", category='danger')
+            flash(f"Error creating user {err_message}", category='danger')
     return render_template("registerUser.html", form=form)
 
 @bp.route("/registerStore", methods=["GET", "POST"])
