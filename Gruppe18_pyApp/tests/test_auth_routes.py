@@ -82,20 +82,39 @@ def test_auth_routes_register_user_that_already_exists(client, existing_user):
 def test_auth_routes_register_store(client, login_normal_user):
     data = {
         "store_name": "Test_ASA",
-        "street_adress": "TestAdress2",
+        "street_address": "TestAdress",
         "street_number": "28",
         "postal_code": "1778",
-        "province": "Testens2",
-        "store_email": "Test2_ASA@gmail.com",
+        "province": "Testnes",
+        "store_email": "Test_ASA@gmail.com",
         "store_phone": "21000001",
         "submit": "Register+store"
     }
     response = client.post('/registerStore', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Register a store?'
-    assert b'You have now registered a store'
-    assert b'You have now made a store with name {store_name} '
     assert login_normal_user.status_code == 200
+    assert b"you have made a new store with name Test_ASA" in response.data
+    store = Store.query.filter_by(store_name="Test_ASA").first()
+    assert store is not None
+    db.session.delete(store)
+    db.session.commit()
+
+def test_auth_routes_register_store_that_already_exists(client, login_normal_user):
+    data = {
+        "store_name": "Test_ASA",
+        "street_address": "TestAdress",
+        "street_number": "28",
+        "postal_code": "1778",
+        "province": "Testnes",
+        "store_email": "Test_ASA@gmail.com",
+        "store_phone": "21000001",
+        "submit": "Register+store"
+    }
+    response = client.post('/registerStore', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert login_normal_user.status_code == 200
+    assert b"you have made a new store with name Test_ASA" in response.data
+
 
 
 # kinda confused shoudlnt login be a get
