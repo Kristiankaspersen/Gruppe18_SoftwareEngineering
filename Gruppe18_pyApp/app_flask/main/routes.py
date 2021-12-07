@@ -93,7 +93,7 @@ def auction_page():
 
     if request.method == "POST":
 
-        if not(isinstance(auction_form.offer.data, int)):
+        if not(isinstance(auction_form.offer.data, int)) and (request.form.get('bid_item') is not None):
             error_message = f"Your bid needs to be a number, try again"
             flash(error_message)
             return redirect(url_for('main.auction_page'))

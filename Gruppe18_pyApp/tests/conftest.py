@@ -169,8 +169,13 @@ def add_goods_item_function(client, existing_store_user):
     db.session.commit()
 
 @pytest.fixture()
-def delete_test_bidding_item():
-    pass
+def delete_test_bidding_item(client, existing_item_in_auction):
+    existing_item_in_auction = existing_item_in_auction.id
+    yield None
+    delete_items = Bidding.query.filter_by(item_id=existing_item_in_auction)
+    for delete_item in delete_items:
+        db.session.delete(delete_item)
+    db.session.commit()
 
 @pytest.fixture()
 def bidding_item(existing_user, existing_store_user, existing_item_in_auction):

@@ -138,8 +138,6 @@ def test_main_routes_store_page_buy_product_not_enough_money(client, existing_st
 
     assert existing_item_in_market.store_owner == existing_store_with_user.id
 
-    response = client.get('/store')
-    assert response.status_code == 200
     response = client.post('/store', data=data, follow_redirects=True)
     assert response.status_code == 200
     assert b"You don" in response.data
@@ -156,15 +154,13 @@ def test_main_routes_store_page_buy_product_ownership_of_goods_change(client, ex
 
     assert existing_item_in_market.store_owner == existing_store_with_user.id
 
-    response = client.get('/store')
-    assert response.status_code == 200
     response = client.post('/store', data=data, follow_redirects=True)
     current_item_that_has_been_bought = Goods.query.filter_by(product_number=product_number).first()
     assert response.status_code == 200
     assert current_item_that_has_been_bought.store_owner is None
     assert current_item_that_has_been_bought.user_owner == existing_user_id
 
-def test_main_routes_store_page_auction_page_bidding_on_goods_with_enough_cash(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
+def test_main_routes_store_page_auction_page_bidding_on_goods_with_enough_cash(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user, delete_test_bidding_item):
 
     data = {
         "store_owner1": f"{existing_store_with_user.id}",
@@ -179,20 +175,41 @@ def test_main_routes_store_page_auction_page_bidding_on_goods_with_enough_cash(c
     assert response.status_code == 200
     assert b"You have bid on test_item for 900 NOK" in response.data
 
-def test_main_routes_store_page_auction_page_bidding_on_goods_with_enough_cash(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
+def test_main_routes_store_page_auction_page_bidding_on_goods_with_not_enough_cash(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
 
     data = {
         "store_owner1": f"{existing_store_with_user.id}",
         "bid_item": f"{existing_item_in_auction.product_number}",
-        "offer": "900",
+        "offer": "300",
         "submit": "bid+for+product"
     }
 
-    response = client.get('/auction')
-    assert response.status_code == 200
     response = client.post('/auction', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b"You have bid on test_item for 900 NOK" in response.data
+    assert b"You have to bid more than that 300 NOK, at least 10 more NOK than current price" in response.data
+
+def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_user_input(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
+    data = {
+        "store_owner1": f"{existing_store_with_user.id}",
+        "bid_item": f"{existing_item_in_auction.product_number}",
+        "offer": "dsadasda",
+        "submit": "bid+for+product"
+    }
+
+    response = client.post('/auction', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"Your bid needs to be a number, try again" in response.data
+
+def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_user_input(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
+    data = {
+        "accepting_user": "1",
+        "accepting_item": "2",
+        "submit": "Accept+offer"
+    }
+
+    response = client.post('/auction', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"You have accepted offer on test_item for 900" in response.data
 
 
 

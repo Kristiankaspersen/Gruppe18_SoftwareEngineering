@@ -77,7 +77,7 @@ def test_main_use_cases_buying_product_not_enough_money(client, existing_store_u
     assert bool_value == False
 
 
-def test_main_use_cases_bidding_on_product_with_enough_money(existing_user, existing_store_user, existing_item_in_auction):
+def test_main_use_cases_bidding_on_product_with_enough_money(existing_user, existing_store_user, existing_item_in_auction, delete_test_bidding_item):
     # data bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id
     bid_item_product_number = existing_item_in_auction.product_number
     offer = 811
