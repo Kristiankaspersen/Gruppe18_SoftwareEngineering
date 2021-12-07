@@ -125,6 +125,7 @@ def existing_item_in_auction(existing_store_user):
     db.session.commit()
     test_item = Goods.query.filter_by(product_number="010101").first()
     yield test_item
+    test_item = Goods.query.filter_by(product_number="010101").first()
     db.session.delete(test_item)
     db.session.commit()
 
