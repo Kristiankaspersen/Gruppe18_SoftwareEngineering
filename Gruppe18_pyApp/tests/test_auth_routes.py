@@ -84,14 +84,12 @@ def test_auth_routes_register_store_with_store_that_dont_exist(client, login_nor
         "street_number": "28",
         "postal_code": "1778",
         "province": "Testnes",
-        "store_email": "Test_ASA@gmail.com",
-        "store_phone": "21000001",
+        "store_email": "EmailThatDontExist@gmail.com",
+        "store_phone": "15352425",
         "submit": "Register+store"
     }
     response = client.post('/registerStore', data=data, follow_redirects=True)
-    assert response.status_code == 200
-    assert login_normal_user.status_code == 200
-    assert b"you have made a new store with name Test_ASA" in response.data
+    assert b"you have made a new store with name" in response.data
     store = Store.query.filter_by(store_name="Test_ASA").first()
     assert store is not None
     db.session.delete(store)
@@ -160,44 +158,33 @@ def test_auth_routes_login_with_correct_password_and_username(client, existing_u
     assert b"You are logged in as test_user" in response.data
     client.post('/logout')
 
-def test_auth_routes_login_user(client, existing_user):
-    response = client.post('/login',
-                           data=dict(username='test_user', password="12345678"),
-                           follow_redirects=True)
+def test_auth_routes_login_with_wrong_password(client, existing_user):
+    data = {
+        "username": "test_user",
+        "password": "wrongPassword",
+        "submit": "Login"
+    }
+    response = client.get("/login")
     assert response.status_code == 200
-    assert b'You are logged in as: {user_attempted.username}'
+    response = client.post('/login', data=data, follow_redirects=True)
+    assert b"Wrong password, or username" in response.data
+    client.post('/logout')
 
-
-def test_login_page(client):
-    response = client.get('/login')
+def test_auth_routes_login_with_wrong_username(client, existing_user):
+    data = {
+        "username": "wrong_username",
+        "password": "12345678",
+        "submit": "Login"
+    }
+    response = client.get("/login")
     assert response.status_code == 200
-    assert b'Login' in response.data
+    response = client.post('/login', data=data, follow_redirects=True)
+    assert b"Wrong password, or username" in response.data
+    client.post('/logout')
 
 
 
-def test_valid_login_logout(client, existing_user):
-    response = client.post('/login',
-                           data=dict(username='test_user@mail.com', password="12345678"),
-                           follow_redirects=True)
-    assert response.status_code == 200
-    assert b'You are logged in as: {user_attempted.username}'
-    assert b'Login' in response.data
-    # not in register check
-
-    response = client.get('/logout', follow_redirects=True)
-    assert response.status_code == 200
-    assert b'You have logged out' in response.data
-    assert b'Logout' not in response.data
-    assert b'Login' in response.data
-    assert b'Register' in response.data
 
 
-def test_invalid_login(client, existing_user):
-    response = client.post('/login',
-                           data=dict(username='test_user@mail.com', password="12345678"),
-                           follow_redirects=True)
-    assert response.status_code == 200
-    # assert b'Incorret login' in response.data
-    assert b'Logout' not in response.data
-    assert b'Login' in response.data
-    assert b'Register' in response.data
+
+
