@@ -138,6 +138,20 @@ def login_normal_user(client, existing_user):
     yield response
     client.get('/logout', follow_redirects=True)
 
+# @pytest.fixture()
+# def login_normal_user(client, existing_user):
+#     data = {
+#         "username": "test_user",
+#         "password1": "12345678",
+#         "submit": "Login"
+#
+#     }
+#     response = client.post('/login', data=data, follow_redirects=True)
+#     assert response
+#     client.get('/logout', follow_redirects=True)
+
+
+
 @pytest.fixture()
 def login_store_user(client, existing_store_user):
     response = client.post('/login',

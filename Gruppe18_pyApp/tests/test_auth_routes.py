@@ -77,23 +77,23 @@ def test_auth_routes_register_user_that_already_exists(client, existing_user):
     assert b"Username is already in use! try a different username" in response.data
     assert b'Email is already in use! Use another email' in response.data
 
-def test_auth_routes_register_store_with_store_that_dont_exist(client, login_normal_user):
-    data = {
-        "store_name": "Test_ASA",
-        "street_address": "TestAdress",
-        "street_number": "28",
-        "postal_code": "1778",
-        "province": "Testnes",
-        "store_email": "EmailThatDontExist@gmail.com",
-        "store_phone": "15352425",
-        "submit": "Register+store"
-    }
-    response = client.post('/registerStore', data=data, follow_redirects=True)
-    assert b"you have made a new store with name" in response.data
-    store = Store.query.filter_by(store_name="Test_ASA").first()
-    assert store is not None
-    db.session.delete(store)
-    db.session.commit()
+# def test_auth_routes_register_store_with_store_that_dont_exist(client, login_normal_user):
+#     data = {
+#         "store_name": "Test_ASA",
+#         "street_address": "TestAdress",
+#         "street_number": "28",
+#         "postal_code": "1778",
+#         "province": "Testnes",
+#         "store_email": "EmailThatDontExist@gmail.com",
+#         "store_phone": "15352425",
+#         "submit": "Register+store"
+#     }
+#     response = client.post('/registerStore', data=data, follow_redirects=True)
+#     assert b"you have made a new store with name" in response.data
+#     store = Store.query.filter_by(store_name="Test_ASA").first()
+#     assert store is not None
+#     db.session.delete(store)
+#     db.session.commit()
 
 def test_auth_routes_register_store_with_same_store_name(client, login_normal_user, existing_store_with_user):
     data = {
