@@ -12,9 +12,6 @@ db.create_all()
 
 # Makes the DB again and restores it with information in the tables.
 
-
-# To make this user, you need the server up running, because it sends a post request with an attampted user creation.
-
 user_exist = User.query.filter_by(username="Geir").first()
 if user_exist is None:
     user = User(

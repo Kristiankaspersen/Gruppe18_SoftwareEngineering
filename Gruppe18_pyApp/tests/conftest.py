@@ -1,8 +1,8 @@
 import pytest
-from app_flask.main.use_cases import add_auction_item, add_market_item, buying_product
+from app_flask.main.use_cases import add_market_item
 from app_flask import create_app
 from app_flask.models import User, Store, db, Goods, Bidding
-import requests
+
 
 @pytest.fixture()
 def client():
@@ -11,10 +11,6 @@ def client():
     with app.app_context():
         with app.test_client() as client:
             yield client
-
-@pytest.fixture()
-def context():
-    pass
 
 @pytest.fixture()
 def existing_user(client):
@@ -138,20 +134,6 @@ def login_normal_user(client, existing_user):
     yield response
     client.get('/logout', follow_redirects=True)
 
-# @pytest.fixture()
-# def login_normal_user(client, existing_user):
-#     data = {
-#         "username": "test_user",
-#         "password1": "12345678",
-#         "submit": "Login"
-#
-#     }
-#     response = client.post('/login', data=data, follow_redirects=True)
-#     assert response
-#     client.get('/logout', follow_redirects=True)
-
-
-
 @pytest.fixture()
 def login_store_user(client, existing_store_user):
     response = client.post('/login',
@@ -222,6 +204,18 @@ def doing_a_bid(client, existing_store_with_user, existing_item_in_auction, exis
     response = client.post('/auction', data=data, follow_redirects=True)
     yield existing_user_id_value, existing_item_in_auction_id
     print("do this after")
+
+@pytest.fixture()
+def new_object_of_user():
+    user = User(
+        id=69,
+        username='super_user',
+        email='super_user@mail.com',
+        password='12345678',
+        profile_type='1',
+        cash=5000
+    )
+    yield user
 
 
 

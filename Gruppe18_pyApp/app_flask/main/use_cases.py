@@ -20,11 +20,9 @@ def add_auction_item(name, description, price, product_number, store_user_owner)
     )
     db.session.add(new_goods)
     db.session.commit()
-    new_goods = Goods.query.filter_by(product_number=product_number).first()
 
     ctx.pop()
-    # here put the item they have put inside
-    #return new_goods
+
 
 
 def add_market_item(name, description, price, product_number, store_owner):
@@ -37,16 +35,15 @@ def add_market_item(name, description, price, product_number, store_owner):
         description=description,
         price=price,
         product_number=product_number,
-        # user_owner?
         store_owner=store_owner,
         goods_type=0 #Market goods type 0
     )
     db.session.add(new_goods)
     db.session.commit()
     new_goods = Goods.query.filter_by(product_number=product_number).first()
-    # here put the item they have put inside
+
     ctx.pop()
-    #return new_goods
+
 
 
 def buying_product(buy_item_product_number, bought_from_store, current_user_id):
@@ -56,7 +53,6 @@ def buying_product(buy_item_product_number, bought_from_store, current_user_id):
 
     current_user = User.query.filter_by(id=current_user_id).first()
 
-    # Change this to product_number:
     bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
     store_owner_item = User.query.filter_by(id=bought_from_store).first()
     if (bought_item is not None) and (store_owner_item is not None):
@@ -68,7 +64,7 @@ def buying_product(buy_item_product_number, bought_from_store, current_user_id):
             ctx.pop()
             return False
     ctx.pop()
-    return #print("error: bought item, or store owner does not exist")
+    return None
 
 def bidding_on_product(bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id):
     app = create_app()

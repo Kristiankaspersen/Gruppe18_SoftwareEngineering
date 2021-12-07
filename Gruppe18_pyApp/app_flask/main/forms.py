@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, PasswordField, StringField, IntegerField, BooleanField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
-from app_flask.models import User
+from wtforms import SubmitField, StringField, IntegerField
+from wtforms.validators import DataRequired, Length
+
 
 class AddGoodsToMarket(FlaskForm):
     name = StringField(label='Choose a title for the ad', validators=[Length(min=1, max=30), DataRequired()])

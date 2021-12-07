@@ -43,7 +43,6 @@ class User(db.Model, UserMixin):
 
 
 class Goods(db.Model):
-    # __bind_key__ = 'goods'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
     description = db.Column(db.String(70), unique=False, nullable=False)
@@ -100,8 +99,5 @@ class Bidding(db.Model):
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
 
-# # Return if the user is authenticated (true)
-# def is_the_user_authenticated(self):
-#     return self.authenticated
 
 

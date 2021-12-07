@@ -2,9 +2,8 @@
 This file (test_models )contain  functional test for the fake users blueprint.
 These test use GETs and POSTs to diffirent URLs to check
 """
-# import json, possible that I know.
 
-from app_flask.models import db, User, Store
+from app_flask.models import db, User
 
 # TC - 001
 def test_auth_routes_register_user_page_and_check_if_stored_in_db(client):
@@ -78,6 +77,7 @@ def test_auth_routes_register_user_that_already_exists(client, existing_user):
     assert b"Username is already in use! try a different username" in response.data
     assert b'Email is already in use! Use another email' in response.data
 
+# Denne vil ikke fungere, er noe med at den ikke kommer gjennom, akkurat nå, har ikke tid til å finne ut av det nå.
 # def test_auth_routes_register_store_with_store_that_dont_exist(client, login_normal_user):
 #     data = {
 #         "store_name": "Test_ASA",

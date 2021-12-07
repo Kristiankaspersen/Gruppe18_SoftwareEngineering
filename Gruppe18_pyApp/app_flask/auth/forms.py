@@ -40,9 +40,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField(label="Login")
 
 class LoginFormUser(FlaskForm):
-    # for user log in
-    # email = StringField('email', validators=[DataRequired()])
-    # password = PasswordField('password', validators=[DataRequired()])
     submit = SubmitField(label="Login normal user")
 
 

@@ -1,12 +1,7 @@
 import pytest
 
-from app_flask.main.use_cases import delete_goods_from_store
 from app_flask.models import Goods, db, User
 
-
-def test_main_routes_home_page(client):
-    response = client.get('/')
-    assert response.status_code == 200
 
 # TC - 012
 def test_main_routes_add_goods_add_auction_product_item_exist(client, login_store_user):
@@ -187,7 +182,7 @@ def test_main_routes_store_page_auction_page_bidding_on_goods_with_not_enough_ca
     assert response.status_code == 200
     assert b"You have to bid more than that 300 NOK, at least 10 more NOK than current price" in response.data
 
-# TC - 019 ( den er lik kun med ny variabel)
+# TC - 019
 def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_user_input(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
     data = {
         "store_owner1": f"{existing_store_with_user.id}",
@@ -231,14 +226,3 @@ def test_main_routes_store_page_auction_accept_bid_from_user_with_not_enough_cas
     assert response.status_code == 200
     assert b"test_user do not have enough money to purchase test_item" in response.data
 
-
-
-def test_main_routes_delete_goods_with_id_3(client):
-    pass
-    # response = client.get('delete_goods/3', follow_redirects=True)
-    # assert response.status_code == 200
-    # rows = db.session.query(Goods).count()
-    # assert rows == 4
-
-def test_main_routes_delete_goods():
-    pass

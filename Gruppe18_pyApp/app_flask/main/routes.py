@@ -1,5 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request, current_app
-from flask_login import login_user, logout_user, current_user
+from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user
 from app_flask import db
 from app_flask.main import bp
 from app_flask.main.forms import AddGoodsToMarket, AddGoodsToAuction, BuyGoodsForm, AcceptAuctionForm, AuctionGoodsForm
@@ -7,7 +7,7 @@ from app_flask.main.use_cases import buying_product, show_current_highest_biddin
     delete_user_from_platform, delete_goods_from_store, add_market_item, add_auction_item, bidding_on_product, \
     accepting_bidding_offer
 from app_flask.models import User, Goods, Store, Bidding
-from sqlalchemy.sql.expression import func, and_
+from sqlalchemy.sql.expression import and_
 
 
 @bp.route("/")
@@ -59,7 +59,6 @@ def store_page():
         buy_item_product_number = request.form.get('bought_item')
         bought_from_store = request.form.get('store_owner')
 
-
         bool_value = buying_product(buy_item_product_number, bought_from_store, current_user.id)
         bought_item = Goods.query.filter_by(product_number=buy_item_product_number).first()
         if bool_value is True:
@@ -70,13 +69,12 @@ def store_page():
             flash(f"You do not have enough money to purchase {bought_item.name}")
 
         return redirect(url_for('main.store_page'))
-    if buy_form.errors != {}:  # This happens if the users do somthing wrong when creating a user
+    if buy_form.errors != {}:
         for err_message in buy_form.errors.values():
             flash(f"Error creating store: {err_message}")
 
     if request.method == "GET":
-        # TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
-        # TODO: Users that don't have a profile can't buy or auction, so if they try, they get a message to log in.
+
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 0)).all()
 
         return render_template("store.html", items=items, buy_form=buy_form)
@@ -135,9 +133,6 @@ def auction_page():
         return redirect(url_for('main.auction_page'))
 
     if request.method == "GET":
-        # items = db.session.query(Goods, Store).join(Store).all()
-        # TODO: Make these to a function. And make more filters, for the user to filter what they want to see.
-        # TODO: Users that don't have a profile can't buy or auction, so if they try, they get a message to log in.
         items = db.session.query(Goods, Store).filter(and_(Store.id == Goods.store_owner, Goods.goods_type == 1)).all()
         try:
             current_user_id = current_user.id
@@ -148,14 +143,6 @@ def auction_page():
 
         return render_template("auction.html", items=items, auction_form=auction_form, bidding_items=bidding_items,
                                accept_form=accept_form)
-
-
-# Kan nok slettes
-@bp.route('/users', methods=['GET', 'POST'])
-def show_users():
-    db_users = show_users_from_db()
-    return render_template('users.html', db_users=db_users)
-
 
 @bp.route('/admin_panel', methods=['GET', 'POST'])
 def display_admin_panel():
