@@ -69,9 +69,10 @@ def existing_store_with_user(client):
     db.session.add(store)
     db.session.commit()
     store.user_owner = User.query.filter_by(username="test_user_store2").first().id
-    user = User.query.filter_by(username="test_user_store2").first()
     store = Store.query.filter_by(store_name="Test_AS2").first()
     yield store
+    user = User.query.filter_by(username="test_user_store2").first()
+    store = Store.query.filter_by(store_name="Test_AS2").first()
     db.session.delete(store)
     db.session.delete(user)
     db.session.commit()
@@ -87,12 +88,13 @@ def existing_item_owned_by_user(existing_user):
     test_item.user_owner = User.query.filter_by(username=existing_store_user.username).first().id
     db.session.add(test_item)
     db.session.commit()
+    test_item = Goods.query.filter_by(product_number="010101").first()
     yield test_item
     db.session.delete(test_item)
     db.session.commit()
 
 @pytest.fixture()
-def existing_item_in_market(existing_store_user):
+def existing_item_in_market(existing_store_with_user):
     test_item = Goods(
         name='test_item',
         description='description',
@@ -100,10 +102,12 @@ def existing_item_in_market(existing_store_user):
         price=800,
         goods_type=0    #Market goods type 0
     )
-    test_item.user_owner = User.query.filter_by(username=existing_store_user.username).first().id
+    test_item.store_owner = Store.query.filter_by(id=existing_store_with_user.id).first().id
     db.session.add(test_item)
     db.session.commit()
+    test_item = Goods.query.filter_by(product_number="010101").first()
     yield test_item
+    test_item = Goods.query.filter_by(product_number="010101").first()
     db.session.delete(test_item)
     db.session.commit()
 
@@ -112,13 +116,14 @@ def existing_item_in_auction(existing_store_user):
     test_item = Goods(
         name='test_item',
         description='description',
-        product_number='010101',
+        product_number="010101",
         price=800,
         goods_type=1    #Market goods type 0
     )
     test_item.user_owner = User.query.filter_by(username=existing_store_user.username).first().id
     db.session.add(test_item)
     db.session.commit()
+    test_item = Goods.query.filter_by(product_number="010101").first()
     yield test_item
     db.session.delete(test_item)
     db.session.commit()

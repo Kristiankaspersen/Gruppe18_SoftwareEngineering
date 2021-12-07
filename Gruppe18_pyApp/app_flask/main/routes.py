@@ -88,8 +88,8 @@ def store_page():
 
 @bp.route("/auction", methods=["POST", "GET"])
 def auction_page():
-    auction_form = AuctionGoodsForm()
-    accept_form = AcceptAuctionForm()
+    auction_form = AuctionGoodsForm(request.form, csrf_enabled=False)
+    accept_form = AcceptAuctionForm(request.form, csrf_enabled=False)
 
     if request.method == "POST":
 

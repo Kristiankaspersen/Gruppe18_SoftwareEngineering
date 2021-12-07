@@ -109,17 +109,22 @@ def test_main_routes_add_goods_add_market_product(client, login_store_user):
 def test_main_routes_show_owned_goods():
     pass
 
-def test_main_routes_store_page_buy_product(client, existing_store_with_user, existing_item_in_market, login_normal_user):
+def test_main_routes_store_page_buy_product(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
 
     data = {
         "store_owner": f"{existing_store_with_user.id}",
         "bought_item": f"{existing_item_in_market.product_number}",
         "submit": "Buy+product"
     }
+    assert existing_item_in_market.store_owner == existing_store_with_user.id
+
     response = client.get('/store')
     assert response.status_code == 200
     response = client.post('/store', data=data, follow_redirects=True)
+    assert existing_item_in_market.store_owner == 0
     assert response.status_code == 200
+
+
 
 
 def test_main_routes_store_page_buy_product_not_enough_cash():
