@@ -71,7 +71,7 @@ def store_page():
 
             flash(f"You have bought {bought_item.name} for {bought_item.price} NOK")
         else:
-            flash(f"You don't have enough money to purchase {bought_item.name}")
+            flash(f"You do not have enough money to purchase {bought_item.name}")
 
         return redirect(url_for('main.store_page'))
     if buy_form.errors != {}:  # This happens if the users do somthing wrong when creating a user
@@ -132,16 +132,11 @@ def auction_page():
         user_bidding_on_item = User.query.filter_by(id=accept_from_user_id).first()
         if request.form.get('accepting_user') is not None:
             if bool_value_accepting_offer is True:
-                flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price}")
+                flash(f"You have accepted offer on {accepting_item.name} for {accepting_item.price} NOK")
             else:
-                flash(f"{user_bidding_on_item.username} don't have enough money to purchase {accepting_item.name}")
+                flash(f"{user_bidding_on_item.username} do not have enough money to purchase {accepting_item.name}")
 
         return redirect(url_for('main.auction_page'))
-
-    if auction_form.errors != {}:  # This happens if the users do somthing wrong when bidding on product
-        for err_message in auction_form.errors.values():
-            flash(f"Error bidding on product: {err_message}")
-
 
     if request.method == "GET":
         # items = db.session.query(Goods, Store).join(Store).all()

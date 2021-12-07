@@ -1,19 +1,12 @@
 import pytest
 
 from app_flask.main.use_cases import delete_goods_from_store
-from app_flask.models import Goods, db
+from app_flask.models import Goods, db, User
 
 
 def test_main_routes_home_page(client):
     response = client.get('/')
     assert response.status_code == 200
-    assert b'This is homepage is not found'
-    response = client.get('/homepage')
-    assert response.status_code == 404
-    assert b'This is homepage'
-
-
-# remember this both post and get met
 
 def test_main_routes_add_goods_add_auction_product_item_exist(client, login_store_user):
     data = {
@@ -140,7 +133,7 @@ def test_main_routes_store_page_buy_product_not_enough_money(client, existing_st
 
     response = client.post('/store', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b"You don" in response.data
+    assert b"You do not have enough money to purchase test_item" in response.data
 
 
 def test_main_routes_store_page_buy_product_ownership_of_goods_change(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
@@ -200,16 +193,34 @@ def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_us
     assert response.status_code == 200
     assert b"Your bid needs to be a number, try again" in response.data
 
-def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_user_input(client, login_store_user, existing_user, existing_store_user,existing_item_in_auction, bidding_item):
+def test_main_routes_store_page_auction_accept_bid_from_user_with_enough_cash(client, existing_user, login_store_user, existing_store_user,existing_item_in_auction, doing_a_bid):
+
+    user_doing_a_bid_id = doing_a_bid[0]
+    existing_item_in_auction_id = doing_a_bid[1]
     data = {
-        "accepting_user": f"{existing_user.id}",
-        "accepting_item": f"{bidding_item.item_id}",
+        "accepting_user": f"{user_doing_a_bid_id}",
+        "accepting_item": f"{existing_item_in_auction_id}",
         "submit": "Accept+offer"
     }
 
     response = client.post('/auction', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b"You have accepted offer" in response.data
+    assert b"You have accepted offer on test_item for 900 NOK" in response.data
+
+def test_main_routes_store_page_auction_accept_bid_from_user_with_not_enough_cash(client, login_store_user, existing_user, existing_store_user,existing_item_in_auction, doing_a_bid):
+    user_doing_a_bid_id = doing_a_bid[0]
+    existing_item_in_auction_id = doing_a_bid[1]
+    data = {
+        "accepting_user": f"{user_doing_a_bid_id}",
+        "accepting_item": f"{existing_item_in_auction_id}",
+        "submit": "Accept+offer"
+    }
+    existing_user = User.query.filter_by(id=user_doing_a_bid_id).first()
+    existing_user.cash = 0
+
+    response = client.post('/auction', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"test_user do not have enough money to purchase test_item" in response.data
 
 
 

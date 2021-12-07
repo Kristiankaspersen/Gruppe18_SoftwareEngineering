@@ -194,4 +194,22 @@ def bidding_item(existing_user, existing_store_user, existing_item_in_auction):
     db.session.delete(new_bid)
     db.session.commit()
 
+@pytest.fixture()
+def doing_a_bid(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
+    existing_user_id_value = existing_user.id
+    existing_item_in_auction_id = existing_item_in_auction.id
+
+    data = {
+        "store_owner1": f"{existing_store_with_user.id}",
+        "bid_item": f"{existing_item_in_auction.product_number}",
+        "offer": "900",
+        "submit": "bid+for+product"
+    }
+    response = client.post('/auction', data=data, follow_redirects=True)
+    yield existing_user_id_value, existing_item_in_auction_id
+    print("do this after")
+
+
+
+
 
