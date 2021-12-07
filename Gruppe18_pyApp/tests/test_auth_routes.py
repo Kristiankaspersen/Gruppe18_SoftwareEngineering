@@ -148,17 +148,6 @@ def test_auth_routes_register_store_that_already_exists(client, login_normal_use
     assert login_normal_user.status_code == 200
     assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
 
-
-
-# kinda confused shoudlnt login be a get
-
-"""def test_auth_routes_register_store_that_exists(client, login_default_user):"""
-
-
-¨
-
-
-
 def test_auth_routes_register_store_same_email(client, existing_store_user):
     data = {
         "store_name": "Test_Ltd",
