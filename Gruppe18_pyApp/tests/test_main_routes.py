@@ -109,20 +109,60 @@ def test_main_routes_add_goods_add_market_product(client, login_store_user):
 def test_main_routes_show_owned_goods():
     pass
 
-def test_main_routes_store_page_buy_product(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
-
+def test_main_routes_store_page_buy_product_enough_money(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
+    product_number = existing_item_in_market.product_number
+    existing_user_id = existing_user.id
     data = {
         "store_owner": f"{existing_store_with_user.id}",
-        "bought_item": f"{existing_item_in_market.product_number}",
+        "bought_item": f"{product_number}",
         "submit": "Buy+product"
     }
+
     assert existing_item_in_market.store_owner == existing_store_with_user.id
 
     response = client.get('/store')
     assert response.status_code == 200
     response = client.post('/store', data=data, follow_redirects=True)
-    assert existing_item_in_market.store_owner == 0
     assert response.status_code == 200
+    assert b'You have bought test_item for 800 NOK' in response.data
+
+def test_main_routes_store_page_buy_product_not_enough_money(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
+    product_number = existing_item_in_market.product_number
+    existing_user_id = existing_user.id
+    data = {
+        "store_owner": f"{existing_store_with_user.id}",
+        "bought_item": f"{product_number}",
+        "submit": "Buy+product"
+    }
+
+    assert existing_item_in_market.store_owner == existing_store_with_user.id
+
+    response = client.get('/store')
+    assert response.status_code == 200
+    response = client.post('/store', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'You have bought test_item for 800 NOK' in response.data
+
+
+def test_main_routes_store_page_buy_product_ownership_of_goods_change(client, existing_store_with_user, existing_item_in_market, existing_user, login_normal_user):
+    product_number = existing_item_in_market.product_number
+    existing_user_id = existing_user.id
+    data = {
+        "store_owner": f"{existing_store_with_user.id}",
+        "bought_item": f"{product_number}",
+        "submit": "Buy+product"
+    }
+
+    assert existing_item_in_market.store_owner == existing_store_with_user.id
+
+    response = client.get('/store')
+    assert response.status_code == 200
+    response = client.post('/store', data=data, follow_redirects=True)
+    current_item_that_has_been_bought = Goods.query.filter_by(product_number=product_number).first()
+    assert response.status_code == 200
+    assert current_item_that_has_been_bought.store_owner is None
+    assert current_item_that_has_been_bought.user_owner == existing_user_id
+
 
 
 
