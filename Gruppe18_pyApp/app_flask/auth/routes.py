@@ -94,14 +94,14 @@ def login_page():
                 password_attempted="12345678"
         ):
             login_user(user_attempted)
-            flash(f"You are logged in as: {user_attempted.username}")
+            flash(f"You are logged in as {user_attempted.username}")
             # Changed store_page to home_page
             return redirect(url_for("main.home_page"))
         elif (real_user_attempted is not None) and real_user_attempted.checking_password_with_hash(
                 password_attempted=form.password.data
             ):
             login_user(real_user_attempted)
-            flash(f"You are logged in as: {real_user_attempted.username}")
+            flash(f"You are logged in as {form.username.data}")
             return redirect(url_for("main.store_page"))
         else:
             flash("Wrong password, or username")

@@ -149,21 +149,16 @@ def test_auth_routes_register_store_that_already_exists(client, login_normal_use
     assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
 
 def test_auth_routes_login_with_correct_password_and_username(client, existing_user):
+    data = {
+        "username": "test_user",
+        "password": "12345678",
+        "submit": "Login"
+    }
     response = client.get("/login")
     assert response.status_code == 200
-    response = client.post('/login',
-                           data=dict(username='test_user', password="12345678"),
-                           follow_redirects=True)
-    assert b"You are logged in as: Geir" in response.data
-
-
-
-
-
-def test_auth_routes_login_admin(client, login_admin_user):
-    assert login_admin_user.status_code == 200
-    assert b'You are logged in as: {user_attempted.username}'
-
+    response = client.post('/login', data=data, follow_redirects=True)
+    assert b"You are logged in as test_user" in response.data
+    client.post('/logout')
 
 def test_auth_routes_login_user(client, existing_user):
     response = client.post('/login',
