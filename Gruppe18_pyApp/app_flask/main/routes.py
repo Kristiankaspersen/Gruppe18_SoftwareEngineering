@@ -93,13 +93,15 @@ def auction_page():
 
     if request.method == "POST":
 
+        if not(isinstance(auction_form.offer.data, int)):
+            error_message = f"Your bid needs to be a number, try again"
+            flash(error_message)
+            return redirect(url_for('main.auction_page'))
+
         bid_item_product_number = request.form.get('bid_item')
-        # current_price = request.form.get('current_price')
         bid_from_store = request.form.get('store_owner1')
         user_id = current_user.id
 
-        print(bid_item_product_number)
-        print(bid_from_store)
         item_bidded_on = Goods.query.filter_by(product_number=bid_item_product_number).first()
         store_bidding_from = User.query.filter_by(id=bid_from_store).first()
         if (item_bidded_on is not None) and (store_bidding_from is not None):
@@ -109,6 +111,8 @@ def auction_page():
             user_name = current_user.username
             store_user_id = store_bidding_from.id
             offer = auction_form.offer.data
+
+
             bool_value_bidding_on_product = bidding_on_product(bid_item_product_number, offer, item_id, item_name, user_id, user_name, store_user_id)
 
             if bool_value_bidding_on_product is True:

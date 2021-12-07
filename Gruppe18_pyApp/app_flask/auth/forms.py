@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, PasswordField, StringField, IntegerField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
-from app_flask.models import User
+from app_flask.models import User, Store
 
 
 class RegisterUserForm(FlaskForm):
@@ -25,18 +25,23 @@ class RegisterUserForm(FlaskForm):
 class RegisterStoreForm(FlaskForm):
     #TODO: More validations of email, and check with user.
 
+    def validate_username(self, check_store_name):
+        store_name = Store.query.filter_by(store_name=check_store_name.data).first()
+        if store_name is not None:
+            raise ValidationError("Username is already in use! try a different username")
+
     def validate_email(self, check_email):
-        email = User.query.filter_by(email=check_email.data).first()
+        email = Store.query.filter_by(store_email=check_email.data).first()
 
         if email is not None:
             raise ValidationError('Email is already in use! Use another email')
 
     store_name = StringField(label="Chose name of store", validators=[Length(min=2, max=40), DataRequired()])
-    street_number = IntegerField(label="Street number", validators=[DataRequired()])
+    street_number = StringField(label="Street number", validators=[DataRequired()])
     street_address = StringField(label="Address", validators=[DataRequired()])
     postal_code = IntegerField(label="Zip code", validators=[DataRequired()])
     province = StringField(label="Province", validators=[DataRequired()])
-    store_email = StringField(label="Store email", validators=[DataRequired()])
+    store_email = StringField(label="Store email", validators=[Email(), DataRequired()])
     store_phone = IntegerField("Store phone number", validators=[DataRequired()])
 
     submit = SubmitField(label="Register store")
