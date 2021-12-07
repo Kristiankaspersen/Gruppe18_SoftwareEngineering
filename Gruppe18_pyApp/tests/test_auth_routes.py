@@ -15,8 +15,8 @@ def test_auth_routes_register_user_page_and_check_if_stored_in_db(client):
         "password2": "12345678",
         "submit": "Create+account"
     }
-    response = client.post('/register')
-    assert response == 200
+    response = client.get('/register')
+    assert response.status_code == 200
     client.post('/register', data=data, follow_redirects=True)
     user = User.query.filter_by(username="testUser").first()
     assert user is not None
@@ -31,8 +31,6 @@ def test_auth_routes_register_user_page_check_valid_user(client):
         "password2": "12345678",
         "submit": "Create+account"
     }
-    response = client.post('/register')
-    assert response.status_code == 200
     response = client.post('/register', data=data, follow_redirects=True)
     user = User.query.filter_by(username="testUser").first()
     db.session.delete(user)
@@ -116,7 +114,7 @@ def test_auth_routes_register_store_with_same_store_name(client, login_normal_us
     assert login_normal_user.status_code == 200
     assert b"Store name Test_AS2 is already in use! try a different store name" in response.data
 
-def test_auth_routes_register_store_with_postal_code_as_text(client, login_normal_user, existing_store_with_user):
+def test_auth_routes_register_store_with_postal_code_as_text_and_phone_number(client, login_normal_user, existing_store_with_user):
     data = {
         "store_name": "Test_AS3",
         "street_address": "TestAdress",
@@ -124,12 +122,13 @@ def test_auth_routes_register_store_with_postal_code_as_text(client, login_norma
         "postal_code": "this_is_text",
         "province": "Testnes",
         "store_email": "Test_AS3@gmail.com",
-        "store_phone": "67326732",
+        "store_phone": "dsadadsa",
         "submit": "Register+store"
     }
     assert existing_store_with_user is not None
     response = client.post('/registerStore', data=data, follow_redirects=True)
-    assert b"phone number and postal code needs to be a number, try again" in response.data
+    assert b'This field is required' in response.data
+    assert b'This field is required' in response.data
 
 def test_auth_routes_register_store_that_already_exists(client, login_normal_user, existing_store_with_user):
     data = {
@@ -167,7 +166,7 @@ def test_auth_routes_register_store_that_exists(client,existing_store_user):
     }
     response = client.post('/registerStore', data=data, follow_redirects=True)
     assert response.status_code == 200
-    #assert b"Store is alredy registerd" in response.data , dont know how to make it work
+    assert b"Store is alredy registerd" in response.data
     assert existing_store_user is not None
 
 

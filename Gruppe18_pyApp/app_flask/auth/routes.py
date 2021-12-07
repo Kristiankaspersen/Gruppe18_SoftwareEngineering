@@ -43,10 +43,10 @@ def register_store():
         store_phone = form.store_phone.data
         owner = current_user.id
 
-        if not(isinstance(postal_code, int) or isinstance(postal_code, int)):
-            error_message = "phone number and postal code needs to be a number, try again"
-            flash(error_message, category='danger')
-            return redirect(url_for('auth.register_store'))
+        # if not(isinstance(postal_code, int) or isinstance(postal_code, int)):
+        #     error_message = "phone number and postal code needs to be a number, try again"
+        #     flash(error_message, category='danger')
+        #     return redirect(url_for('auth.register_store'))
 
         store_name_exists = Store.query.filter_by(store_name=store_name).first()
 

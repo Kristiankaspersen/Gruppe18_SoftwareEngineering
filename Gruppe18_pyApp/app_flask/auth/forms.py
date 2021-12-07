@@ -25,11 +25,6 @@ class RegisterUserForm(FlaskForm):
 class RegisterStoreForm(FlaskForm):
     #TODO: More validations of email, and check with user.
 
-    def validate_username(self, check_store_name):
-        store_name = Store.query.filter_by(store_name=check_store_name.data).first()
-        if store_name is not None:
-            raise ValidationError("Username is already in use! try a different username")
-
     def validate_email(self, check_email):
         email = Store.query.filter_by(store_email=check_email.data).first()
 
