@@ -4,7 +4,7 @@ from app_flask import create_app
 from app_flask.models import User, Store, db, Goods, Bidding
 import requests
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def client():
     app = create_app()
     app.config["TESTING"] = True
@@ -12,7 +12,7 @@ def client():
         with app.test_client() as client:
             yield client
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def context():
     pass
 
@@ -100,7 +100,7 @@ def existing_item_in_auction(existing_store_user):
 
 
 @pytest.fixture()
-def login_default_user(client, existing_user):
+def login_normal_user(client, existing_user):
     response = client.post('/login',
                 data=dict(username='test_user', password="12345678"),
                 follow_redirects=True)
@@ -108,7 +108,7 @@ def login_default_user(client, existing_user):
     client.get('/logout', follow_redirects=True)
 
 @pytest.fixture()
-def login_default_store(client, existing_store_user):
+def login_store_user(client, existing_store_user):
     response = client.post('/login',
                 data=dict(username='test_user_store', password="12345678"),
                 follow_redirects=True)
@@ -117,10 +117,10 @@ def login_default_store(client, existing_store_user):
 
 @pytest.fixture
 def login_admin_user(client):
-    response = client.post('/login',
+    client.post('/login',
                 data=dict(username='Admin', password="12345678"),
                 follow_redirects=True)
-    yield response
+    yield client
     client.get('/logout', follow_redirects=True)
 
 @pytest.fixture()

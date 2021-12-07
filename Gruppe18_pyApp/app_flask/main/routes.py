@@ -18,8 +18,8 @@ def home_page():
 
 @bp.route('/goods', methods=['GET', 'POST'])
 def add_goods():
-    form_auction = AddGoodsToAuction()
-    form_market = AddGoodsToMarket()
+    form_auction = AddGoodsToAuction(request.form, csrf_enabled=False)
+    form_market = AddGoodsToMarket(request.form, csrf_enabled=False)
 
     if request.method == "POST":
 
@@ -57,7 +57,7 @@ def show_owned_goods():
 
 @bp.route("/store", methods=["POST", "GET"])
 def store_page():
-    buy_form = BuyGoodsForm()
+    buy_form = BuyGoodsForm(request.form, csrf_enabled=False)
 
     if request.method == "POST":
         buy_item_product_number = request.form.get('bought_item')
