@@ -200,16 +200,16 @@ def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_us
     assert response.status_code == 200
     assert b"Your bid needs to be a number, try again" in response.data
 
-def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_user_input(client, existing_store_with_user, existing_item_in_auction, existing_user, login_normal_user):
+def test_main_routes_store_page_auction_page_bidding_on_goods_with_with_wrong_user_input(client, login_store_user, existing_user, existing_store_user,existing_item_in_auction, bidding_item):
     data = {
-        "accepting_user": "1",
-        "accepting_item": "2",
+        "accepting_user": f"{existing_user.id}",
+        "accepting_item": f"{bidding_item.item_id}",
         "submit": "Accept+offer"
     }
 
     response = client.post('/auction', data=data, follow_redirects=True)
     assert response.status_code == 200
-    assert b"You have accepted offer on test_item for 900" in response.data
+    assert b"You have accepted offer" in response.data
 
 
 
